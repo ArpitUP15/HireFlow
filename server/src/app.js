@@ -3,24 +3,38 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
+import authRoutes from "./routes/authRoutes.js";
+
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorMiddleware.js";
 
 const app = express();
 
-// -----------------------------
-// Middleware
-// -----------------------------
+// --------------------------------------
+// Security / Middleware
+// --------------------------------------
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin:
+      process.env.CLIENT_URL ||
+      "http://localhost:5173",
+
     credentials: true
   })
 );
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    limit: "10mb"
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 
 app.use(cookieParser());
 
@@ -28,9 +42,9 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// -----------------------------
-// Health Check
-// -----------------------------
+// --------------------------------------
+// Health
+// --------------------------------------
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
@@ -40,22 +54,25 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// -----------------------------
-// API Routes
-// -----------------------------
+// --------------------------------------
+// Routes
+// --------------------------------------
 
-app.get("/api", (req, res) => {
-  res.json({
-    success: true,
-    message: "Welcome to HireFlow API"
-  });
-});
+app.use(
+  "/api/auth",
+  authRoutes
+);
 
-// -----------------------------
-// Error Handling
-// -----------------------------
+// --------------------------------------
+// 404
+// --------------------------------------
 
 app.use(notFound);
+
+// --------------------------------------
+// Global error handler
+// --------------------------------------
+
 app.use(errorHandler);
 
 export default app;
