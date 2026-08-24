@@ -16,7 +16,7 @@ const connectDB = async () => {
   }
 
   try {
-    const connection = await mongoose.connect(mongoUri);
+    const connection = await mongoose.connect(process.env.MONGO_URI);
 
     console.log(
       `MongoDB connected: ${connection.connection.host}`
@@ -27,9 +27,5 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-db.grantRolesToUser("USERNAME", [
-  { role: "readWrite", db: "Login" }
-])
 
 export default connectDB;
