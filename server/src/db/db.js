@@ -1,20 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  const mongoUri = process.env.MONGO_URI;
-
-  if (!mongoUri) {
-    throw new Error("MONGO_URI is not configured");
-  }
-
-  const uri = new URL(mongoUri);
-
-  if (uri.protocol === "mongodb+srv:" && !uri.username) {
-    throw new Error(
-      "MONGO_URI must include the MongoDB username and password"
-    );
-  }
-
+  console.log(process.env.MONGO_URI);
   try {
     const connection = await mongoose.connect(process.env.MONGO_URI);
 
