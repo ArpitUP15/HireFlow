@@ -60,7 +60,7 @@ function Dashboard() {
             return (
               <div
                 key={stat.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+                className="rounded-2xl border border-white/10 bg-white/3 p-6"
               >
 
                 <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ function Dashboard() {
 
               <div
                 key={stage}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"
+                className="rounded-2xl border border-white/10 bg-white/3 p-5"
               >
 
                 <p className="text-sm text-slate-400">
