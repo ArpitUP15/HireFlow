@@ -2,10 +2,17 @@ import {
   Users,
   Briefcase,
   FileText,
-  UserCheck
+  UserCheck,
+  LogOut
 } from "lucide-react";
 
+import { useAuth } from "../context/AuthContext";
+
 function Dashboard() {
+  const {
+    user,
+    logout
+  } = useAuth();
 
   const stats = [
     {
@@ -34,22 +41,70 @@ function Dashboard() {
     <div className="min-h-screen bg-slate-950 text-white">
 
       <header className="border-b border-white/10">
-        <div className="mx-auto max-w-7xl px-6 py-5">
 
-          <h1 className="text-2xl font-bold">
-            HireFlow Dashboard
-          </h1>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
 
-          <p className="mt-1 text-sm text-slate-400">
-            Recruitment overview
-          </p>
+          <div>
+
+            <h1 className="text-2xl font-bold">
+              Hire
+              <span className="text-blue-500">
+                Flow
+              </span>
+            </h1>
+
+            <p className="mt-1 text-sm text-slate-400">
+              Recruitment Dashboard
+            </p>
+
+          </div>
+
+          <div className="flex items-center gap-4">
+
+            <div className="hidden text-right sm:block">
+
+              <p className="font-medium">
+                {user?.firstName}{" "}
+                {user?.lastName}
+              </p>
+
+              <p className="text-xs capitalize text-slate-400">
+                {user?.role?.replace(
+                  "_",
+                  " "
+                )}
+              </p>
+
+            </div>
+
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm transition hover:bg-white/5"
+            >
+              <LogOut size={17} />
+              Logout
+            </button>
+
+          </div>
 
         </div>
+
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-10">
 
-        {/* Stats */}
+        <div className="mb-10">
+
+          <h2 className="text-3xl font-bold">
+            Welcome back,{" "}
+            {user?.firstName} 👋
+          </h2>
+
+          <p className="mt-2 text-slate-400">
+            Here's what's happening with your recruitment activities.
+          </p>
+
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
@@ -66,6 +121,7 @@ function Dashboard() {
                 <div className="flex items-center justify-between">
 
                   <div>
+
                     <p className="text-sm text-slate-400">
                       {stat.title}
                     </p>
@@ -73,6 +129,7 @@ function Dashboard() {
                     <h2 className="mt-2 text-3xl font-bold">
                       {stat.value}
                     </h2>
+
                   </div>
 
                   <div className="rounded-xl bg-blue-500/10 p-3 text-blue-400">
@@ -86,8 +143,6 @@ function Dashboard() {
           })}
 
         </div>
-
-        {/* Recruitment pipeline */}
 
         <section className="mt-10">
 
@@ -103,24 +158,24 @@ function Dashboard() {
               ["Shortlisted", 92],
               ["Interview", 48],
               ["Selected", 18]
-            ].map(([stage, count]) => (
+            ].map(
+              ([stage, count]) => (
+                <div
+                  key={stage}
+                  className="rounded-2xl border border-white/10 bg-white/3 p-5"
+                >
 
-              <div
-                key={stage}
-                className="rounded-2xl border border-white/10 bg-white/3 p-5"
-              >
+                  <p className="text-sm text-slate-400">
+                    {stage}
+                  </p>
 
-                <p className="text-sm text-slate-400">
-                  {stage}
-                </p>
+                  <p className="mt-3 text-2xl font-bold">
+                    {count}
+                  </p>
 
-                <p className="mt-3 text-2xl font-bold">
-                  {count}
-                </p>
-
-              </div>
-
-            ))}
+                </div>
+              )
+            )}
 
           </div>
 
