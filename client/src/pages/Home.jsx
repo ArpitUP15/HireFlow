@@ -101,7 +101,7 @@ function Home() {
           return (
             <div
               key={feature.title}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur"
+              className="rounded-2xl border border-white/10 bg-white/3 p-7 backdrop-blur"
             >
 
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
