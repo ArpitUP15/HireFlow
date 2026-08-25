@@ -43,6 +43,19 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // --------------------------------------
+// Root
+// --------------------------------------
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Welcome to HireFlow API",
+    version: "1.0.0",
+    timestamp: new Date().toISOString()
+  });
+});
+
+// --------------------------------------
 // Health
 // --------------------------------------
 
