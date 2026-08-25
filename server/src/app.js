@@ -4,15 +4,12 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 
 import authRoutes from "./routes/authRoutes.js";
+import organizationRoutes from "./routes/organizationRoutes.js";
 
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorMiddleware.js";
 
 const app = express();
-
-// --------------------------------------
-// Security / Middleware
-// --------------------------------------
 
 app.use(
   cors({
@@ -38,53 +35,47 @@ app.use(
 
 app.use(cookieParser());
 
-if (process.env.NODE_ENV === "development") {
+if (
+  process.env.NODE_ENV ===
+  "development"
+) {
   app.use(morgan("dev"));
 }
 
-// --------------------------------------
-// Root
-// --------------------------------------
+// Health check
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Welcome to HireFlow API",
-    version: "1.0.0",
-    timestamp: new Date().toISOString()
-  });
-});
+app.get(
+  "/api/health",
+  (req, res) => {
+    res.status(200).json({
+      success: true,
+      message:
+        "HireFlow API is running",
+      timestamp:
+        new Date().toISOString()
+    });
+  }
+);
 
-// --------------------------------------
-// Health
-// --------------------------------------
-
-app.get("/api/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "HireFlow API is running",
-    timestamp: new Date().toISOString()
-  });
-});
-
-// --------------------------------------
-// Routes
-// --------------------------------------
+// Authentication
 
 app.use(
   "/api/auth",
   authRoutes
 );
 
-// --------------------------------------
+// Organizations
+
+app.use(
+  "/api/organizations",
+  organizationRoutes
+);
+
 // 404
-// --------------------------------------
 
 app.use(notFound);
 
-// --------------------------------------
-// Global error handler
-// --------------------------------------
+// Error handler
 
 app.use(errorHandler);
 
