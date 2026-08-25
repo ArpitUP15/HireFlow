@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
 
@@ -33,6 +33,12 @@ app.use(
 );
 
 app.use(cookieParser());
+if (
+  process.env.NODE_ENV ===
+  "development"
+) {
+  app.use(morgan("dev"));
+}
 
 // Health check
 
