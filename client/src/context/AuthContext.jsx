@@ -1,4 +1,6 @@
-import {createContext,useContext,useEffect,useState} from "react";
+import { useEffect, useState } from "react";
+
+import AuthContext from "./AuthContextValue";
 
 import {
   login as loginRequest,
@@ -6,9 +8,6 @@ import {
   logout as logoutRequest,
   getMe
 } from "../services/authService";
-
-const AuthContext =
-  createContext(null);
 
 export const AuthProvider = ({
   children
@@ -29,7 +28,7 @@ export const AuthProvider = ({
         const response = await getMe();
 
         setUser(response.user);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -99,17 +98,4 @@ export const AuthProvider = ({
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context =
-    useContext(AuthContext);
-
-  if (!context) {
-    throw new Error(
-      "useAuth must be used inside AuthProvider"
-    );
-  }
-
-  return context;
 };

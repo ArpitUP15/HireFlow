@@ -9,7 +9,7 @@ import {
   acceptInvitation,
   removeMember,
   updateMemberRole
-} from "../controllers/organizationController.js";
+} from "../controllers/organisationController.js";
 
 import {
   protect

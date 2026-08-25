@@ -9,13 +9,12 @@ import {
 
 import {
   UserPlus,
-  User,
   Mail,
   Lock,
   Briefcase
 } from "lucide-react";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 function Register() {
   const navigate =
