@@ -1,9 +1,5 @@
-import {
-  Navigate,
-  Outlet
-} from "react-router-dom";
-
-import { useAuth } from "../context/useAuth";
+import {Navigate,Outlet} from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 function PublicRoute() {
   const {
