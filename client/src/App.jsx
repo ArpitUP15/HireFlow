@@ -1,68 +1,81 @@
+import { Routes, Route } from "react-router-dom";
+
 import {
-  Routes,
-  Route
-} from "react-router-dom";
+  OrganizationProvider,
+} from "./context/OrganizationContext";
+
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import PublicRoute from "./components/common/PublicRoute";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Unauthorized from "./pages/Unauthorized";
+import Dashboard from "./pages/DashBoard";
+import OrganizationSetup from "./pages/OrganizationSetup";
+import OrganizationDashboard from "./pages/OrganizationDashboard";
+import OrganizationSettings from "./pages/OrganizationSettings";
+import TeamManagement from "./pages/TeamManagement";
+import AcceptInvitation from "./pages/AcceptInvitation";
 import NotFound from "./pages/NotFound";
 
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
-
-function App() {
+const App = () => {
   return (
     <Routes>
-
-      {/* Public pages */}
-
       <Route element={<PublicRoute />}>
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
 
-      <Route
-        path="/"
-        element={<Home />}
-      />
-
-      {/* Protected pages */}
-
-      <Route element={<ProtectedRoute />}>
-
+        {/* Invitation */}
         <Route
-          path="/dashboard"
-          element={<Dashboard />}
+          path="/accept-invitation"
+          element={
+            <AcceptInvitation />
+          }
         />
 
-      </Route>
+        {/* Protected application */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/organization/setup"
+            element={
+              <OrganizationSetup />
+            }
+          />
 
-      {/* Unauthorized */}
+          <Route
+            path="/organization"
+            element={
+              <OrganizationProvider>
+                <OrganizationDashboard />
+              </OrganizationProvider>
+            }
+          />
 
-      <Route
-        path="/unauthorized"
-        element={<Unauthorized />}
-      />
+          <Route
+            path="/organization/settings"
+            element={
+              <OrganizationProvider>
+                <OrganizationSettings />
+              </OrganizationProvider>
+            }
+          />
 
-      {/* 404 */}
+          <Route
+            path="/organization/team"
+            element={
+              <OrganizationProvider>
+                <TeamManagement />
+              </OrganizationProvider>
+            }
+          />
+        </Route>
 
-      <Route
-        path="*"
-        element={<NotFound />}
-      />
-
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
-}
+};
 
 export default App;

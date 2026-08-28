@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "tailwindcss/preflight";
-@tailwind utilities;
 
 * {
   box-sizing: border-box;
@@ -30,5 +28,5 @@ a {
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.4);
+  background: rgb(23, 90, 81);
 }
