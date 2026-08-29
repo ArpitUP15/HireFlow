@@ -64,7 +64,8 @@ const OrganizationSetup = () => {
     <div
       className="
         min-h-screen
-        bg-gray-50
+        bg-blue-600
+        text-black
         flex
         items-center
         justify-center
@@ -76,7 +77,7 @@ const OrganizationSetup = () => {
           w-full
           max-w-2xl
           rounded-2xl
-          bg-white
+          bg-blue-50
           p-8
           shadow-lg
         "
@@ -92,8 +93,8 @@ const OrganizationSetup = () => {
               items-center
               justify-center
               rounded-xl
-              bg-blue-100
-              text-blue-600
+              bg-blue-200
+              text-black
             "
           >
             <Building2 size={28} />
@@ -103,13 +104,13 @@ const OrganizationSetup = () => {
             Create your organization
           </h1>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-black/70">
             Set up your HireFlow workspace
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-black">
             {error}
           </div>
         )}
@@ -128,7 +129,7 @@ const OrganizationSetup = () => {
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-black">
               Description
             </label>
 
@@ -142,7 +143,9 @@ const OrganizationSetup = () => {
                 w-full
                 rounded-lg
                 border
-                border-gray-300
+                border-blue-300
+                bg-white
+                text-black
                 px-3.5
                 py-2.5
                 outline-none
@@ -181,7 +184,9 @@ const OrganizationSetup = () => {
                 w-full
                 rounded-lg
                 border
-                border-gray-300
+                border-blue-300
+                bg-white
+                text-black
                 px-3.5
                 py-2.5
               "

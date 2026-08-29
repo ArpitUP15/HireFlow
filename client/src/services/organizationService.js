@@ -83,18 +83,16 @@ export const inviteMember = async (
 };
 
 // Accept invitation
-export const acceptInvitation =
-  async (token) => {
-    const response = await api.post(
-      "/organizations/accept-invitation",
-      {
-        token,
-      }
-    );
+export const acceptInvitation = async (token) => {
+  const response = await api.post(
+    "/organizations/accept-invitation",
+    {
+      token,
+    }
+  );
 
-    return response.data;
-  };
-
+  return response.data;
+};
 // Update member role
 export const updateMemberRole =
   async (memberId, role) => {

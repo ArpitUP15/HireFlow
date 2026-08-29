@@ -29,7 +29,8 @@ const Modal = ({
           w-full
           max-w-lg
           rounded-2xl
-          bg-white
+          bg-blue-50
+          text-black
           shadow-2xl
         "
         onClick={(event) =>
@@ -55,7 +56,7 @@ const Modal = ({
             className="
               rounded-lg
               p-2
-              text-gray-500
+              text-black
               hover:bg-gray-100
             "
           >

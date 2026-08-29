@@ -122,11 +122,11 @@ const TeamManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-blue-600 p-6 text-black lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm font-medium text-blue-600">
+            <p className="text-sm font-medium text-black">
               {organization?.name}
             </p>
 
@@ -134,7 +134,7 @@ const TeamManagement = () => {
               Team Management
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-black/70">
               Manage your organization's recruitment team.
             </p>
           </div>
@@ -154,7 +154,7 @@ const TeamManagement = () => {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center justify-between rounded-lg bg-red-50 p-4 text-sm text-red-600">
+          <div className="mb-6 flex items-center justify-between rounded-lg bg-red-50 p-4 text-sm text-black">
             <span>{error}</span>
 
             <button
@@ -168,13 +168,13 @@ const TeamManagement = () => {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b px-5 py-4">
+        <div className="overflow-hidden rounded-2xl border border-blue-200 bg-blue-50 shadow-sm">
+          <div className="border-b border-blue-200 px-5 py-4">
             <h2 className="font-semibold">
               Team Members
             </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-black/70">
               {members.length} member
               {members.length !== 1
                 ? "s"

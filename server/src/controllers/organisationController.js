@@ -281,6 +281,8 @@ export const inviteMember =
     const rawToken =
       generateInvitationToken();
 
+    console.log("Invitation token:", rawToken);
+
     const tokenHash =
       hashInvitationToken(
         rawToken

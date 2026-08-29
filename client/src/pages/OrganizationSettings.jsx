@@ -121,8 +121,8 @@ const OrganizationSettings = () => {
 
   if (!canEdit) {
     return (
-      <div className="p-8">
-        <div className="rounded-xl bg-red-50 p-5 text-red-600">
+      <div className="min-h-screen bg-blue-600 p-8 text-black">
+        <div className="rounded-xl bg-blue-50 p-5 text-black">
           You don't have permission to edit this organization.
         </div>
       </div>
@@ -130,24 +130,24 @@ const OrganizationSettings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-blue-600 p-6 text-black lg:p-8">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-2xl font-bold">
           Organization Settings
         </h1>
 
-        <p className="mt-2 text-gray-500">
+        <p className="mt-2 text-black/70">
           Update your organization's information.
         </p>
 
         {message && (
-          <div className="mt-6 rounded-lg bg-green-50 p-4 text-sm text-green-700">
+          <div className="mt-6 rounded-lg bg-green-50 p-4 text-sm text-black">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="mt-6 rounded-lg bg-red-50 p-4 text-sm text-red-600">
+          <div className="mt-6 rounded-lg bg-red-50 p-4 text-sm text-black">
             {error}
           </div>
         )}
@@ -159,8 +159,8 @@ const OrganizationSettings = () => {
             space-y-5
             rounded-2xl
             border
-            border-gray-200
-            bg-white
+            border-blue-200
+            bg-blue-50
             p-6
             shadow-sm
           "
@@ -174,7 +174,7 @@ const OrganizationSettings = () => {
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-black">
               Description
             </label>
 
@@ -183,7 +183,7 @@ const OrganizationSettings = () => {
               value={form.description}
               onChange={handleChange}
               rows="5"
-              className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-blue-300 bg-white p-3 text-black outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -202,7 +202,7 @@ const OrganizationSettings = () => {
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-black">
               Company Size
             </label>
 
@@ -210,7 +210,7 @@ const OrganizationSettings = () => {
               name="companySize"
               value={form.companySize}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2.5"
+              className="w-full rounded-lg border border-blue-300 bg-white px-3 py-2.5 text-black"
             >
               <option>1-10</option>
               <option>11-50</option>

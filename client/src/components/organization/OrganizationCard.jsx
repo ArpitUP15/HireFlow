@@ -13,8 +13,9 @@ const OrganizationCard = ({
       className="
         rounded-2xl
         border
-        border-gray-200
-        bg-white
+        border-blue-200
+        bg-blue-50
+        text-black
         p-6
         shadow-sm
       "
@@ -29,8 +30,8 @@ const OrganizationCard = ({
             items-center
             justify-center
             rounded-xl
-            bg-blue-100
-            text-blue-600
+            bg-blue-200
+            text-black
           "
         >
           <Building2 size={28} />
@@ -41,7 +42,7 @@ const OrganizationCard = ({
             {organization.name}
           </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-black/70">
             {organization.industry ||
               "Industry not specified"}
           </p>
@@ -51,12 +52,12 @@ const OrganizationCard = ({
               mt-3
               inline-block
               rounded-full
-              bg-blue-50
+              bg-blue-200
               px-3
               py-1
               text-xs
               font-medium
-              text-blue-600
+              text-black
             "
           >
             {membership?.role}
@@ -65,7 +66,7 @@ const OrganizationCard = ({
       </div>
 
       {organization.description && (
-        <p className="mt-5 text-sm leading-6 text-gray-600">
+        <p className="mt-5 text-sm leading-6 text-black/80">
           {organization.description}
         </p>
       )}
@@ -80,7 +81,7 @@ const OrganizationCard = ({
           sm:grid-cols-2
         "
       >
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm text-black/80">
           <Users size={17} />
           {organization.companySize ||
             "Size not specified"}
@@ -96,7 +97,7 @@ const OrganizationCard = ({
               items-center
               gap-2
               text-sm
-              text-blue-600
+              text-black
               hover:underline
             "
           >

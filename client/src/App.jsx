@@ -28,12 +28,10 @@ const App = () => {
       </Route>
 
         {/* Invitation */}
-        <Route
-          path="/accept-invitation"
-          element={
-            <AcceptInvitation />
-          }
-        />
+       <Route
+  path="/accept-invitation"
+  element={<AcceptInvitation />}
+/>
 
         {/* Protected application */}
         <Route element={<ProtectedRoute />}>

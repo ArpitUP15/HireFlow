@@ -4,10 +4,13 @@ import {
 } from "react";
 
 import {
+  useSearchParams,
+  useNavigate,
+} from "react-router-dom";
+import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-
 import Button from "../components/common/Button";
 
 import {
@@ -15,6 +18,12 @@ import {
 } from "../services/organizationService";
 
 const AcceptInvitation = () => {
+  const [searchParams] =
+    useSearchParams();
+
+  const navigate =
+    useNavigate();
+
   const [status, setStatus] =
     useState("loading");
 
@@ -22,34 +31,31 @@ const AcceptInvitation = () => {
     useState("");
 
   useEffect(() => {
-    const accept = async () => {
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
-
+    const acceptInvite = async () => {
       const token =
-        params.get("token");
+        searchParams.get("token");
 
       if (!token) {
         setStatus("error");
         setMessage(
-          "Invitation token is missing."
+          "Invalid invitation link."
         );
         return;
       }
 
       try {
         const data =
-          await acceptInvitation(
-            token
-          );
+          await acceptInvitation(token);
 
         setStatus("success");
         setMessage(
           data.message ||
-            "Invitation accepted successfully."
+            "Invitation accepted successfully!"
         );
+
+        setTimeout(() => {
+          navigate("/organization");
+        }, 2000);
       } catch (error) {
         setStatus("error");
         setMessage(
@@ -59,76 +65,72 @@ const AcceptInvitation = () => {
       }
     };
 
-    accept();
-  }, []);
+    acceptInvite();
+  }, [searchParams, navigate]);
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
+
+          <h2 className="text-xl font-semibold">
+            Accepting invitation...
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Please wait while we add you to the organization.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "success") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-2xl">
+            ✓
+          </div>
+
+          <h1 className="text-2xl font-bold text-gray-900">
+            Invitation Accepted!
+          </h1>
+
+          <p className="mt-3 text-gray-500">
+            {message}
+          </p>
+
+          <p className="mt-4 text-sm text-gray-400">
+            Redirecting to your organization...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
-        {status === "loading" && (
-          <>
-            <div className="mx-auto mb-5 h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl">
+          ✕
+        </div>
 
-            <h1 className="text-xl font-bold">
-              Accepting invitation...
-            </h1>
-          </>
-        )}
+        <h1 className="text-2xl font-bold">
+          Invitation Failed
+        </h1>
 
-        {status === "success" && (
-          <>
-            <CheckCircle
-              size={52}
-              className="mx-auto mb-5 text-green-500"
-            />
+        <p className="mt-3 text-red-500">
+          {message}
+        </p>
 
-            <h1 className="text-2xl font-bold">
-              Welcome to the team!
-            </h1>
-
-            <p className="mt-3 text-gray-500">
-              {message}
-            </p>
-
-            <Button
-              className="mt-6 w-full"
-              onClick={() =>
-                (window.location.href =
-                  "/organization")
-              }
-            >
-              Go to Organization
-            </Button>
-          </>
-        )}
-
-        {status === "error" && (
-          <>
-            <XCircle
-              size={52}
-              className="mx-auto mb-5 text-red-500"
-            />
-
-            <h1 className="text-2xl font-bold">
-              Invitation failed
-            </h1>
-
-            <p className="mt-3 text-red-500">
-              {message}
-            </p>
-
-            <Button
-              variant="secondary"
-              className="mt-6 w-full"
-              onClick={() =>
-                (window.location.href =
-                  "/")
-              }
-            >
-              Go Home
-            </Button>
-          </>
-        )}
+        <button
+          onClick={() => navigate("/")}
+          className="mt-6 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700"
+        >
+          Go Home
+        </button>
       </div>
     </div>
   );

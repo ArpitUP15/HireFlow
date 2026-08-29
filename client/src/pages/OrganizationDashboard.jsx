@@ -26,8 +26,8 @@ const OrganizationDashboard = () => {
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="rounded-xl bg-red-50 p-5 text-red-600">
+      <div className="min-h-screen bg-blue-600 p-8 text-black">
+        <div className="rounded-xl bg-red-50 p-5 text-black">
           {error}
         </div>
       </div>
@@ -36,25 +36,25 @@ const OrganizationDashboard = () => {
 
   if (!organization) {
     return (
-      <div className="p-8">
+      <div className="min-h-screen bg-blue-600 p-8 text-black">
         No organization selected.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-blue-600 p-6 text-black lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <p className="text-sm font-medium text-blue-600">
+          <p className="text-sm font-medium text-black">
             Organization
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-gray-900">
+          <h1 className="mt-1 text-3xl font-bold text-black">
             {organization.name}
           </h1>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-black/70">
             Manage your HireFlow workspace
           </p>
         </div>
@@ -100,12 +100,12 @@ const StatCard = ({
   value,
 }) => {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-4 text-blue-600">
+    <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 text-black shadow-sm">
+      <div className="mb-4 text-black">
         {icon}
       </div>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-black/70">
         {title}
       </p>
 
