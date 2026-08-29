@@ -1,4 +1,4 @@
-const Job = require("../models/JOb");
+const Job = require("../models/Job");
 
 
 // CREATE JOB
