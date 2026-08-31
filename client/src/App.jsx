@@ -17,6 +17,11 @@ import OrganizationSettings from "./pages/OrganizationSettings";
 import TeamManagement from "./pages/TeamManagement";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import NotFound from "./pages/NotFound";
+import Jobs from "./pages/jobs/Jobs";
+import CreateJob from "./pages/jobs/CreateJob";
+
+import Candidates from "./pages/candidates/Candidates";
+import CreateCandidate from "./pages/candidates/CreateCandidate";
 
 const App = () => {
   return (
@@ -34,42 +39,85 @@ const App = () => {
 />
 
         {/* Protected application */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route
-            path="/organization/setup"
-            element={
-              <OrganizationSetup />
-            }
-          />
+       <Route element={<ProtectedRoute />}>
 
-          <Route
-            path="/organization"
-            element={
-              <OrganizationProvider>
-                <OrganizationDashboard />
-              </OrganizationProvider>
-            }
-          />
+       {/* Phase 3 */}
 
-          <Route
-            path="/organization/settings"
-            element={
-              <OrganizationProvider>
-                <OrganizationSettings />
-              </OrganizationProvider>
-            }
-          />
+      <Route
+        path="/organization"
+        element={
+          <OrganizationProvider>
+            <OrganizationDashboard />
+          </OrganizationProvider>
+        }
+      />
 
-          <Route
-            path="/organization/team"
-            element={
-              <OrganizationProvider>
-                <TeamManagement />
-              </OrganizationProvider>
-            }
-          />
-        </Route>
+  <Route
+    path="/organization/setup"
+    element={
+      <OrganizationSetup />
+    }
+  />
+
+  <Route
+    path="/organization/team"
+    element={
+      <OrganizationProvider>
+        <TeamManagement />
+      </OrganizationProvider>
+    }
+  />
+
+  <Route
+    path="/organization/settings"
+    element={
+      <OrganizationProvider>
+        <OrganizationSettings />
+      </OrganizationProvider>
+    }
+  />
+
+  {/* Phase 4 - Jobs */}
+
+  <Route
+    path="/jobs"
+    element={
+      <OrganizationProvider>
+        <Jobs />
+      </OrganizationProvider>
+    }
+  />
+
+  <Route
+    path="/jobs/create"
+    element={
+      <OrganizationProvider>
+        <CreateJob />
+      </OrganizationProvider>
+    }
+  />
+
+  {/* Phase 4 - Candidates */}
+
+  <Route
+    path="/candidates"
+    element={
+      <OrganizationProvider>
+        <Candidates />
+      </OrganizationProvider>
+    }
+  />
+
+  <Route
+    path="/candidates/create"
+    element={
+      <OrganizationProvider>
+        <CreateCandidate />
+      </OrganizationProvider>
+    }
+  />
+
+     </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -1,4 +1,4 @@
-const Job = require("../models/JOb");
+import Job from "../models/Job.js";
 
 // CREATE JOB
 const createJob = async (req, res) => {
@@ -299,7 +299,7 @@ const closeJob = async (req, res) => {
 };
 
 
-module.exports = {
+export {
   createJob,
   getJobs,
   getJobById,

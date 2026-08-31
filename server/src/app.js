@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
@@ -25,6 +26,8 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true,
 }));
+
+app.use(cookieParser());
 
 
 // ================================

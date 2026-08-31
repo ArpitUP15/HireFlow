@@ -1,4 +1,4 @@
-const Candidate = require("../models/Candidate");
+import Candidate from "../models/Candidate.js";
 
 
 // CREATE CANDIDATE
@@ -290,7 +290,7 @@ const deleteCandidate =
   };
 
 
-module.exports = {
+export {
   createCandidate,
   getCandidates,
   getCandidateById,

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
@@ -127,7 +127,7 @@ jobSchema.index({
   status: 1,
 });
 
-module.exports = mongoose.model(
+export default mongoose.model(
   "Job",
   jobSchema
 );

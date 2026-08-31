@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
   createJob,
   getJobs,
   getJobById,
@@ -8,20 +8,20 @@ const {
   deleteJob,
   publishJob,
   closeJob,
-} = require("../controllers/jobController");
+} from "../controllers/jobController.js";
 
-const {
+import {
   protect,
-} = require("../middleware/authMiddleware");
+} from "../middleware/authMiddleware.js";
 
-const {
-  organizationMiddleware,
-} = require("../middleware/organizationMiddleware");
+import {
+  loadOrganization,
+} from "../middleware/organizationMiddleware.js";
 
 const router = express.Router();
 
 router.use(protect);
-router.use(organizationMiddleware);
+router.use(loadOrganization);
 
 router.post("/", createJob);
 
@@ -43,4 +43,4 @@ router.patch(
   closeJob
 );
 
-module.exports = router;
+export default router;
