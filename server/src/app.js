@@ -1,80 +1,102 @@
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
-import morgan from "morgan";
+
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
-
-import notFound from "./middleware/notFound.js";
-import errorHandler from "./middleware/errorMiddleware.js";
+import jobRoutes from "./routes/jobRoutes.js";
+import candidateRoutes from "./routes/candidateRoutes.js";
 
 const app = express();
 
+
+// ================================
+// MIDDLEWARE
+// ================================
+
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL ||
-      "http://localhost:5173",
-
-    credentials: true
+    origin: process.env.CLIENT_URL,
+    credentials: true,
   })
 );
 
-app.use(
-  express.json({
-    limit: "10mb"
-  })
-);
+app.use(express.json());
 
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
+app.use(express.urlencoded({
+  extended: true,
+}));
 
-app.use(cookieParser());
-if (
-  process.env.NODE_ENV ===
-  "development"
-) {
-  app.use(morgan("dev"));
-}
 
-// Health check
+// ================================
+// HEALTH CHECK
+// ================================
 
-app.get(
-  "/api/health",
-  (req, res) => {
-    res.status(200).json({
-      success: true,
-      message:
-        "HireFlow API is running",
-      timestamp:
-        new Date().toISOString()
-    });
-  }
-);
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 HireFlow API is running",
+  });
+});
 
-// Authentication
 
+// ================================
+// API ROUTES
+// ================================
+
+// Phase 2
 app.use(
   "/api/auth",
   authRoutes
 );
 
-// Organizations
-
+// Phase 3
 app.use(
   "/api/organizations",
   organizationRoutes
 );
 
-// 404
+// Phase 4
+app.use(
+  "/api/jobs",
+  jobRoutes
+);
 
-app.use(notFound);
+app.use(
+  "/api/candidates",
+  candidateRoutes
+);
 
-// Error handler
 
-app.use(errorHandler);
+// ================================
+// 404 HANDLER
+// ================================
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+  });
+});
+
+
+// ================================
+// ERROR HANDLER
+// ================================
+
+app.use(
+  (error, req, res, next) => {
+    console.error(error);
+
+    res.status(
+      error.statusCode || 500
+    ).json({
+      success: false,
+      message:
+        error.message ||
+        "Internal Server Error",
+    });
+  }
+);
+
 
 export default app;

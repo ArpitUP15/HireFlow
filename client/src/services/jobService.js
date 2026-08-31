@@ -1,0 +1,91 @@
+import api from "./organizationService";
+
+
+// CREATE JOB
+export const createJob = async (
+  jobData
+) => {
+  const response = await api.post(
+    "/jobs",
+    jobData
+  );
+
+  return response.data;
+};
+
+
+// GET JOBS
+export const getJobs = async (
+  params = {}
+) => {
+  const response = await api.get(
+    "/jobs",
+    {
+      params,
+    }
+  );
+
+  return response.data;
+};
+
+
+// GET JOB
+export const getJobById = async (
+  id
+) => {
+  const response = await api.get(
+    `/jobs/${id}`
+  );
+
+  return response.data;
+};
+
+
+// UPDATE JOB
+export const updateJob = async (
+  id,
+  jobData
+) => {
+  const response = await api.put(
+    `/jobs/${id}`,
+    jobData
+  );
+
+  return response.data;
+};
+
+
+// DELETE JOB
+export const deleteJob = async (
+  id
+) => {
+  const response = await api.delete(
+    `/jobs/${id}`
+  );
+
+  return response.data;
+};
+
+
+// PUBLISH JOB
+export const publishJob = async (
+  id
+) => {
+  const response = await api.patch(
+    `/jobs/${id}/publish`
+  );
+
+  return response.data;
+};
+
+
+// CLOSE JOB
+export const closeJob = async (
+  id
+) => {
+  const response = await api.patch(
+    `/jobs/${id}/close`
+  );
+
+  return response.data;
+};
