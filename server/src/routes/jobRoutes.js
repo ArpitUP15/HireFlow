@@ -1,27 +1,11 @@
-import express from "express";
-
-import {
-  createJob,
-  getJobs,
-  getJobById,
-  updateJob,
-  deleteJob,
-  publishJob,
-  closeJob,
-} from "../controllers/jobController.js";
-
-import {
-  protect,
-} from "../middleware/authMiddleware.js";
-
-import {
-  loadOrganization,
-} from "../middleware/organizationMiddleware.js";
-
+const express = require("express");
+const {createJob,getJobs,getJobById,updateJob,deleteJob,publishJob,closeJob,} = require("../controllers/jobController");
+const {protect,} = require("../middleware/authMiddleware");
+const {organizationMiddleware,} = require("../middleware/organizationMiddleware");
 const router = express.Router();
 
 router.use(protect);
-router.use(loadOrganization);
+router.use(organizationMiddleware);
 
 router.post("/", createJob);
 
@@ -43,4 +27,4 @@ router.patch(
   closeJob
 );
 
-export default router;
+module.exports = router;

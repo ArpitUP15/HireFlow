@@ -22,6 +22,11 @@ import CreateJob from "./pages/jobs/CreateJob";
 
 import Candidates from "./pages/candidates/Candidates";
 import CreateCandidate from "./pages/candidates/CreateCandidate";
+import EditJob from "./pages/jobs/EditJob";
+import JobDetails from "./pages/jobs/JobDetails";
+
+import EditCandidate from "./pages/candidates/EditCandidate";
+import CandidateDetails from "./pages/candidates/CandidateDetails";
 
 const App = () => {
   return (
@@ -97,6 +102,24 @@ const App = () => {
     }
   />
 
+  <Route
+    path="/jobs/:id"
+    element={
+      <OrganizationProvider>
+        <JobDetails />
+      </OrganizationProvider>
+    }
+  />
+
+  <Route
+    path="/jobs/:id/edit"
+    element={
+      <OrganizationProvider>
+        <EditJob />
+      </OrganizationProvider>
+    }
+  />
+
   {/* Phase 4 - Candidates */}
 
   <Route
@@ -117,10 +140,29 @@ const App = () => {
     }
   />
 
+  <Route
+    path="/candidates/:id"
+    element={
+      <OrganizationProvider>
+        <CandidateDetails />
+      </OrganizationProvider>
+    }
+  />
+
+  <Route
+    path="/candidates/:id/edit"
+    element={
+      <OrganizationProvider>
+        <EditCandidate />
+      </OrganizationProvider>
+    }
+  />
+
      </Route>
 
       <Route path="*" element={<NotFound />} />
     </Routes>
+
   );
 };
 
