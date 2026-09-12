@@ -1,22 +1,19 @@
-import { Routes, Route } from "react-router-dom";
-
 import {
-  OrganizationProvider,
-} from "./context/OrganizationContext";
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
-import ProtectedRoute from "./components/common/ProtectedRoute";
-import PublicRoute from "./components/common/PublicRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/DashBoard";
-import OrganizationSetup from "./pages/OrganizationSetup";
-import OrganizationDashboard from "./pages/OrganizationDashboard";
-import OrganizationSettings from "./pages/OrganizationSettings";
-import TeamManagement from "./pages/TeamManagement";
-import AcceptInvitation from "./pages/AcceptInvitation";
-import NotFound from "./pages/NotFound";
+// Auth
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+
+// Dashboard
+import Dashboard from "./pages/Dashboard";
+
+// Phase 4 - Jobs
 import Jobs from "./pages/jobs/Jobs";
 import CreateJob from "./pages/jobs/CreateJob";
 
@@ -25,145 +22,140 @@ import CreateCandidate from "./pages/candidates/CreateCandidate";
 import EditJob from "./pages/jobs/EditJob";
 import JobDetails from "./pages/jobs/JobDetails";
 
+// Phase 4 - Candidates
+import Candidates from "./pages/candidates/Candidates";
+import CreateCandidate from "./pages/candidates/CreateCandidate";
 import EditCandidate from "./pages/candidates/EditCandidate";
 import CandidateDetails from "./pages/candidates/CandidateDetails";
 
-const App = () => {
+// Phase 5 - Applications
+import Applications from "./pages/applications/Applications";
+import CreateApplication from "./pages/applications/CreateApplication";
+import ApplicationDetails from "./pages/applications/ApplicationDetails";
+
+function App() {
+
   return (
-    <Routes>
-      <Route element={<PublicRoute />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
 
-        {/* Invitation */}
-       <Route
-  path="/accept-invitation"
-  element={<AcceptInvitation />}
-/>
+    <BrowserRouter>
 
-        {/* Protected application */}
-       <Route element={<ProtectedRoute />}>
+      <Routes>
 
-       {/* Phase 3 */}
+        {/* =====================================================
+            PUBLIC ROUTES
+        ===================================================== */}
 
-      <Route
-        path="/organization"
-        element={
-          <OrganizationProvider>
-            <OrganizationDashboard />
-          </OrganizationProvider>
-        }
-      />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-  <Route
-    path="/organization/setup"
-    element={
-      <OrganizationSetup />
-    }
-  />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
-  <Route
-    path="/organization/team"
-    element={
-      <OrganizationProvider>
-        <TeamManagement />
-      </OrganizationProvider>
-    }
-  />
 
-  <Route
-    path="/organization/settings"
-    element={
-      <OrganizationProvider>
-        <OrganizationSettings />
-      </OrganizationProvider>
-    }
-  />
+        {/* =====================================================
+            PROTECTED ROUTES
+        ===================================================== */}
 
-  {/* Phase 4 - Jobs */}
+        <Route element={<ProtectedRoute />}>
 
-  <Route
-    path="/jobs"
-    element={
-      <OrganizationProvider>
-        <Jobs />
-      </OrganizationProvider>
-    }
-  />
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
 
-  <Route
-    path="/jobs/create"
-    element={
-      <OrganizationProvider>
-        <CreateJob />
-      </OrganizationProvider>
-    }
-  />
 
-  <Route
-    path="/jobs/:id"
-    element={
-      <OrganizationProvider>
-        <JobDetails />
-      </OrganizationProvider>
-    }
-  />
+          {/* =================================================
+              PHASE 4 - JOBS
+          ================================================= */}
 
-  <Route
-    path="/jobs/:id/edit"
-    element={
-      <OrganizationProvider>
-        <EditJob />
-      </OrganizationProvider>
-    }
-  />
+          <Route
+            path="/jobs"
+            element={<Jobs />}
+          />
 
-  {/* Phase 4 - Candidates */}
+          <Route
+            path="/jobs/create"
+            element={<CreateJob />}
+          />
 
-  <Route
-    path="/candidates"
-    element={
-      <OrganizationProvider>
-        <Candidates />
-      </OrganizationProvider>
-    }
-  />
+          <Route
+            path="/jobs/:id"
+            element={<JobDetails />}
+          />
 
-  <Route
-    path="/candidates/create"
-    element={
-      <OrganizationProvider>
-        <CreateCandidate />
-      </OrganizationProvider>
-    }
-  />
+          <Route
+            path="/jobs/:id/edit"
+            element={<EditJob />}
+          />
 
-  <Route
-    path="/candidates/:id"
-    element={
-      <OrganizationProvider>
-        <CandidateDetails />
-      </OrganizationProvider>
-    }
-  />
 
-  <Route
-    path="/candidates/:id/edit"
-    element={
-      <OrganizationProvider>
-        <EditCandidate />
-      </OrganizationProvider>
-    }
-  />
+          {/* =================================================
+              PHASE 4 - CANDIDATES
+          ================================================= */}
 
-     </Route>
+          <Route
+            path="/candidates"
+            element={<Candidates />}
+          />
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+          <Route
+            path="/candidates/create"
+            element={<CreateCandidate />}
+          />
+
+          <Route
+            path="/candidates/:id"
+            element={<CandidateDetails />}
+          />
+
+          <Route
+            path="/candidates/:id/edit"
+            element={<EditCandidate />}
+          />
+
+
+          {/* =================================================
+              PHASE 5 - APPLICATIONS
+          ================================================= */}
+
+          <Route
+            path="/applications"
+            element={<Applications />}
+          />
+
+          <Route
+            path="/applications/create"
+            element={<CreateApplication />}
+          />
+
+          <Route
+            path="/applications/:id"
+            element={<ApplicationDetails />}
+          />
+
+        </Route>
+
+
+        {/* =====================================================
+            FALLBACK
+        ===================================================== */}
+
+        <Route
+          path="*"
+          element={<Login />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
 
   );
-};
+
+}
 
 export default App;

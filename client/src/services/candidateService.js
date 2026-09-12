@@ -1,69 +1,58 @@
-import api from "./organizationService";
+import api from "./api";
 
 
+// ============================================================
+// GET ALL CANDIDATES
+// ============================================================
+
+export const getCandidates = () => {
+  return api.get("/candidates");
+};
+
+
+// ============================================================
+// GET CANDIDATE BY ID
+// ============================================================
+
+export const getCandidateById = (id) => {
+  return api.get(`/candidates/${id}`);
+};
+
+
+// ============================================================
 // CREATE CANDIDATE
-export const createCandidate =
-  async (candidateData) => {
-    const response =
-      await api.post(
-        "/candidates",
-        candidateData
-      );
+// ============================================================
 
-    return response.data;
-  };
-
-
-// GET CANDIDATES
-export const getCandidates =
-  async (params = {}) => {
-    const response =
-      await api.get(
-        "/candidates",
-        {
-          params,
-        }
-      );
-
-    return response.data;
-  };
-
-
-// GET CANDIDATE
-export const getCandidateById =
-  async (id) => {
-    const response =
-      await api.get(
-        `/candidates/${id}`
-      );
-
-    return response.data;
-  };
-
-
-// UPDATE CANDIDATE
-export const updateCandidate =
-  async (
-    id,
+export const createCandidate = (candidateData) => {
+  return api.post(
+    "/candidates",
     candidateData
-  ) => {
-    const response =
-      await api.put(
-        `/candidates/${id}`,
-        candidateData
-      );
-
-    return response.data;
-  };
+  );
+};
 
 
+// ============================================================
+// UPDATE CANDIDATE
+// ============================================================
+
+export const updateCandidate = (
+  id,
+  candidateData
+) => {
+  return api.put(
+    `/candidates/${id}`,
+    candidateData
+  );
+};
+
+
+// ============================================================
 // DELETE CANDIDATE
-export const deleteCandidate =
-  async (id) => {
-    const response =
-      await api.delete(
-        `/candidates/${id}`
-      );
+// ============================================================
 
-    return response.data;
-  };
+export const deleteCandidate = (id) => {
+  return api.delete(
+    `/candidates/${id}`
+  );
+};
+

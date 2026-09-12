@@ -1,17 +1,20 @@
-import express from "express";
-import {
+const express = require("express");
+
+const {
   createCandidate,
   getCandidates,
   getCandidateById,
   updateCandidate,
   deleteCandidate,
-} from "../controllers/candidateController.js";
-import {
+} = require("../controllers/candidateController");
+
+const {
   protect,
-} from "../middleware/authMiddleware.js";
-import {
+} = require("../middleware/authMiddleware");
+
+const {
   organizationMiddleware,
-} from "../middleware/organizationMiddleware.js";
+} = require("../middleware/organizationMiddleware");
 
 const router = express.Router();
 
@@ -43,4 +46,4 @@ router.delete(
   deleteCandidate
 );
 
-export default router;
+module.exports = router;
