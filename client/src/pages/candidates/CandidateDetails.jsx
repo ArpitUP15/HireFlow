@@ -8,8 +8,7 @@ import {
   Mail,
   Phone,
   MapPin,
-  Github,
-  Linkedin,
+  ExternalLink,
   Globe,
   User,
   Loader2,
@@ -404,7 +403,7 @@ const CandidateDetails = () => {
                   rel="noreferrer"
                   className="flex items-center gap-3 text-gray-600 hover:text-blue-600"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <ExternalLink className="h-5 w-5" />
                   LinkedIn
                 </a>
               )}
@@ -416,7 +415,7 @@ const CandidateDetails = () => {
                   rel="noreferrer"
                   className="flex items-center gap-3 text-gray-600 hover:text-blue-600"
                 >
-                  <Github className="h-5 w-5" />
+                  <ExternalLink className="h-5 w-5" />
                   GitHub
                 </a>
               )}

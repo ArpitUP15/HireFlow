@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import applicationRoutes from "./routes/applicationRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
@@ -69,6 +69,10 @@ app.use(
   candidateRoutes
 );
 
+app.use(
+  "/api/applications",
+  applicationRoutes
+);
 
 // ================================
 // 404 HANDLER

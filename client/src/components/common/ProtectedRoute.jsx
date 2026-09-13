@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import {Navigate,Outlet,useLocation,} from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-import api from "../services/api";
+import api from "../../services/api";
 
 
 // ============================================================

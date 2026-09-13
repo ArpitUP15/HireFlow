@@ -4,18 +4,19 @@ import {
   Route,
 } from "react-router-dom";
 
-import ProtectedRoute from "./routes/ProtectedRoute";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 // Auth
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 // Dashboard
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/DashBoard";
 
 // Phase 4 - Jobs
 import Jobs from "./pages/jobs/Jobs";
 import CreateJob from "./pages/jobs/CreateJob";
+
 import EditJob from "./pages/jobs/EditJob";
 import JobDetails from "./pages/jobs/JobDetails";
 
@@ -64,6 +65,32 @@ function App() {
             path="/dashboard"
             element={<Dashboard />}
           />
+          <Route
+  path="/applications"
+  element={
+    <OrganizationProvider>
+      <Applications />
+    </OrganizationProvider>
+  }
+/>
+
+<Route
+  path="/applications/create"
+  element={
+    <OrganizationProvider>
+      <CreateApplication />
+    </OrganizationProvider>
+  }
+/>
+
+<Route
+  path="/applications/:id"
+  element={
+    <OrganizationProvider>
+      <ApplicationDetails />
+    </OrganizationProvider>
+  }
+/>
 
 
           {/* =================================================
