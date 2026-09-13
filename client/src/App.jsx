@@ -16,9 +16,6 @@ import Dashboard from "./pages/Dashboard";
 // Phase 4 - Jobs
 import Jobs from "./pages/jobs/Jobs";
 import CreateJob from "./pages/jobs/CreateJob";
-
-import Candidates from "./pages/candidates/Candidates";
-import CreateCandidate from "./pages/candidates/CreateCandidate";
 import EditJob from "./pages/jobs/EditJob";
 import JobDetails from "./pages/jobs/JobDetails";
 
