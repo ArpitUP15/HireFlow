@@ -4,11 +4,12 @@ import {
   Route,
 } from "react-router-dom";
 
-import ProtectedRoute from "./components/common/ProtectedRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { OrganizationProvider } from "./context/OrganizationContext";
 
 // Auth
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 
 // Dashboard
 import Dashboard from "./pages/DashBoard";

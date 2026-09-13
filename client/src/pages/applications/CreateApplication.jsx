@@ -3,7 +3,7 @@ import {
   useState,
 } from "react";
 
-import ApplicationForm from "../../components/applications/ApplicationForm";
+import ApplicationForm from "../../components/application/ApplicationForm";
 
 import {
   getJobs,

@@ -8,7 +8,7 @@ export const protect = async (
 ) => {
   try {
     const token =
-      req.cookies.hireflow_token;
+      req.cookies?.hireflow_token;
 
     if (!token) {
       res.status(401);
@@ -47,6 +47,7 @@ export const protect = async (
 
     next();
   } catch (error) {
+    console.error("Authentication error:", error.message);
     if (
       error.name === "JsonWebTokenError" ||
       error.name === "TokenExpiredError"

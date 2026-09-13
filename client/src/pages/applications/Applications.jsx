@@ -8,7 +8,7 @@ import {
   Search,
 } from "lucide-react";
 
-import ApplicationCard from "../../components/applications/ApplicationCard";
+import ApplicationCard from "../../components/application/ApplicationCard";
 
 import {
   getApplications,

@@ -14,7 +14,7 @@ import {
   Briefcase
 } from "lucide-react";
 
-import { useAuth } from "../context/useAuth";
+import { useAuth } from "../../context/useAuth";
 
 function Register() {
   const navigate =

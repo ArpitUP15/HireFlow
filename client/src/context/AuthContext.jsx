@@ -1,101 +1,102 @@
-import { useEffect, useState } from "react";
-
-import AuthContext from "./AuthContextValue";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import {
-  login as loginRequest,
-  register as registerRequest,
-  logout as logoutRequest,
-  getMe
+  login as loginUser,
+  register as registerUser,
+  logout as logoutUser,
+  getMe,
 } from "../services/authService";
 
-export const AuthProvider = ({
-  children
-}) => {
-  const [user, setUser] =
-    useState(null);
+const AuthContext = createContext(null);
 
-  const [loading, setLoading] =
-    useState(true);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // --------------------------------------
-  // Load current user
-  // --------------------------------------
+  /**
+   * Check the current authentication status of the user.
+   */
+  const checkAuth = async () => {
+    try {
+      const response = await getMe();
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const response = await getMe();
-
+      if (response?.success && response?.user) {
         setUser(response.user);
-      } catch {
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    loadUser();
-  }, []);
+  /**
+   * Log in an existing user with credentials.
+   */
+  const login = async (email, password) => {
+    const response = await loginUser({
+      email,
+      password,
+    });
 
-  // --------------------------------------
-  // Login
-  // --------------------------------------
-
-  const login = async (
-    email,
-    password
-  ) => {
-    const response =
-      await loginRequest({
-        email,
-        password
-      });
-
-    setUser(response.user);
+    if (response?.success && response?.user) {
+      setUser(response.user);
+    }
 
     return response;
   };
 
-  // --------------------------------------
-  // Register
-  // --------------------------------------
+  /**
+   * Register a new user account.
+   */
+  const register = async (userData) => {
+    const response = await registerUser(userData);
 
-  const register = async (
-    userData
-  ) => {
-    const response =
-      await registerRequest(userData);
-
-    setUser(response.user);
+    if (response?.success && response?.user) {
+      setUser(response.user);
+    }
 
     return response;
   };
 
-  // --------------------------------------
-  // Logout
-  // --------------------------------------
-
+  /**
+   * Log out the currently authenticated user.
+   */
   const logout = async () => {
     try {
-      await logoutRequest();
+      await logoutUser();
     } finally {
       setUser(null);
     }
   };
 
-  const value = {
-    user,
-    loading,
-    isAuthenticated: Boolean(user),
-    login,
-    register,
-    logout
-  };
+  // Run initial authentication check on mount
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        checkAuth,
+        isAuthenticated: !!user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;
