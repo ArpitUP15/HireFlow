@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import invitationRoutes from "./routes/invitationRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
@@ -69,6 +70,8 @@ app.use(
   candidateRoutes
 );
 
+app.use("/api/invitations", invitationRoutes);
+
 app.use(
   "/api/applications",
   applicationRoutes
@@ -93,6 +96,7 @@ app.use((req, res) => {
 app.use(
   (error, req, res, next) => {
     console.error(error);
+    const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
 
     res.status(
       error.statusCode || 500

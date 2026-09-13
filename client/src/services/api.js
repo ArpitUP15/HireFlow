@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 // ============================================================
@@ -48,7 +47,6 @@ api.interceptors.response.use(
   },
 
   (error) => {
-
     if (error.response?.status === 401) {
 
       localStorage.removeItem("token");
@@ -59,7 +57,5 @@ api.interceptors.response.use(
 
     return Promise.reject(error);
   }
-);
-
-
+)
 export default api;
