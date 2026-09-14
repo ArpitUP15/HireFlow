@@ -11,11 +11,11 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import Button from "../components/common/Button";
+import Button from "../../components/common/Button";
 
 import {
   acceptInvitation,
-} from "../services/organizationService";
+} from "../../services/organizationService";
 
 const AcceptInvitation = () => {
   const [searchParams] =

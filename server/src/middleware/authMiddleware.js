@@ -1,35 +1,38 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-export const protect = async (
-  req,
-  res,
-  next
-) => {
+export const protect = async (req, res, next) => {
   try {
-    const token =
-      req.cookies?.hireflow_token;
+    console.log("\n========== AUTH DEBUG ==========");
+    console.log("Cookies:", req.cookies);
+    console.log(
+      "HireFlow Token:",
+      req.cookies?.hireflow_token
+    );
+    console.log("JWT Secret exists:", !!process.env.JWT_SECRET);
+
+    const token = req.cookies?.hireflow_token;
 
     if (!token) {
       res.status(401);
-
-      throw new Error(
-        "Not authenticated. Please login."
-      );
+      throw new Error("Not authenticated. Please login.");
     }
+
+    console.log("Token received successfully");
 
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
     );
 
-    const user = await User.findById(
-      decoded.userId
-    );
+    console.log("Decoded JWT:", decoded);
+
+    const user = await User.findById(decoded.userId);
+
+    console.log("User found:", !!user);
 
     if (!user) {
       res.status(401);
-
       throw new Error(
         "User associated with this token no longer exists"
       );
@@ -37,7 +40,6 @@ export const protect = async (
 
     if (!user.isActive) {
       res.status(403);
-
       throw new Error(
         "Your account has been deactivated"
       );
@@ -45,9 +47,17 @@ export const protect = async (
 
     req.user = user;
 
+    console.log(
+      "Authentication successful:",
+      user.email
+    );
+
+    console.log("================================\n");
+
     next();
   } catch (error) {
-    console.error("Authentication error:", error.message);
+    console.error("AUTH ERROR:", error.message);
+
     if (
       error.name === "JsonWebTokenError" ||
       error.name === "TokenExpiredError"
@@ -64,10 +74,6 @@ export const protect = async (
     next(error);
   }
 };
-
-// --------------------------------------
-// Role authorization
-// --------------------------------------
 
 export const authorize = (...roles) => {
   return (req, res, next) => {

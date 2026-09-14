@@ -5,12 +5,12 @@ import {
   Settings,
 } from "lucide-react";
 
-import Loader from "../components/common/Loader";
-import OrganizationCard from "../components/organization/OrganizationCard";
+import Loader from "../../components/common/Loader";
+import OrganizationCard from "../../components/organization/OrganizationCard";
 
 import {
   useOrganization,
-} from "../context/OrganizationContext";
+} from "../../context/OrganizationContext";
 
 const OrganizationDashboard = () => {
   const {

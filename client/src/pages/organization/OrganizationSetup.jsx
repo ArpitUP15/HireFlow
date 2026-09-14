@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Building2 } from "lucide-react";
 
-import Input from "../components/common/Input";
-import Button from "../components/common/Button";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
 
 import {
   createOrganization,
-} from "../services/organizationService";
+} from "../../services/organizationService";
 
 const OrganizationSetup = () => {
   const [form, setForm] = useState({

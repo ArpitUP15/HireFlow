@@ -1,69 +1,65 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import applicationRoutes from "./routes/applicationRoutes.js";
-import invitationRoutes from "./routes/invitationRoutes.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+
+import notFound from "./middleware/notFound.js";
+import errorHandler from "./middleware/errorMiddleware.js";
 
 const app = express();
 
-
-// ================================
-// MIDDLEWARE
-// ================================
+// ==========================================
+// CORS
+// ==========================================
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   })
 );
 
-app.use(express.json());
+// ==========================================
+// BODY PARSERS
+// ==========================================
 
-app.use(express.urlencoded({
-  extended: true,
-}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ==========================================
+// COOKIE PARSER
+// ==========================================
 
 app.use(cookieParser());
 
-
-// ================================
+// ==========================================
 // HEALTH CHECK
-// ================================
+// ==========================================
 
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "🚀 HireFlow API is running",
+    message: "HireFlow API is running 🚀",
   });
 });
 
-
-// ================================
+// ==========================================
 // API ROUTES
-// ================================
+// ==========================================
 
-// Phase 2
-app.use(
-  "/api/auth",
-  authRoutes
-);
+app.use("/api/auth", authRoutes);
 
-// Phase 3
 app.use(
   "/api/organizations",
   organizationRoutes
 );
 
-// Phase 4
-app.use(
-  "/api/jobs",
-  jobRoutes
-);
+app.use("/api/jobs", jobRoutes);
 
 app.use(
   "/api/candidates",
@@ -75,37 +71,16 @@ app.use(
   applicationRoutes
 );
 
-// ================================
-// 404 HANDLER
-// ================================
+// ==========================================
+// 404
+// ==========================================
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Route not found: ${req.method} ${req.originalUrl}`,
-  });
-});
+app.use(notFound);
 
+// ==========================================
+// GLOBAL ERROR HANDLER
+// ==========================================
 
-// ================================
-// ERROR HANDLER
-// ================================
-
-app.use(
-  (error, req, res, next) => {
-    console.error(error);
-    const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
-
-    res.status(
-      error.statusCode || 500
-    ).json({
-      success: false,
-      message:
-        error.message ||
-        "Internal Server Error",
-    });
-  }
-);
-
+app.use(errorHandler);
 
 export default app;

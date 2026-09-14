@@ -1,16 +1,16 @@
 import {useEffect,useState,} from "react";
-import Input from "../components/common/Input";
-import Button from "../components/common/Button";
-import Loader from "../components/common/Loader";
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
+import Loader from "../../components/common/Loader";
 
 import {
   getCurrentOrganization,
   updateOrganization,
-} from "../services/organizationService";
+} from "../../services/organizationService";
 
 import {
   useOrganization,
-} from "../context/OrganizationContext";
+} from "../../context/OrganizationContext";
 
 const OrganizationSettings = () => {
   const {
