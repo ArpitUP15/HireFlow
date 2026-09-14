@@ -17,7 +17,6 @@ const router = express.Router();
 // Public
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/logout", logoutUser);
 
 // Protected
 router.get("/me", protect, getCurrentUser);

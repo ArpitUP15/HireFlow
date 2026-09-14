@@ -70,8 +70,6 @@ app.use(
   candidateRoutes
 );
 
-app.use("/api/invitations", invitationRoutes);
-
 app.use(
   "/api/applications",
   applicationRoutes
