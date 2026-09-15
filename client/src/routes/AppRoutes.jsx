@@ -27,10 +27,6 @@ import Applications from "../pages/applications/Applications";
 import CreateApplication from "../pages/applications/CreateApplication";
 import ApplicationDetails from "../pages/applications/ApplicationDetails";
 
-/**
- * AppRoutes Component
- * Handles all public, protected, and fallback routing configuration for HireFlow.
- */
 const AppRoutes = () => {
   return (
     <Routes>
