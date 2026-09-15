@@ -1,16 +1,17 @@
 node_modules/
+
 .env
 .env.local
-.env.development
 .env.production
 
-dist/
-build/
+.env.test
+
+logs/
+*.log
 
 coverage/
-
-.vscode/
-.idea/
+dist/
+build/
 
 .DS_Store
 Thumbs.db

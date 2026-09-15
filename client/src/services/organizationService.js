@@ -1,34 +1,9 @@
-import axios from "axios";
+import api from "./api";
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "http://localhost:5000/api";
+// ============================================================
+// CREATE ORGANIZATION
+// ============================================================
 
-const api = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Add organization ID automatically
-api.interceptors.request.use(
-  (config) => {
-    const organizationId =
-      localStorage.getItem("currentOrganizationId");
-
-    if (organizationId) {
-      config.headers["x-organization-id"] =
-        organizationId;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Create organization
 export const createOrganization = async (
   organizationData
 ) => {
@@ -40,7 +15,10 @@ export const createOrganization = async (
   return response.data;
 };
 
-// Get current organization
+// ============================================================
+// GET CURRENT ORGANIZATION
+// ============================================================
+
 export const getCurrentOrganization =
   async () => {
     const response = await api.get(
@@ -50,7 +28,10 @@ export const getCurrentOrganization =
     return response.data;
   };
 
-// Update organization
+// ============================================================
+// UPDATE ORGANIZATION
+// ============================================================
+
 export const updateOrganization =
   async (organizationData) => {
     const response = await api.put(
@@ -61,7 +42,10 @@ export const updateOrganization =
     return response.data;
   };
 
-// Get members
+// ============================================================
+// GET ORGANIZATION MEMBERS
+// ============================================================
+
 export const getMembers = async () => {
   const response = await api.get(
     "/organizations/members"
@@ -70,7 +54,10 @@ export const getMembers = async () => {
   return response.data;
 };
 
-// Invite member
+// ============================================================
+// INVITE MEMBER
+// ============================================================
+
 export const inviteMember = async (
   memberData
 ) => {
@@ -82,8 +69,13 @@ export const inviteMember = async (
   return response.data;
 };
 
-// Accept invitation
-export const acceptInvitation = async (token) => {
+// ============================================================
+// ACCEPT INVITATION
+// ============================================================
+
+export const acceptInvitation = async (
+  token
+) => {
   const response = await api.post(
     "/organizations/accept-invitation",
     {
@@ -93,27 +85,35 @@ export const acceptInvitation = async (token) => {
 
   return response.data;
 };
-// Update member role
-export const updateMemberRole =
-  async (memberId, role) => {
-    const response = await api.patch(
-      `/organizations/members/${memberId}/role`,
-      {
-        role,
-      }
-    );
 
-    return response.data;
-  };
+// ============================================================
+// UPDATE MEMBER ROLE
+// ============================================================
 
-// Remove member
-export const removeMember =
-  async (memberId) => {
-    const response = await api.delete(
-      `/organizations/members/${memberId}`
-    );
+export const updateMemberRole = async (
+  memberId,
+  role
+) => {
+  const response = await api.patch(
+    `/organizations/members/${memberId}/role`,
+    {
+      role,
+    }
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-export default api;
+// ============================================================
+// REMOVE MEMBER
+// ============================================================
+
+export const removeMember = async (
+  memberId
+) => {
+  const response = await api.delete(
+    `/organizations/members/${memberId}`
+  );
+
+  return response.data;
+};
