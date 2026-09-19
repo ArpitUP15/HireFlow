@@ -50,6 +50,8 @@ router.get(
 
 router.get(
   "/pipeline",
+  protect,
+  organizationMiddleware,
   getRecruitmentPipeline
 );
 

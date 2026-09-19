@@ -8,38 +8,67 @@ import jobRoutes from "./routes/jobRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 
-import notFound from "./middleware/notFound.js";
-import errorHandler from "./middleware/errorMiddleware.js";
-
 const app = express();
 
-// ==========================================
+
+// =====================================================
 // CORS
-// ==========================================
+// =====================================================
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin:
+      process.env.CLIENT_URL ||
+      "http://localhost:5173",
+
     credentials: true,
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "x-organization-id",
+    ],
   })
 );
 
-// ==========================================
+
+// =====================================================
 // BODY PARSERS
-// ==========================================
+// =====================================================
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    limit: "10mb",
+  })
+);
 
-// ==========================================
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "10mb",
+  })
+);
+
+
+// =====================================================
 // COOKIE PARSER
-// ==========================================
+// =====================================================
 
 app.use(cookieParser());
 
-// ==========================================
+
+// =====================================================
 // HEALTH CHECK
-// ==========================================
+// =====================================================
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -48,39 +77,104 @@ app.get("/", (req, res) => {
   });
 });
 
-// ==========================================
-// API ROUTES
-// ==========================================
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "healthy",
+    service: "HireFlow API",
+    timestamp: new Date().toISOString(),
+  });
+});
 
-app.use("/api/auth", authRoutes);
+
+// =====================================================
+// AUTH ROUTES
+// =====================================================
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+
+// =====================================================
+// ORGANIZATION ROUTES
+// =====================================================
 
 app.use(
   "/api/organizations",
   organizationRoutes
 );
 
-app.use("/api/jobs", jobRoutes);
+
+// =====================================================
+// JOB ROUTES
+// =====================================================
+
+app.use(
+  "/api/jobs",
+  jobRoutes
+);
+
+
+// =====================================================
+// CANDIDATE ROUTES
+// =====================================================
 
 app.use(
   "/api/candidates",
   candidateRoutes
 );
 
+
+// =====================================================
+// APPLICATION ROUTES
+// =====================================================
+
 app.use(
   "/api/applications",
   applicationRoutes
 );
 
-// ==========================================
-// 404
-// ==========================================
 
-app.use(notFound);
+// =====================================================
+// 404 HANDLER
+// =====================================================
 
-// ==========================================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message:
+      `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+
+// =====================================================
 // GLOBAL ERROR HANDLER
-// ==========================================
+// =====================================================
 
-app.use(errorHandler);
+app.use(
+  (error, req, res, next) => {
+    console.error(
+      "Server Error:",
+      error.message
+    );
+
+    const statusCode =
+      res.statusCode &&
+      res.statusCode !== 200
+        ? res.statusCode
+        : 500;
+
+    res.status(statusCode).json({
+      success: false,
+      message:
+        error.message ||
+        "Internal server error",
+    });
+  }
+);
+
 
 export default app;

@@ -1,120 +1,214 @@
 import {
-  useState
+  useState,
 } from "react";
 
 import {
   Link,
-  useNavigate
+  useNavigate,
 } from "react-router-dom";
 
 import {
   UserPlus,
   Mail,
   Lock,
-  Briefcase
+  User,
+  Loader2,
 } from "lucide-react";
 
-import { useAuth } from "../../context/useAuth";
+import {
+  useAuth,
+} from "../../context/useAuth";
+
 
 function Register() {
+
   const navigate =
     useNavigate();
 
+
   const {
-    register
+    register,
   } = useAuth();
+
 
   const [
     formData,
-    setFormData
+    setFormData,
   ] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "candidate"
+    role: "recruiter",
   });
+
 
   const [
     error,
-    setError
+    setError,
   ] = useState("");
+
 
   const [
     loading,
-    setLoading
+    setLoading,
   ] = useState(false);
 
-  const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]:
-        event.target.value
-    });
-  };
 
-  const handleSubmit = async (
+  // ===================================================
+  // HANDLE INPUT
+  // ===================================================
+
+  const handleChange = (
     event
   ) => {
-    event.preventDefault();
 
-    setError("");
+    const {
+      name,
+      value,
+    } = event.target;
 
-    if (
-      formData.password !==
-      formData.confirmPassword
-    ) {
-      setError(
-        "Passwords do not match"
-      );
 
-      return;
-    }
+    setFormData(
+      (previous) => ({
+        ...previous,
+        [name]: value,
+      })
+    );
 
-    if (formData.password.length < 8) {
-      setError(
-        "Password must contain at least 8 characters"
-      );
 
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await register({
-        firstName:
-          formData.firstName,
-
-        lastName:
-          formData.lastName,
-
-        email:
-          formData.email,
-
-        password:
-          formData.password,
-
-        role:
-          formData.role
-      });
-
-      navigate("/dashboard");
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Registration failed"
-      );
-    } finally {
-      setLoading(false);
+    if (error) {
+      setError("");
     }
   };
 
+
+  // ===================================================
+  // SUBMIT
+  // ===================================================
+
+  const handleSubmit =
+    async (event) => {
+
+      event.preventDefault();
+
+      setError("");
+
+
+      const firstName =
+        formData.firstName.trim();
+
+      const lastName =
+        formData.lastName.trim();
+
+      const email =
+        formData.email
+          .trim()
+          .toLowerCase();
+
+
+      // ------------------------------------------------
+      // Validation
+      // ------------------------------------------------
+
+      if (
+        !firstName ||
+        !lastName ||
+        !email ||
+        !formData.password
+      ) {
+
+        setError(
+          "Please fill in all required fields."
+        );
+
+        return;
+      }
+
+
+      if (
+        formData.password.length <
+        6
+      ) {
+
+        setError(
+          "Password must be at least 6 characters long."
+        );
+
+        return;
+      }
+
+
+      if (
+        formData.password !==
+        formData.confirmPassword
+      ) {
+
+        setError(
+          "Passwords do not match."
+        );
+
+        return;
+      }
+
+
+      try {
+
+        setLoading(true);
+
+
+        await register({
+          firstName,
+          lastName,
+          email,
+
+          password:
+            formData.password,
+
+          role:
+            formData.role,
+        });
+
+
+        navigate(
+          "/dashboard",
+          {
+            replace: true,
+          }
+        );
+
+      } catch (error) {
+
+        const message =
+          error?.response
+            ?.data
+            ?.message ||
+          error?.message ||
+          "Registration failed. Please try again.";
+
+
+        setError(
+          message
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
+
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12 text-white">
+
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-10 text-white">
 
       <div className="w-full max-w-lg">
+
+
+        {/* =========================================
+            HEADER
+        ========================================= */}
 
         <div className="mb-8 text-center">
 
@@ -128,9 +222,11 @@ function Register() {
             </span>
           </Link>
 
+
           <h1 className="mt-8 text-3xl font-bold">
             Create your account
           </h1>
+
 
           <p className="mt-2 text-slate-400">
             Join the future of recruitment
@@ -138,66 +234,143 @@ function Register() {
 
         </div>
 
+
+        {/* =========================================
+            FORM
+        ========================================= */}
+
         <form
-          onSubmit={handleSubmit}
-          className="rounded-2xl border border-white/10 bg-white/3 p-8"
+          onSubmit={
+            handleSubmit
+          }
+
+          className="rounded-2xl border border-white/10 bg-slate-900/70 p-8 shadow-2xl backdrop-blur"
         >
 
+
+          {/* =======================================
+              ERROR
+          ======================================= */}
+
           {error && (
-            <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+
+            <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+
               {error}
+
             </div>
+
           )}
 
-          <div className="grid gap-5 md:grid-cols-2">
+
+          {/* =======================================
+              FIRST + LAST NAME
+          ======================================= */}
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
 
             {/* First Name */}
 
             <div>
 
-              <label className="mb-2 block text-sm">
+              <label
+                htmlFor="firstName"
+                className="mb-2 block text-sm font-medium"
+              >
                 First Name
               </label>
 
-              <input
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-                placeholder="Arpit"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-blue-500"
-              />
+
+              <div className="relative">
+
+                <User
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                />
+
+
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  value={
+                    formData.firstName
+                  }
+                  onChange={
+                    handleChange
+                  }
+                  required
+                  disabled={
+                    loading
+                  }
+                  placeholder="Arpit"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-50"
+                />
+
+              </div>
 
             </div>
+
 
             {/* Last Name */}
 
             <div>
 
-              <label className="mb-2 block text-sm">
+              <label
+                htmlFor="lastName"
+                className="mb-2 block text-sm font-medium"
+              >
                 Last Name
               </label>
 
-              <input
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                placeholder="Bansal"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-blue-500"
-              />
+
+              <div className="relative">
+
+                <User
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                />
+
+
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  value={
+                    formData.lastName
+                  }
+                  onChange={
+                    handleChange
+                  }
+                  required
+                  disabled={
+                    loading
+                  }
+                  placeholder="Bansal"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-50"
+                />
+
+              </div>
 
             </div>
 
           </div>
 
-          {/* Email */}
+
+          {/* =======================================
+              EMAIL
+          ======================================= */}
 
           <div className="mt-5">
 
-            <label className="mb-2 block text-sm">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium"
+            >
               Email
             </label>
+
 
             <div className="relative">
 
@@ -206,27 +379,43 @@ function Register() {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
               />
 
+
               <input
-                type="email"
+                id="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                type="email"
+                value={
+                  formData.email
+                }
+                onChange={
+                  handleChange
+                }
                 required
+                disabled={
+                  loading
+                }
                 placeholder="you@example.com"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 outline-none focus:border-blue-500"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-50"
               />
 
             </div>
 
           </div>
 
-          {/* Password */}
+
+          {/* =======================================
+              PASSWORD
+          ======================================= */}
 
           <div className="mt-5">
 
-            <label className="mb-2 block text-sm">
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm font-medium"
+            >
               Password
             </label>
+
 
             <div className="relative">
 
@@ -235,89 +424,161 @@ function Register() {
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
               />
 
+
               <input
-                type="password"
+                id="password"
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
+                type="password"
+                value={
+                  formData.password
+                }
+                onChange={
+                  handleChange
+                }
                 required
-                placeholder="Minimum 8 characters"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 outline-none focus:border-blue-500"
+                minLength={6}
+                disabled={
+                  loading
+                }
+                placeholder="Minimum 6 characters"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-50"
               />
 
             </div>
 
           </div>
 
-          {/* Confirm Password */}
+
+          {/* =======================================
+              CONFIRM PASSWORD
+          ======================================= */}
 
           <div className="mt-5">
 
-            <label className="mb-2 block text-sm">
+            <label
+              htmlFor="confirmPassword"
+              className="mb-2 block text-sm font-medium"
+            >
               Confirm Password
             </label>
 
-            <input
-              type="password"
-              name="confirmPassword"
-              value={
-                formData.confirmPassword
-              }
-              onChange={handleChange}
-              required
-              placeholder="Repeat your password"
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-          {/* Role */}
-
-          <div className="mt-5">
-
-            <label className="mb-2 block text-sm">
-              Account Type
-            </label>
 
             <div className="relative">
 
-              <Briefcase
+              <Lock
                 size={18}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
               />
 
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full appearance-none rounded-xl border border-white/10 bg-slate-900 py-3 pl-10 pr-4 outline-none focus:border-blue-500"
-              >
-                <option value="candidate">
-                  Candidate
-                </option>
 
-                <option value="recruiter">
-                  Recruiter
-                </option>
-              </select>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={
+                  formData.confirmPassword
+                }
+                onChange={
+                  handleChange
+                }
+                required
+                minLength={6}
+                disabled={
+                  loading
+                }
+                placeholder="Repeat your password"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:opacity-50"
+              />
 
             </div>
 
           </div>
 
+
+          {/* =======================================
+              ROLE
+          ======================================= */}
+
+          <div className="mt-5">
+
+            <label
+              htmlFor="role"
+              className="mb-2 block text-sm font-medium"
+            >
+              Account Type
+            </label>
+
+
+            <select
+              id="role"
+              name="role"
+              value={
+                formData.role
+              }
+              onChange={
+                handleChange
+              }
+              disabled={
+                loading
+              }
+              className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-blue-500 disabled:opacity-50"
+            >
+
+              <option value="recruiter">
+                Recruiter
+              </option>
+
+              <option value="candidate">
+                Candidate
+              </option>
+
+            </select>
+
+          </div>
+
+
+          {/* =======================================
+              SUBMIT
+          ======================================= */}
+
           <button
             type="submit"
-            disabled={loading}
-            className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold hover:bg-blue-500 disabled:opacity-50"
+            disabled={
+              loading
+            }
+            className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
 
-            <UserPlus size={18} />
+            {loading ? (
 
-            {loading
-              ? "Creating account..."
-              : "Create Account"}
+              <>
+                <Loader2
+                  size={18}
+                  className="animate-spin"
+                />
+
+                Creating account...
+
+              </>
+
+            ) : (
+
+              <>
+                <UserPlus
+                  size={18}
+                />
+
+                Create Account
+              </>
+
+            )}
 
           </button>
+
+
+          {/* =======================================
+              LOGIN LINK
+          ======================================= */}
 
           <p className="mt-6 text-center text-sm text-slate-400">
 
@@ -325,7 +586,7 @@ function Register() {
 
             <Link
               to="/login"
-              className="text-blue-400"
+              className="text-blue-400 hover:text-blue-300"
             >
               Sign in
             </Link>
@@ -339,5 +600,6 @@ function Register() {
     </div>
   );
 }
+
 
 export default Register;

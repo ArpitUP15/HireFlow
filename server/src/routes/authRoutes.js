@@ -7,18 +7,46 @@ import {
   getCurrentUser,
 } from "../controllers/authController.js";
 
-import { protect } from "../middleware/authMiddleware.js";
+import {
+  protect,
+} from "../middleware/authMiddleware.js";
 
-const router = express.Router();
 
-// Public
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+const router =
+  express.Router();
 
-// Protected
-router.get("/me", protect, getCurrentUser);
 
-// Logout
-router.post("/logout", logoutUser);
+// =====================================================
+// PUBLIC AUTH ROUTES
+// =====================================================
+
+router.post(
+  "/register",
+  registerUser
+);
+
+
+router.post(
+  "/login",
+  loginUser
+);
+
+
+// =====================================================
+// PROTECTED AUTH ROUTES
+// =====================================================
+
+router.post(
+  "/logout",
+  logoutUser
+);
+
+
+router.get(
+  "/me",
+  protect,
+  getCurrentUser
+);
+
 
 export default router;

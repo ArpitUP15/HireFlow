@@ -440,7 +440,7 @@ export const updateApplicationStatus =
             "Invalid application status",
         });
       }
-
+    // Update Status
       const application =
         await Application.findOneAndUpdate(
           {
@@ -668,71 +668,60 @@ export const getCandidateApplications =
 // RECRUITMENT PIPELINE
 // ==========================================
 
-export const getRecruitmentPipeline =
-  async (req, res) => {
-    try {
-      const pipeline =
-        await Application.aggregate([
+export const getRecruitmentPipeline = 
+  async (req, res) => { 
+    try { 
+      // ------------------------------------------------------ //
+      //  Aggregate applications by status // 
+      // ------------------------------------------------------ 
+      const pipeline = await Application.aggregate([ 
+        {
+           $match: {
+             organization: 
+             req.organization._id, 
+            }, 
+          }, 
+          
           {
-            $match: {
-              organization:
-                req.organization
-                  ._id,
-            },
-          },
-
-          {
-            $group: {
-              _id: "$status",
-              count: {
-                $sum: 1,
-              },
-            },
-          },
-        ]);
-
-      const statuses = [
-        "applied",
-        "screening",
-        "shortlisted",
-        "interview",
-        "selected",
-        "rejected",
-      ];
-
-      const result =
-        statuses.map(
-          (status) => {
-            const found =
-              pipeline.find(
-                (item) =>
-                  item._id ===
-                  status
-              );
-
-            return {
-              status,
-
-              count:
-                found?.count || 0,
-            };
-          }
-        );
-
-      return res.status(200).json({
-        success: true,
-        pipeline: result,
-      });
-    } catch (error) {
-      console.error(
-        "Pipeline error:",
-        error
-      );
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Failed to fetch recruitment pipeline",
-      });
-    }
-  };
+             $group: {
+               _id: "$status", 
+               count: { 
+                $sum: 1, 
+              }, 
+            }, 
+          }, ]
+        ); 
+        // ------------------------------------------------------ //
+        // Define all pipeline stages // 
+        // ------------------------------------------------------ 
+        const statuses = [ "applied", "screening", "shortlisted", "interview", "selected", "rejected", ]; 
+        // ------------------------------------------------------ // 
+        // Convert MongoDB aggregation result 
+        // // into frontend-friendly object //
+        //  ------------------------------------------------------ 
+        const pipelineData = {}; 
+        statuses.forEach(
+           (status) => {
+             const found = pipeline.find(
+               (item) => 
+                item._id === status );
+               
+               pipelineData[status] = 
+                 found?.count || 0; 
+                } 
+              ); 
+              // ------------------------------------------------------ //
+              //  Return response // 
+              // ------------------------------------------------------ 
+              return res.status(200).json({
+                 success: true, 
+                 pipeline: pipelineData, 
+                });
+               } catch (error) { 
+                console.error( "Pipeline error:", error );
+                 return res.status(500).json({
+                   success: false,
+                   message: "Failed to fetch recruitment pipeline",
+                  });
+                 } 
+                };

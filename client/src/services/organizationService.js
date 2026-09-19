@@ -1,119 +1,141 @@
 import api from "./api";
 
-// ============================================================
+
+// =====================================================
 // CREATE ORGANIZATION
-// ============================================================
+// =====================================================
 
-export const createOrganization = async (
-  organizationData
-) => {
-  const response = await api.post(
-    "/organizations",
-    organizationData
-  );
+export const createOrganization =
+  async (organizationData) => {
 
-  return response.data;
-};
+    const response =
+      await api.post(
+        "/organizations",
+        organizationData
+      );
 
-// ============================================================
-// GET CURRENT ORGANIZATION
-// ============================================================
+    return response.data;
+  };
+
+
+// =====================================================
+// CURRENT ORGANIZATION
+// =====================================================
 
 export const getCurrentOrganization =
   async () => {
-    const response = await api.get(
-      "/organizations/current"
-    );
+
+    const response =
+      await api.get(
+        "/organizations/current"
+      );
 
     return response.data;
   };
 
-// ============================================================
+
+// =====================================================
 // UPDATE ORGANIZATION
-// ============================================================
+// =====================================================
 
 export const updateOrganization =
   async (organizationData) => {
-    const response = await api.put(
-      "/organizations/current",
-      organizationData
-    );
+
+    const response =
+      await api.put(
+        "/organizations/current",
+        organizationData
+      );
 
     return response.data;
   };
 
-// ============================================================
-// GET ORGANIZATION MEMBERS
-// ============================================================
 
-export const getMembers = async () => {
-  const response = await api.get(
-    "/organizations/members"
-  );
+// =====================================================
+// MEMBERS
+// =====================================================
 
-  return response.data;
-};
+export const getMembers =
+  async () => {
 
-// ============================================================
+    const response =
+      await api.get(
+        "/organizations/members"
+      );
+
+    return response.data;
+  };
+
+
+// =====================================================
 // INVITE MEMBER
-// ============================================================
+// =====================================================
 
-export const inviteMember = async (
-  memberData
-) => {
-  const response = await api.post(
-    "/organizations/invite",
-    memberData
-  );
+export const inviteMember =
+  async (memberData) => {
 
-  return response.data;
-};
+    const response =
+      await api.post(
+        "/organizations/invite",
+        memberData
+      );
 
-// ============================================================
+    return response.data;
+  };
+
+
+// =====================================================
 // ACCEPT INVITATION
-// ============================================================
+// =====================================================
 
-export const acceptInvitation = async (
-  token
-) => {
-  const response = await api.post(
-    "/organizations/accept-invitation",
-    {
-      token,
-    }
-  );
+export const acceptInvitation =
+  async (token) => {
 
-  return response.data;
-};
+    const response =
+      await api.post(
+        "/organizations/accept-invitation",
+        {
+          token,
+        }
+      );
 
-// ============================================================
+    return response.data;
+  };
+
+
+// =====================================================
 // UPDATE MEMBER ROLE
-// ============================================================
+// =====================================================
 
-export const updateMemberRole = async (
-  memberId,
-  role
-) => {
-  const response = await api.patch(
-    `/organizations/members/${memberId}/role`,
-    {
-      role,
-    }
-  );
+export const updateMemberRole =
+  async (
+    memberId,
+    role
+  ) => {
 
-  return response.data;
-};
+    const response =
+      await api.patch(
+        `/organizations/members/${memberId}/role`,
+        {
+          role,
+        }
+      );
 
-// ============================================================
+    return response.data;
+  };
+
+
+// =====================================================
 // REMOVE MEMBER
-// ============================================================
+// =====================================================
 
-export const removeMember = async (
-  memberId
-) => {
-  const response = await api.delete(
-    `/organizations/members/${memberId}`
-  );
+export const removeMember =
+  async (memberId) => {
 
-  return response.data;
-};
+    const response =
+      await api.delete(
+        `/organizations/members/${memberId}`
+      );
+
+    return response.data;
+  };

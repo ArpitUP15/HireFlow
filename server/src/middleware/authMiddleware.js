@@ -1,100 +1,175 @@
 import jwt from "jsonwebtoken";
+
 import User from "../models/User.js";
 
-export const protect = async (req, res, next) => {
-  try {
-    console.log("\n========== AUTH DEBUG ==========");
-    console.log("Cookies:", req.cookies);
-    console.log(
-      "HireFlow Token:",
-      req.cookies?.hireflow_token
-    );
-    console.log("JWT Secret exists:", !!process.env.JWT_SECRET);
 
-    const token = req.cookies?.hireflow_token;
+// =====================================================
+// PROTECT ROUTES
+// =====================================================
+
+export const protect = async (
+  req,
+  res,
+  next
+) => {
+  try {
+
+    const token =
+      req.cookies?.hireflow_token;
+
+
+    // -------------------------------------------------
+    // No token
+    // -------------------------------------------------
 
     if (!token) {
-      res.status(401);
-      throw new Error("Not authenticated. Please login.");
+      return res.status(401).json({
+        success: false,
+        message:
+          "Not authenticated. Please login.",
+      });
     }
 
-    console.log("Token received successfully");
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    );
+    // -------------------------------------------------
+    // JWT secret check
+    // -------------------------------------------------
 
-    console.log("Decoded JWT:", decoded);
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message:
+          "JWT_SECRET is not configured",
+      });
+    }
 
-    const user = await User.findById(decoded.userId);
 
-    console.log("User found:", !!user);
+    // -------------------------------------------------
+    // Verify token
+    // -------------------------------------------------
+
+    const decoded =
+      jwt.verify(
+        token,
+        process.env.JWT_SECRET
+      );
+
+
+    if (!decoded?.userId) {
+      return res.status(401).json({
+        success: false,
+        message:
+          "Invalid authentication token",
+      });
+    }
+
+
+    // -------------------------------------------------
+    // Find user
+    // -------------------------------------------------
+
+    const user =
+      await User.findById(
+        decoded.userId
+      );
+
 
     if (!user) {
-      res.status(401);
-      throw new Error(
-        "User associated with this token no longer exists"
-      );
+      return res.status(401).json({
+        success: false,
+        message:
+          "User associated with this token no longer exists",
+      });
     }
 
+
+    // -------------------------------------------------
+    // Check active status
+    // -------------------------------------------------
+
     if (!user.isActive) {
-      res.status(403);
-      throw new Error(
-        "Your account has been deactivated"
-      );
+      return res.status(403).json({
+        success: false,
+        message:
+          "Your account has been deactivated",
+      });
     }
+
+
+    // -------------------------------------------------
+    // Attach user
+    // -------------------------------------------------
 
     req.user = user;
 
-    console.log(
-      "Authentication successful:",
-      user.email
+    next();
+
+  } catch (error) {
+
+    console.error(
+      "Authentication middleware error:",
+      error.message
     );
 
-    console.log("================================\n");
-
-    next();
-  } catch (error) {
-    console.error("AUTH ERROR:", error.message);
 
     if (
-      error.name === "JsonWebTokenError" ||
-      error.name === "TokenExpiredError"
+      error.name ===
+        "JsonWebTokenError" ||
+      error.name ===
+        "TokenExpiredError"
     ) {
-      res.status(401);
-
-      return next(
-        new Error(
-          "Invalid or expired authentication token"
-        )
-      );
+      return res.status(401).json({
+        success: false,
+        message:
+          "Invalid or expired authentication token",
+      });
     }
 
-    next(error);
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "Authentication failed",
+    });
   }
 };
 
-export const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      res.status(401);
 
-      return next(
-        new Error("Authentication required")
-      );
-    }
+// =====================================================
+// ROLE AUTHORIZATION
+// =====================================================
 
-    if (!roles.includes(req.user.role)) {
-      res.status(403);
+export const authorize =
+  (...roles) => {
 
-      return next(
-        new Error(
-          "You do not have permission to access this resource"
+    return (
+      req,
+      res,
+      next
+    ) => {
+
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message:
+            "Authentication required",
+        });
+      }
+
+
+      if (
+        !roles.includes(
+          req.user.role
         )
-      );
-    }
+      ) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You do not have permission to access this resource",
+        });
+      }
 
-    next();
+
+      next();
+    };
   };
-};

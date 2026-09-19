@@ -114,7 +114,7 @@ const DeleteMemberModal = ({
             type="button"
             onClick={handleConfirm}
             disabled={loading}
-            className="flex min-w-[120px] items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-w-30 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? (
               <>

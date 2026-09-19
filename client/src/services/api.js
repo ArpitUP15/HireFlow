@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const api = axios.create({
   baseURL:
     import.meta.env.VITE_API_URL ||
@@ -8,43 +9,67 @@ const api = axios.create({
   withCredentials: true,
 
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type":
+      "application/json",
   },
 });
 
-// Attach organization ID automatically
+
+// =====================================================
+// REQUEST INTERCEPTOR
+// =====================================================
+
 api.interceptors.request.use(
   (config) => {
+
     const organizationId =
       localStorage.getItem(
         "currentOrganizationId"
       );
 
+
     if (organizationId) {
-      config.headers["x-organization-id"] =
-        organizationId;
+      config.headers[
+        "x-organization-id"
+      ] = organizationId;
     }
+
 
     return config;
   },
+
   (error) => {
     return Promise.reject(error);
   }
 );
 
-// Handle API errors globally
+
+// =====================================================
+// RESPONSE INTERCEPTOR
+// =====================================================
+
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
 
   (error) => {
-    if (error.response?.status === 401) {
-      console.warn(
-        "Authentication required"
+
+    if (
+      !error.response
+    ) {
+      console.error(
+        "HireFlow API unavailable:",
+        error.message
       );
     }
 
-    return Promise.reject(error);
+
+    return Promise.reject(
+      error
+    );
   }
 );
+
 
 export default api;

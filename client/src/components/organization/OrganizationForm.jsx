@@ -312,7 +312,7 @@ const OrganizationForm = ({
         <button
           type="submit"
           disabled={loading}
-          className="flex min-w-[150px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-w-37.5 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? (
             <>

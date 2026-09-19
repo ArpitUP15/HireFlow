@@ -108,6 +108,54 @@ export const getOrganization =
     });
   };
 
+// =====================================================
+// GET MY ORGANIZATIONS
+// =====================================================
+
+export const getMyOrganizations =
+  async (req, res) => {
+
+    const memberships =
+      await OrganizationMember.find({
+        user: req.user._id,
+        status: "active",
+      })
+        .populate(
+          "organization"
+        )
+        .sort({
+          createdAt: 1,
+        });
+
+
+    const organizations =
+      memberships.map(
+        (membership) => ({
+          organization:
+            membership.organization,
+
+          membershipId:
+            membership._id,
+
+          role:
+            membership.role,
+
+          permissions:
+            membership.permissions,
+        })
+      );
+
+
+    res.status(200).json({
+      success: true,
+
+      count:
+        organizations.length,
+
+      organizations,
+    });
+  };
+
 // ------------------------------------------------
 // Update organization
 // ------------------------------------------------

@@ -3,30 +3,33 @@ import express from "express";
 import {
   createOrganization,
   getOrganization,
+  getMyOrganizations,
   updateOrganization,
   getMembers,
   inviteMember,
   acceptInvitation,
   removeMember,
-  updateMemberRole
+  updateMemberRole,
 } from "../controllers/organisationController.js";
 
 import {
-  protect
+  protect,
 } from "../middleware/authMiddleware.js";
 
 import {
   loadOrganization,
   requireOrganizationRole,
-  requirePermission
+  requirePermission,
 } from "../middleware/organizationMiddleware.js";
+
 
 const router =
   express.Router();
 
-// =================================================
-// Organization creation
-// =================================================
+
+// =====================================================
+// CREATE ORGANIZATION
+// =====================================================
 
 router.post(
   "/",
@@ -34,9 +37,21 @@ router.post(
   createOrganization
 );
 
-// =================================================
-// Organization profile
-// =================================================
+
+// =====================================================
+// GET MY ORGANIZATIONS
+// =====================================================
+
+router.get(
+  "/my",
+  protect,
+  getMyOrganizations
+);
+
+
+// =====================================================
+// CURRENT ORGANIZATION
+// =====================================================
 
 router.get(
   "/current",
@@ -44,6 +59,11 @@ router.get(
   loadOrganization,
   getOrganization
 );
+
+
+// =====================================================
+// UPDATE CURRENT ORGANIZATION
+// =====================================================
 
 router.put(
   "/current",
@@ -56,9 +76,10 @@ router.put(
   updateOrganization
 );
 
-// =================================================
-// Members
-// =================================================
+
+// =====================================================
+// MEMBERS
+// =====================================================
 
 router.get(
   "/members",
@@ -70,9 +91,10 @@ router.get(
   getMembers
 );
 
-// =================================================
-// Invitations
-// =================================================
+
+// =====================================================
+// INVITATIONS
+// =====================================================
 
 router.post(
   "/invite",
@@ -84,15 +106,17 @@ router.post(
   inviteMember
 );
 
+
 router.post(
   "/accept-invitation",
   protect,
   acceptInvitation
 );
 
-// =================================================
-// Member management
-// =================================================
+
+// =====================================================
+// UPDATE MEMBER ROLE
+// =====================================================
 
 router.patch(
   "/members/:memberId/role",
@@ -104,6 +128,11 @@ router.patch(
   updateMemberRole
 );
 
+
+// =====================================================
+// REMOVE MEMBER
+// =====================================================
+
 router.delete(
   "/members/:memberId",
   protect,
@@ -113,5 +142,6 @@ router.delete(
   ),
   removeMember
 );
+
 
 export default router;

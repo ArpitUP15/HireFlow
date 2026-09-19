@@ -340,7 +340,7 @@ const OrganizationSettings = () => {
         )}
 
         {/* Organization Information Section */}
-        <section className="mb-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-xl sm:p-6">
+        <section className="mb-8 rounded-2xl border border-white/10 bg-white/3 p-5 shadow-xl sm:p-6">
           <div className="mb-6 flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10">
@@ -379,7 +379,7 @@ const OrganizationSettings = () => {
             />
           ) : (
             <div className="grid gap-5 md:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="rounded-xl border border-white/10 bg-white/2 p-5">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
                   Organization Name
                 </p>
@@ -388,7 +388,7 @@ const OrganizationSettings = () => {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="rounded-xl border border-white/10 bg-white/2 p-5">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
                   Industry
                 </p>
@@ -397,7 +397,7 @@ const OrganizationSettings = () => {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="rounded-xl border border-white/10 bg-white/2 p-5">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
                   Company Size
                 </p>
@@ -406,7 +406,7 @@ const OrganizationSettings = () => {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="rounded-xl border border-white/10 bg-white/2 p-5">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
                   Website
                 </p>
@@ -424,7 +424,7 @@ const OrganizationSettings = () => {
                 )}
               </div>
 
-              <div className="md:col-span-2 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+              <div className="md:col-span-2 rounded-xl border border-white/10 bg-white/2 p-5">
                 <p className="text-xs uppercase tracking-wider text-slate-500">
                   Description
                 </p>
@@ -438,7 +438,7 @@ const OrganizationSettings = () => {
         </section>
 
         {/* Members Section */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-xl sm:p-6">
+        <section className="rounded-2xl border border-white/10 bg-white/3 p-5 shadow-xl sm:p-6">
           <div className="mb-6 flex flex-col gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
@@ -466,7 +466,7 @@ const OrganizationSettings = () => {
 
           {/* Member Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/2 p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-500">Total Members</p>
@@ -476,7 +476,7 @@ const OrganizationSettings = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/2 p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-500">Active Members</p>
@@ -493,7 +493,7 @@ const OrganizationSettings = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/2 p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-500">Administrators</p>
@@ -514,7 +514,7 @@ const OrganizationSettings = () => {
 
           {/* Member Table */}
           {loadingMembers ? (
-            <div className="flex min-h-[220px] items-center justify-center">
+            <div className="flex min-h-55 items-center justify-center">
               <div className="text-center">
                 <RefreshCw
                   size={28}
@@ -543,7 +543,7 @@ const OrganizationSettings = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[700px]">
+              <table className="w-full min-w-175">
                 <thead>
                   <tr className="border-b border-white/10 text-left">
                     <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -579,7 +579,7 @@ const OrganizationSettings = () => {
                     return (
                       <tr
                         key={member._id}
-                        className="border-b border-white/5 transition hover:bg-white/[0.02]"
+                        className="border-b border-white/5 transition hover:bg-white/2"
                       >
                         {/* Member Info */}
                         <td className="px-4 py-4">

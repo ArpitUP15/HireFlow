@@ -1,149 +1,104 @@
-import {createContext,useContext,useEffect,useState,} from "react";
-import {getCurrentOrganization} from "../services/organizationService";
+import {
+  createContext,
+  useEffect,
+  useState,
+} from "react";
 
-const OrganizationContext =
+import {
+  getCurrentOrganization,
+} from "../services/organizationService";
+
+import {
+  useAuth,
+} from "./useAuth";
+
+
+export const OrganizationContext =
   createContext(null);
+
 
 export const OrganizationProvider = ({
   children,
 }) => {
+
+  const {
+    user,
+  } = useAuth();
+
+
   const [
     organization,
     setOrganization,
   ] = useState(null);
 
+
   const [
-    membership,
-    setMembership,
-  ] = useState(null);
+    loading,
+    setLoading,
+  ] = useState(false);
 
-  const [loading, setLoading] =
-    useState(true);
 
-  const [error, setError] =
-    useState("");
+  const loadOrganization =
+    async () => {
 
-  const loadOrganization = async () => {
-    try {
-      setLoading(true);
-      setError("");
+      if (!user) {
+        setOrganization(null);
+        return;
+      }
 
-      const data =
-        await getCurrentOrganization();
 
-      setOrganization(
-        data.organization
-      );
+      try {
 
-      setMembership(
-        data.membership
-      );
-    } catch (error) {
-      console.error(error);
+        setLoading(true);
 
-      setError(
-        error.response?.data?.message ||
-          "Unable to load organization"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+
+        const response =
+          await getCurrentOrganization();
+
+
+        if (
+          response?.success
+        ) {
+
+          setOrganization(
+            response.organization
+          );
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Organization loading error:",
+          error
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+    };
+
 
   useEffect(() => {
-    const organizationId =
-      localStorage.getItem(
-        "currentOrganizationId"
-      );
 
-    if (organizationId) {
-      loadOrganization();
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    loadOrganization();
 
-  const selectOrganization = (
-    organizationId
-  ) => {
-    localStorage.setItem(
-      "currentOrganizationId",
-      organizationId
-    );
+  }, [user]);
 
-    window.location.reload();
+
+  const value = {
+    organization,
+    loading,
+    refreshOrganization:
+      loadOrganization,
   };
 
-  const clearOrganization = () => {
-    localStorage.removeItem(
-      "currentOrganizationId"
-    );
-
-    setOrganization(null);
-    setMembership(null);
-  };
-
-  const hasRole = (...roles) => {
-    if (!membership) {
-      return false;
-    }
-
-    return roles.includes(
-      membership.role
-    );
-  };
-
-  const hasPermission = (
-    permission
-  ) => {
-    if (!membership) {
-      return false;
-    }
-
-    if (
-      membership.role === "owner" ||
-      membership.role === "hr_admin"
-    ) {
-      return true;
-    }
-
-    return Boolean(
-      membership.permissions?.[
-        permission
-      ]
-    );
-  };
 
   return (
     <OrganizationContext.Provider
-      value={{
-        organization,
-        membership,
-        loading,
-        error,
-        loadOrganization,
-        selectOrganization,
-        clearOrganization,
-        hasRole,
-        hasPermission,
-      }}
+      value={value}
     >
       {children}
     </OrganizationContext.Provider>
   );
-};
-
-export const useOrganization = () => {
-  const context =
-    useContext(
-      OrganizationContext
-    );
-
-  if (!context) {
-    throw new Error(
-      "useOrganization must be used inside OrganizationProvider"
-    );
-  }
-
-  return context;
 };
