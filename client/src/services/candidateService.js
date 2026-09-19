@@ -1,58 +1,66 @@
 import api from "./api";
 
 
-// ============================================================
-// GET ALL CANDIDATES
-// ============================================================
+export const getCandidates =
+  async () => {
 
-export const getCandidates = () => {
-  return api.get("/candidates");
-};
+    const response =
+      await api.get(
+        "/candidates"
+      );
 
-
-// ============================================================
-// GET CANDIDATE BY ID
-// ============================================================
-
-export const getCandidateById = (id) => {
-  return api.get(`/candidates/${id}`);
-};
+    return response;
+  };
 
 
-// ============================================================
-// CREATE CANDIDATE
-// ============================================================
+export const getCandidateById =
+  async (id) => {
 
-export const createCandidate = (candidateData) => {
-  return api.post(
-    "/candidates",
+    const response =
+      await api.get(
+        `/candidates/${id}`
+      );
+
+    return response;
+  };
+
+
+export const createCandidate =
+  async (candidateData) => {
+
+    const response =
+      await api.post(
+        "/candidates",
+        candidateData
+      );
+
+    return response;
+  };
+
+
+export const updateCandidate =
+  async (
+    id,
     candidateData
-  );
-};
+  ) => {
+
+    const response =
+      await api.put(
+        `/candidates/${id}`,
+        candidateData
+      );
+
+    return response;
+  };
 
 
-// ============================================================
-// UPDATE CANDIDATE
-// ============================================================
+export const deleteCandidate =
+  async (id) => {
 
-export const updateCandidate = (
-  id,
-  candidateData
-) => {
-  return api.put(
-    `/candidates/${id}`,
-    candidateData
-  );
-};
+    const response =
+      await api.delete(
+        `/candidates/${id}`
+      );
 
-
-// ============================================================
-// DELETE CANDIDATE
-// ============================================================
-
-export const deleteCandidate = (id) => {
-  return api.delete(
-    `/candidates/${id}`
-  );
-};
-
+    return response;
+  };

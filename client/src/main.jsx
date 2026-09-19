@@ -1,7 +1,5 @@
 import React from "react";
-
-import ReactDOM from
-  "react-dom/client";
+import ReactDOM from "react-dom/client";
 
 import App from "./App.jsx";
 
@@ -9,18 +7,17 @@ import "./index.css";
 
 import {
   AuthProvider,
-} from "./context/AuthContext.jsx";
+} from "./context/AuthContext";
 
 import {
   OrganizationProvider,
-} from "./context/OrganizationContext.jsx";
+} from "./context/OrganizationContext";
 
 
 ReactDOM.createRoot(
-  document.getElementById(
-    "root"
-  )
+  document.getElementById("root")
 ).render(
+
   <React.StrictMode>
 
     <AuthProvider>

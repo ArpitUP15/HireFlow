@@ -19,7 +19,23 @@ export const createOrganization =
 
 
 // =====================================================
-// CURRENT ORGANIZATION
+// GET MY ORGANIZATIONS
+// =====================================================
+
+export const getMyOrganizations =
+  async () => {
+
+    const response =
+      await api.get(
+        "/organizations/my"
+      );
+
+    return response.data;
+  };
+
+
+// =====================================================
+// GET CURRENT ORGANIZATION
 // =====================================================
 
 export const getCurrentOrganization =
@@ -52,7 +68,7 @@ export const updateOrganization =
 
 
 // =====================================================
-// MEMBERS
+// GET MEMBERS
 // =====================================================
 
 export const getMembers =

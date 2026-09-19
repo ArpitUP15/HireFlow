@@ -29,19 +29,11 @@ const ProtectedRoute = () => {
 
     return (
 
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+      <div className="flex min-h-screen items-center justify-center bg-slate-950">
 
-        <div className="flex flex-col items-center">
-
-          <Loader2
-            className="h-10 w-10 animate-spin text-blue-500"
-          />
-
-          <p className="mt-4 text-sm text-slate-400">
-            Checking authentication...
-          </p>
-
-        </div>
+        <Loader2
+          className="h-10 w-10 animate-spin text-blue-500"
+        />
 
       </div>
     );

@@ -4,35 +4,82 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import ProtectedRoute
-  from "./ProtectedRoute";
 
-import PublicRoute
-  from "./PublicRoute";
+// =====================================================
+// ROUTE GUARDS
+// =====================================================
 
-
-import Login
-  from "../pages/auth/Login";
-
-import Register
-  from "../pages/auth/Register";
-
-import AcceptInvitation
-  from "../pages/auth/AcceptInvitation";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
 
-import Dashboard
-  from "../pages/DashBoard";
+// =====================================================
+// AUTH PAGES
+// =====================================================
 
-import Home
-  from "../pages/Home";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import AcceptInvitation from "../pages/auth/AcceptInvitation";
 
-import NotFound
-  from "../pages/NotFound";
 
-import Unauthorized
-  from "../pages/Unauthorized";
+// =====================================================
+// GENERAL PAGES
+// =====================================================
 
+import Home from "../pages/Home";
+import Dashboard from "../pages/DashBoard";
+import NotFound from "../pages/NotFound";
+import Unauthorized from "../pages/Unauthorized";
+
+
+// =====================================================
+// ORGANIZATION PAGES
+// =====================================================
+
+import OrganizationSetup from "../pages/organization/OrganizationSetup";
+import OrganizationDashboard from "../pages/organization/OrganizationDashboard";
+import OrganizationSettings from "../pages/organization/OrganizationSettings";
+
+
+// =====================================================
+// TEAM
+// =====================================================
+
+import TeamManagement from "../pages/TeamManagement";
+
+
+// =====================================================
+// JOBS
+// =====================================================
+
+import Jobs from "../pages/jobs/Jobs";
+import CreateJob from "../pages/jobs/CreateJob";
+import EditJob from "../pages/jobs/EditJob";
+import JobDetails from "../pages/jobs/JobDetails";
+
+
+// =====================================================
+// CANDIDATES
+// =====================================================
+
+import Candidates from "../pages/candidates/Candidates";
+import CreateCandidate from "../pages/candidates/CreateCandidate";
+import EditCandidate from "../pages/candidates/EditCandidate";
+import CandidateDetails from "../pages/candidates/CandidateDetails";
+
+
+// =====================================================
+// APPLICATIONS
+// =====================================================
+
+import Applications from "../pages/applications/Applications";
+import CreateApplication from "../pages/applications/CreateApplication";
+import ApplicationDetails from "../pages/applications/ApplicationDetails";
+
+
+// =====================================================
+// APP ROUTES
+// =====================================================
 
 const AppRoutes = () => {
 
@@ -42,31 +89,39 @@ const AppRoutes = () => {
 
 
       {/* =================================================
-          HOME
+          PUBLIC HOME
       ================================================= */}
 
       <Route
         path="/"
-        element={<Home />}
+        element={
+          <Home />
+        }
       />
 
 
       {/* =================================================
-          PUBLIC ROUTES
+          PUBLIC AUTH ROUTES
       ================================================= */}
 
       <Route
-        element={<PublicRoute />}
+        element={
+          <PublicRoute />
+        }
       >
 
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <Login />
+          }
         />
 
         <Route
           path="/register"
-          element={<Register />}
+          element={
+            <Register />
+          }
         />
 
       </Route>
@@ -94,6 +149,11 @@ const AppRoutes = () => {
         }
       >
 
+
+        {/* ===============================================
+            DASHBOARD
+        =============================================== */}
+
         <Route
           path="/dashboard"
           element={
@@ -101,8 +161,145 @@ const AppRoutes = () => {
           }
         />
 
-        {/* Keep your remaining
-            protected routes here */}
+
+        {/* ===============================================
+            ORGANIZATION SETUP
+        =============================================== */}
+
+        <Route
+          path="/organization/setup"
+          element={
+            <OrganizationSetup />
+          }
+        />
+
+
+        {/* ===============================================
+            ORGANIZATION DASHBOARD
+        =============================================== */}
+
+        <Route
+          path="/organization"
+          element={
+            <OrganizationDashboard />
+          }
+        />
+
+
+        {/* ===============================================
+            ORGANIZATION SETTINGS
+        =============================================== */}
+
+        <Route
+          path="/organization/settings"
+          element={
+            <OrganizationSettings />
+          }
+        />
+
+
+        {/* ===============================================
+            TEAM
+        =============================================== */}
+
+        <Route
+          path="/team"
+          element={
+            <TeamManagement />
+          }
+        />
+
+
+        {/* ===============================================
+            JOBS
+        =============================================== */}
+
+        <Route
+          path="/jobs"
+          element={
+            <Jobs />
+          }
+        />
+
+        <Route
+          path="/jobs/create"
+          element={
+            <CreateJob />
+          }
+        />
+
+        <Route
+          path="/jobs/:id"
+          element={
+            <JobDetails />
+          }
+        />
+
+        <Route
+          path="/jobs/:id/edit"
+          element={
+            <EditJob />
+          }
+        />
+
+
+        {/* ===============================================
+            CANDIDATES
+        =============================================== */}
+
+        <Route
+          path="/candidates"
+          element={
+            <Candidates />
+          }
+        />
+
+        <Route
+          path="/candidates/create"
+          element={
+            <CreateCandidate />
+          }
+        />
+
+        <Route
+          path="/candidates/:id"
+          element={
+            <CandidateDetails />
+          }
+        />
+
+        <Route
+          path="/candidates/:id/edit"
+          element={
+            <EditCandidate />
+          }
+        />
+
+
+        {/* ===============================================
+            APPLICATIONS
+        =============================================== */}
+
+        <Route
+          path="/applications"
+          element={
+            <Applications />
+          }
+        />
+
+        <Route
+          path="/applications/create"
+          element={
+            <CreateApplication />
+          }
+        />
+
+        <Route
+          path="/applications/:id"
+          element={
+            <ApplicationDetails />
+          }
+        />
 
       </Route>
 

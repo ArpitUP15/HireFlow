@@ -1,64 +1,87 @@
 import api from "./api";
 
 
-// ============================================================
-// GET ALL JOBS
-// ============================================================
+export const getJobs = async () => {
 
-export const getJobs = () => {
-  return api.get("/jobs");
+  const response =
+    await api.get("/jobs");
+
+  return response;
 };
 
 
-// ============================================================
-// GET SINGLE JOB
-// ============================================================
+export const getJobById =
+  async (id) => {
 
-export const getJobById = (id) => {
-  return api.get(`/jobs/${id}`);
-};
+    const response =
+      await api.get(
+        `/jobs/${id}`
+      );
 
-
-// ============================================================
-// CREATE JOB
-// ============================================================
-
-export const createJob = (jobData) => {
-  return api.post("/jobs", jobData);
-};
+    return response;
+  };
 
 
-// ============================================================
-// UPDATE JOB
-// ============================================================
+export const createJob =
+  async (jobData) => {
 
-export const updateJob = (id, jobData) => {
-  return api.put(`/jobs/${id}`, jobData);
-};
+    const response =
+      await api.post(
+        "/jobs",
+        jobData
+      );
 
-
-// ============================================================
-// DELETE JOB
-// ============================================================
-
-export const deleteJob = (id) => {
-  return api.delete(`/jobs/${id}`);
-};
+    return response;
+  };
 
 
-// ============================================================
-// PUBLISH JOB
-// ============================================================
+export const updateJob =
+  async (
+    id,
+    jobData
+  ) => {
 
-export const publishJob = (id) => {
-  return api.patch(`/jobs/${id}/publish`);
-};
+    const response =
+      await api.put(
+        `/jobs/${id}`,
+        jobData
+      );
+
+    return response;
+  };
 
 
-// ============================================================
-// CLOSE JOB
-// ============================================================
+export const deleteJob =
+  async (id) => {
 
-export const closeJob = (id) => {
-  return api.patch(`/jobs/${id}/close`);
-};
+    const response =
+      await api.delete(
+        `/jobs/${id}`
+      );
+
+    return response;
+  };
+
+
+export const publishJob =
+  async (id) => {
+
+    const response =
+      await api.patch(
+        `/jobs/${id}/publish`
+      );
+
+    return response;
+  };
+
+
+export const closeJob =
+  async (id) => {
+
+    const response =
+      await api.patch(
+        `/jobs/${id}/close`
+      );
+
+    return response;
+  };

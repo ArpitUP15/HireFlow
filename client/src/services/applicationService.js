@@ -1,121 +1,96 @@
 import api from "./api";
 
 
-// ============================================================
-// CREATE APPLICATION
-// ============================================================
+export const getApplications =
+  async () => {
 
-export const createApplication = (
-  applicationData
-) => {
-  return api.post(
-    "/applications",
+    const response =
+      await api.get(
+        "/applications"
+      );
+
+    return response;
+  };
+
+
+export const getApplicationById =
+  async (id) => {
+
+    const response =
+      await api.get(
+        `/applications/${id}`
+      );
+
+    return response;
+  };
+
+
+export const createApplication =
+  async (applicationData) => {
+
+    const response =
+      await api.post(
+        "/applications",
+        applicationData
+      );
+
+    return response;
+  };
+
+
+export const updateApplication =
+  async (
+    id,
     applicationData
-  );
-};
+  ) => {
+
+    const response =
+      await api.put(
+        `/applications/${id}`,
+        applicationData
+      );
+
+    return response;
+  };
 
 
-// ============================================================
-// GET ALL APPLICATIONS
-// ============================================================
+export const updateApplicationStatus =
+  async (
+    id,
+    status
+  ) => {
 
-export const getApplications = (params = {}) => {
-  return api.get(
-    "/applications",
-    {
-      params,
-    }
-  );
-};
+    const response =
+      await api.patch(
+        `/applications/${id}/status`,
+        {
+          status,
+        }
+      );
 
-
-// ============================================================
-// GET APPLICATION BY ID
-// ============================================================
-
-export const getApplicationById = (id) => {
-  return api.get(
-    `/applications/${id}`
-  );
-};
+    return response;
+  };
 
 
-// ============================================================
-// UPDATE APPLICATION
-// ============================================================
+export const deleteApplication =
+  async (id) => {
 
-export const updateApplication = (
-  id,
-  applicationData
-) => {
-  return api.put(
-    `/applications/${id}`,
-    applicationData
-  );
-};
+    const response =
+      await api.delete(
+        `/applications/${id}`
+      );
+
+    return response;
+  };
 
 
-// ============================================================
-// UPDATE APPLICATION STATUS
-// ============================================================
+export const getRecruitmentPipeline =
+  async () => {
 
-export const updateApplicationStatus = (
-  id,
-  status
-) => {
-  return api.patch(
-    `/applications/${id}/status`,
-    {
-      status,
-    }
-  );
-};
+    const response =
+      await api.get(
+        "/applications/pipeline"
+      );
 
-
-// ============================================================
-// DELETE APPLICATION
-// ============================================================
-
-export const deleteApplication = (id) => {
-  return api.delete(
-    `/applications/${id}`
-  );
-};
-
-
-// ============================================================
-// GET JOB APPLICATIONS
-// ============================================================
-
-export const getJobApplications = (
-  jobId
-) => {
-  return api.get(
-    `/applications/job/${jobId}`
-  );
-};
-
-
-// ============================================================
-// GET CANDIDATE APPLICATIONS
-// ============================================================
-
-export const getCandidateApplications = (
-  candidateId
-) => {
-  return api.get(
-    `/applications/candidate/${candidateId}`
-  );
-};
-
-
-// ============================================================
-// GET RECRUITMENT PIPELINE
-// ============================================================
-
-export const getRecruitmentPipeline = () => {
-  return api.get(
-    "/applications/pipeline"
-  );
-};
-
+    return response;
+  };
