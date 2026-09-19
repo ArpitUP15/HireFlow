@@ -7,6 +7,7 @@ import organizationRoutes from "./routes/organizationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import interviewRoutes from "./routes/interviewRoutes.js";
 
 const app = express();
 
@@ -136,6 +137,10 @@ app.use(
   applicationRoutes
 );
 
+app.use(
+  "/api/interviews",
+  interviewRoutes
+);
 
 // =====================================================
 // 404 HANDLER

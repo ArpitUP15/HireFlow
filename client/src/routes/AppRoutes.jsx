@@ -6,7 +6,7 @@ import {
 
 
 // =====================================================
-// ROUTE GUARDS
+// ROUTES
 // =====================================================
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -33,7 +33,7 @@ import Unauthorized from "../pages/Unauthorized";
 
 
 // =====================================================
-// ORGANIZATION PAGES
+// ORGANIZATION
 // =====================================================
 
 import OrganizationSetup from "../pages/organization/OrganizationSetup";
@@ -78,6 +78,22 @@ import ApplicationDetails from "../pages/applications/ApplicationDetails";
 
 
 // =====================================================
+// INTERVIEWS — PHASE 6
+// =====================================================
+
+import Interviews from "../pages/interviews/Interviews";
+import CreateInterview from "../pages/interviews/CreateInterview";
+import InterviewDetails from "../pages/interviews/InterviewDetails";
+
+
+// =====================================================
+// LAYOUT
+// =====================================================
+
+import DashboardLayout from "../components/common/DashboardLayout";
+
+
+// =====================================================
 // APP ROUTES
 // =====================================================
 
@@ -101,7 +117,7 @@ const AppRoutes = () => {
 
 
       {/* =================================================
-          PUBLIC AUTH ROUTES
+          PUBLIC ROUTES
       ================================================= */}
 
       <Route
@@ -128,7 +144,7 @@ const AppRoutes = () => {
 
 
       {/* =================================================
-          INVITATION
+          ACCEPT INVITATION
       ================================================= */}
 
       <Route
@@ -149,157 +165,183 @@ const AppRoutes = () => {
         }
       >
 
-
-        {/* ===============================================
-            DASHBOARD
-        =============================================== */}
-
+        {/* =================================================
+            DASHBOARD LAYOUT
+        ================================================= */}
+       <Route
+         path="/organization/setup"
+         element={
+       <OrganizationSetup />
+        }
+       />
         <Route
-          path="/dashboard"
           element={
-            <Dashboard />
+            <DashboardLayout />
           }
-        />
+        >
 
 
-        {/* ===============================================
-            ORGANIZATION SETUP
-        =============================================== */}
+          {/* ===============================================
+              DASHBOARD
+          =============================================== */}
 
-        <Route
-          path="/organization/setup"
-          element={
-            <OrganizationSetup />
-          }
-        />
-
-
-        {/* ===============================================
-            ORGANIZATION DASHBOARD
-        =============================================== */}
-
-        <Route
-          path="/organization"
-          element={
-            <OrganizationDashboard />
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard />
+            }
+          />
 
 
-        {/* ===============================================
-            ORGANIZATION SETTINGS
-        =============================================== */}
+          {/* ===============================================
+              ORGANIZATION
+          =============================================== */}
 
-        <Route
-          path="/organization/settings"
-          element={
-            <OrganizationSettings />
-          }
-        />
+          <Route
+            path="/organization"
+            element={
+              <OrganizationDashboard />
+            }
+          />
 
-
-        {/* ===============================================
-            TEAM
-        =============================================== */}
-
-        <Route
-          path="/team"
-          element={
-            <TeamManagement />
-          }
-        />
+          <Route
+            path="/organization/settings"
+            element={
+              <OrganizationSettings />
+            }
+          />
 
 
-        {/* ===============================================
-            JOBS
-        =============================================== */}
+          {/* ===============================================
+              TEAM
+          =============================================== */}
 
-        <Route
-          path="/jobs"
-          element={
-            <Jobs />
-          }
-        />
-
-        <Route
-          path="/jobs/create"
-          element={
-            <CreateJob />
-          }
-        />
-
-        <Route
-          path="/jobs/:id"
-          element={
-            <JobDetails />
-          }
-        />
-
-        <Route
-          path="/jobs/:id/edit"
-          element={
-            <EditJob />
-          }
-        />
+          <Route
+            path="/team"
+            element={
+              <TeamManagement />
+            }
+          />
 
 
-        {/* ===============================================
-            CANDIDATES
-        =============================================== */}
+          {/* ===============================================
+              JOBS
+          =============================================== */}
 
-        <Route
-          path="/candidates"
-          element={
-            <Candidates />
-          }
-        />
+          <Route
+            path="/jobs"
+            element={
+              <Jobs />
+            }
+          />
 
-        <Route
-          path="/candidates/create"
-          element={
-            <CreateCandidate />
-          }
-        />
+          <Route
+            path="/jobs/create"
+            element={
+              <CreateJob />
+            }
+          />
 
-        <Route
-          path="/candidates/:id"
-          element={
-            <CandidateDetails />
-          }
-        />
+          <Route
+            path="/jobs/:id"
+            element={
+              <JobDetails />
+            }
+          />
 
-        <Route
-          path="/candidates/:id/edit"
-          element={
-            <EditCandidate />
-          }
-        />
+          <Route
+            path="/jobs/:id/edit"
+            element={
+              <EditJob />
+            }
+          />
 
 
-        {/* ===============================================
-            APPLICATIONS
-        =============================================== */}
+          {/* ===============================================
+              CANDIDATES
+          =============================================== */}
 
-        <Route
-          path="/applications"
-          element={
-            <Applications />
-          }
-        />
+          <Route
+            path="/candidates"
+            element={
+              <Candidates />
+            }
+          />
 
-        <Route
-          path="/applications/create"
-          element={
-            <CreateApplication />
-          }
-        />
+          <Route
+            path="/candidates/create"
+            element={
+              <CreateCandidate />
+            }
+          />
 
-        <Route
-          path="/applications/:id"
-          element={
-            <ApplicationDetails />
-          }
-        />
+          <Route
+            path="/candidates/:id"
+            element={
+              <CandidateDetails />
+            }
+          />
+
+          <Route
+            path="/candidates/:id/edit"
+            element={
+              <EditCandidate />
+            }
+          />
+
+
+          {/* ===============================================
+              APPLICATIONS
+          =============================================== */}
+
+          <Route
+            path="/applications"
+            element={
+              <Applications />
+            }
+          />
+
+          <Route
+            path="/applications/create"
+            element={
+              <CreateApplication />
+            }
+          />
+
+          <Route
+            path="/applications/:id"
+            element={
+              <ApplicationDetails />
+            }
+          />
+
+
+          {/* ===============================================
+              INTERVIEWS — PHASE 6
+          =============================================== */}
+
+          <Route
+            path="/interviews"
+            element={
+              <Interviews />
+            }
+          />
+
+          <Route
+            path="/interviews/create"
+            element={
+              <CreateInterview />
+            }
+          />
+
+          <Route
+            path="/interviews/:id"
+            element={
+              <InterviewDetails />
+            }
+          />
+
+        </Route>
 
       </Route>
 
