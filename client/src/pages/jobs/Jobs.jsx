@@ -102,7 +102,7 @@ const Jobs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen p-6 lg:p-8 bg-linear-to-b from- to-slate-900 text-white">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div>
@@ -131,7 +131,7 @@ const Jobs = () => {
           <div className="relative flex-1">
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2  text-gray-400"
             />
 
             <input
@@ -150,7 +150,7 @@ const Jobs = () => {
                 }
               }}
               placeholder="Search jobs..."
-              className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-gray-300  py-2.5 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -167,7 +167,7 @@ const Jobs = () => {
             Loading jobs...
           </div>
         ) : jobs.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-dashed bg-white py-20 text-center">
+          <div className="mt-8 rounded-2xl border border-dashed  py-20 text-center">
             <h2 className="text-xl font-semibold">
               No jobs found
             </h2>

@@ -22,7 +22,7 @@ import {
   updateInterviewStatus,
   addInterviewFeedback,
   updateHiringDecision,
-} from "../../services/interviewService";
+} from "../../services/interviewServices";
 
 
 const InterviewDetails = () => {

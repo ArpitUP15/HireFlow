@@ -63,7 +63,7 @@ const Candidates = () => {
     };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-b from- to-slate-900 text-white p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div>
@@ -111,7 +111,7 @@ const Candidates = () => {
                 }
               }}
               placeholder="Search by name, email or skill..."
-              className="w-full rounded-lg border border-gray-300 bg-white py-2.5 pl-10 pr-4 outline-none"
+              className="w-full rounded-lg border border-gray-300    py-2.5 pl-10 pr-4 outline-none"
             />
           </div>
 
@@ -131,7 +131,7 @@ const Candidates = () => {
           </div>
         ) : candidates.length ===
           0 ? (
-          <div className="mt-8 rounded-2xl border border-dashed bg-white py-20 text-center">
+          <div className="mt-8 rounded-2xl border border-dashed    py-20 text-center">
             <h2 className="text-xl font-semibold">
               No candidates found
             </h2>

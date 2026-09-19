@@ -11,9 +11,13 @@ import {
   deleteInterview,
 } from "../controllers/interviewController.js";
 
-import protect from "../middleware/authMiddleware.js";
+import {
+  protect,
+} from "../middleware/authMiddleware.js";
 
-import organizationMiddleware from "../middleware/organizationMiddleware.js";
+import {
+  organizationMiddleware,
+} from "../middleware/organizationMiddleware.js";
 
 
 // =====================================================

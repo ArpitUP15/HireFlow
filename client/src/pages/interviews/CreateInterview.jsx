@@ -11,11 +11,11 @@ import {
   Loader2,
 } from "lucide-react";
 
-import InterviewForm from "../../components/interview/InterviewForm";
+import InterviewForm from "../../components/interviews/InterviewForm";
 
 import {
   createInterview,
-} from "../../services/interviewService";
+} from "../../services/interviewServices";
 
 import {
   getApplications,

@@ -2,14 +2,34 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+
+// =====================================================
+// ROUTES
+// =====================================================
+
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
+import publicRoutes from "./routes/publicRoutes.js";
 
-const app = express();
+
+// =====================================================
+// MIDDLEWARE
+// =====================================================
+
+import notFound from "./middleware/notFound.js";
+import errorHandler from "./middleware/errorMiddleware.js";
+
+
+// =====================================================
+// APP
+// =====================================================
+
+const app =
+  express();
 
 
 // =====================================================
@@ -23,21 +43,6 @@ app.use(
       "http://localhost:5173",
 
     credentials: true,
-
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-      "OPTIONS",
-    ],
-
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "x-organization-id",
-    ],
   })
 );
 
@@ -47,15 +52,12 @@ app.use(
 // =====================================================
 
 app.use(
-  express.json({
-    limit: "10mb",
-  })
+  express.json()
 );
 
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "10mb",
   })
 );
 
@@ -64,28 +66,61 @@ app.use(
 // COOKIE PARSER
 // =====================================================
 
-app.use(cookieParser());
+app.use(
+  cookieParser()
+);
+
+
+// =====================================================
+// ROOT
+// =====================================================
+
+app.get(
+  "/",
+  (req, res) => {
+
+    res.status(200).json({
+      success: true,
+      message:
+        "HireFlow API is running 🚀",
+    });
+  }
+);
 
 
 // =====================================================
 // HEALTH CHECK
 // =====================================================
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "HireFlow API is running 🚀",
-  });
-});
+app.get(
+  "/health",
+  (req, res) => {
 
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    status: "healthy",
-    service: "HireFlow API",
-    timestamp: new Date().toISOString(),
-  });
-});
+    res.status(200).json({
+      success: true,
+      status: "healthy",
+      service:
+        "HireFlow API",
+      timestamp:
+        new Date().toISOString(),
+    });
+  }
+);
+
+
+// =====================================================
+// PUBLIC ROUTES
+//
+// IMPORTANT:
+// These routes are BEFORE protected routes.
+// They do NOT require authentication.
+// They do NOT require x-organization-id.
+// =====================================================
+
+app.use(
+  "/api/public",
+  publicRoutes
+);
 
 
 // =====================================================
@@ -137,49 +172,37 @@ app.use(
   applicationRoutes
 );
 
+
+// =====================================================
+// INTERVIEW ROUTES — PHASE 6
+// =====================================================
+
 app.use(
   "/api/interviews",
   interviewRoutes
 );
 
+
 // =====================================================
 // 404 HANDLER
 // =====================================================
 
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message:
-      `Route not found: ${req.method} ${req.originalUrl}`,
-  });
-});
+app.use(
+  notFound
+);
 
 
 // =====================================================
-// GLOBAL ERROR HANDLER
+// ERROR HANDLER
 // =====================================================
 
 app.use(
-  (error, req, res, next) => {
-    console.error(
-      "Server Error:",
-      error.message
-    );
-
-    const statusCode =
-      res.statusCode &&
-      res.statusCode !== 200
-        ? res.statusCode
-        : 500;
-
-    res.status(statusCode).json({
-      success: false,
-      message:
-        error.message ||
-        "Internal server error",
-    });
-  }
+  errorHandler
 );
 
+
+// =====================================================
+// EXPORT
+// =====================================================
 
 export default app;

@@ -123,7 +123,7 @@ const ApplicationDetails =
 
 
     return (
-      <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+      <div className="min-h-screen bg-linear-to-b from-slate-900 to-slate-700 p-6 text-white lg:p-8">
 
         <div className="mx-auto max-w-6xl">
 
@@ -141,13 +141,13 @@ const ApplicationDetails =
 
           {/* Candidate Header */}
 
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border p-6 shadow-sm">
 
             <div className="flex flex-col justify-between gap-6 md:flex-row">
 
               <div className="flex gap-4">
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-700">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-b from-slate-900 to-slate-700 text-white  font-bold ">
 
                   {candidate.firstName?.[0]}
                   {candidate.lastName?.[0]}
@@ -245,7 +245,7 @@ const ApplicationDetails =
 
               {/* Job */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border p-6 shadow-sm">
 
                 <h2 className="text-lg font-bold">
                   Applied Position
@@ -287,7 +287,7 @@ const ApplicationDetails =
 
               {/* Summary */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <h2 className="text-lg font-bold">
                   Candidate Summary
@@ -303,7 +303,7 @@ const ApplicationDetails =
 
               {/* Skills */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <h2 className="text-lg font-bold">
                   Skills
@@ -329,7 +329,7 @@ const ApplicationDetails =
 
               {/* Cover Letter */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <h2 className="text-lg font-bold">
                   Cover Letter
@@ -345,7 +345,7 @@ const ApplicationDetails =
 
               {/* Notes */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <h2 className="text-lg font-bold">
                   Recruiter Notes
@@ -368,7 +368,7 @@ const ApplicationDetails =
 
               {/* Rating */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <h2 className="font-bold">
                   Candidate Rating
@@ -399,7 +399,7 @@ const ApplicationDetails =
 
               {/* Experience */}
 
-              <div className="rounded-2xl border bg-white p-6 shadow-sm">
+              <div className="rounded-2xl border    p-6 shadow-sm">
 
                 <p className="text-sm text-gray-500">
                   Experience

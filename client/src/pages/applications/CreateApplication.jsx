@@ -129,7 +129,7 @@ const CreateApplication = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-linear-to-b from- to-slate-900 text-white p-6 lg:p-8">
 
       <div className="mx-auto max-w-4xl">
 
@@ -149,7 +149,7 @@ const CreateApplication = () => {
         )}
 
 
-        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+        <div className="mt-8 rounded-2xl border    p-6 shadow-sm">
 
           <ApplicationForm
             jobs={jobs}

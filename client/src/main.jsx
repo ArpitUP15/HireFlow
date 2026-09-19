@@ -1,4 +1,5 @@
 import React from "react";
+
 import ReactDOM from "react-dom/client";
 
 import App from "./App.jsx";
@@ -14,21 +15,25 @@ import {
 } from "./context/OrganizationContext";
 
 
-ReactDOM.createRoot(
-  document.getElementById("root")
-).render(
+ReactDOM
+  .createRoot(
+    document.getElementById(
+      "root"
+    )
+  )
+  .render(
 
-  <React.StrictMode>
+    <React.StrictMode>
 
-    <AuthProvider>
+      <AuthProvider>
 
-      <OrganizationProvider>
+        <OrganizationProvider>
 
-        <App />
+          <App />
 
-      </OrganizationProvider>
+        </OrganizationProvider>
 
-    </AuthProvider>
+      </AuthProvider>
 
-  </React.StrictMode>
-);
+    </React.StrictMode>
+  );

@@ -38,7 +38,7 @@ const ApplicationCard = ({
     application.job;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-gray-200     p-6 shadow-sm transition hover:shadow-md">
 
       {/* Header */}
 
@@ -46,7 +46,7 @@ const ApplicationCard = ({
 
         <div className="flex items-center gap-3">
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-b from-slate-900 to-slate-700 text-white  font-bold">
             {candidate?.firstName?.[0]}
             {candidate?.lastName?.[0]}
           </div>
@@ -85,7 +85,7 @@ const ApplicationCard = ({
           {application.status}
         </span>
 
-      </div>
+      </div> 
 
 
       {/* Details */}

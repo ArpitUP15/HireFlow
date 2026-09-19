@@ -15,9 +15,9 @@ import {
 
 import {
   getInterviews,
-} from "../../services/interviewService";
+} from "../../services/interviewServices";
 
-import InterviewCard from "../../components/interview/InterviewCard";
+import InterviewCard from "../../components/interviews/InterviewCard";
 
 
 const Interviews = () => {
