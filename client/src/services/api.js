@@ -1,88 +1,64 @@
 import axios from "axios";
 
+const api = axios.create({
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:5001/api",
 
-// =====================================================
-// AXIOS INSTANCE
-// =====================================================
+  withCredentials: true,
 
-const api =
-  axios.create({
-    baseURL:
-      import.meta.env.VITE_API_URL ||
-      "http://localhost:5001/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-    withCredentials: true,
-
-    headers: {
-      "Content-Type":
-        "application/json",
-    },
-  });
-
-
-// =====================================================
-// REQUEST INTERCEPTOR
-//
-// Adds organization ID ONLY when one exists.
-// Public landing-page APIs work without it.
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| Organization Header
+|--------------------------------------------------------------------------
+*/
 
 api.interceptors.request.use(
   (config) => {
-
     const organizationId =
       localStorage.getItem(
         "currentOrganizationId"
       );
 
-
     if (organizationId) {
-
       config.headers[
         "x-organization-id"
       ] = organizationId;
     }
 
-
     return config;
   },
 
-  (error) =>
-    Promise.reject(error)
-);
-
-
-// =====================================================
-// RESPONSE INTERCEPTOR
-// =====================================================
-
-api.interceptors.response.use(
-  (response) =>
-    response,
-
   (error) => {
-
-    if (
-      error.response?.status === 401
-    ) {
-
-      console.warn(
-        "Authentication required:",
-        error.response?.data
-          ?.message
-      );
-    }
-
-
-    return Promise.reject(
-      error
-    );
+    return Promise.reject(error);
   }
 );
 
+/*
+|--------------------------------------------------------------------------
+| Response Interceptor
+|--------------------------------------------------------------------------
+*/
 
-// =====================================================
-// EXPORT
-// =====================================================
+api.interceptors.response.use(
+  (response) => response,
+
+  (error) => {
+    if (
+      error.response?.status === 401
+    ) {
+      console.warn(
+        "Authentication required."
+      );
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;

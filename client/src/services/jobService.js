@@ -1,12 +1,12 @@
 import api from "./api";
 
 
-export const getJobs = async () => {
+export const getJobs = async (params = {}) => {
+  const response = await api.get("/jobs", {
+    params,
+  });
 
-  const response =
-    await api.get("/jobs");
-
-  return response;
+  return response.data;
 };
 
 
@@ -18,7 +18,7 @@ export const getJobById =
         `/jobs/${id}`
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -31,7 +31,7 @@ export const createJob =
         jobData
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -47,7 +47,7 @@ export const updateJob =
         jobData
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -59,7 +59,7 @@ export const deleteJob =
         `/jobs/${id}`
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -71,7 +71,7 @@ export const publishJob =
         `/jobs/${id}/publish`
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -83,5 +83,5 @@ export const closeJob =
         `/jobs/${id}/close`
       );
 
-    return response;
+    return response.data;
   };

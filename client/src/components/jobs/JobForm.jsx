@@ -159,7 +159,7 @@ const JobForm = ({
         />
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+          <label className="mb-1.5 block text-sm font-medium text-slate-200">
             Employment Type
           </label>
 
@@ -169,32 +169,32 @@ const JobForm = ({
               form.employmentType
             }
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2.5"
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100"
           >
-            <option value="full-time">
+            <option value="full-time" className="bg-slate-900 text-slate-100">
               Full Time
             </option>
 
-            <option value="part-time">
+            <option value="part-time" className="bg-slate-900 text-slate-100">
               Part Time
             </option>
 
-            <option value="contract">
+            <option value="contract" className="bg-slate-900 text-slate-100">
               Contract
             </option>
 
-            <option value="internship">
+            <option value="internship" className="bg-slate-900 text-slate-100">
               Internship
             </option>
 
-            <option value="freelance">
+            <option value="freelance" className="bg-slate-900 text-slate-100">
               Freelance
             </option>
           </select>
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+          <label className="mb-1.5 block text-sm font-medium text-slate-200">
             Experience Level
           </label>
 
@@ -204,25 +204,25 @@ const JobForm = ({
               form.experienceLevel
             }
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2.5"
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100"
           >
-            <option value="entry">
+            <option value="entry" className="bg-slate-900 text-slate-100">
               Entry
             </option>
 
-            <option value="junior">
+            <option value="junior" className="bg-slate-900 text-slate-100">
               Junior
             </option>
 
-            <option value="mid">
+            <option value="mid" className="bg-slate-900 text-slate-100">
               Mid
             </option>
 
-            <option value="senior">
+            <option value="senior" className="bg-slate-900 text-slate-100">
               Senior
             </option>
 
-            <option value="lead">
+            <option value="lead" className="bg-slate-900 text-slate-100">
               Lead
             </option>
           </select>
@@ -267,7 +267,7 @@ const JobForm = ({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Description
         </label>
 
@@ -278,12 +278,12 @@ const JobForm = ({
           rows="6"
           required
           placeholder="Describe the job..."
-          className="w-full rounded-lg border border-gray-300 p-3 outline-none focus:ring-2 focus:ring-blue-500/20"
+          className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Skills
         </label>
 
@@ -296,7 +296,7 @@ const JobForm = ({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Requirements
         </label>
 
@@ -306,12 +306,12 @@ const JobForm = ({
           onChange={handleChange}
           rows="5"
           placeholder="One requirement per line"
-          className="w-full rounded-lg border border-gray-300 p-3"
+          className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Responsibilities
         </label>
 
@@ -323,7 +323,7 @@ const JobForm = ({
           onChange={handleChange}
           rows="5"
           placeholder="One responsibility per line"
-          className="w-full rounded-lg border border-gray-300 p-3"
+          className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
         />
       </div>
 

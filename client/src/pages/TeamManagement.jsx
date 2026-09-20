@@ -122,19 +122,19 @@ const TeamManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-blue-600 p-6 text-black lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm font-medium text-black">
+            <p className="text-sm font-medium text-slate-300">
               {organization?.name}
             </p>
 
-            <h1 className="mt-1 text-3xl font-bold">
+            <h1 className="mt-1 text-3xl font-bold text-white">
               Team Management
             </h1>
 
-            <p className="mt-2 text-black/70">
+            <p className="mt-2 text-slate-400">
               Manage your organization's recruitment team.
             </p>
           </div>
@@ -154,12 +154,12 @@ const TeamManagement = () => {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center justify-between rounded-lg bg-red-50 p-4 text-sm text-black">
+          <div className="mb-6 flex items-center justify-between rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
             <span>{error}</span>
 
             <button
               onClick={loadMembers}
-              className="rounded p-1 hover:bg-red-100"
+              className="rounded p-1 text-red-300 hover:bg-red-500/20"
             >
               <RefreshCw
                 size={17}
@@ -168,13 +168,13 @@ const TeamManagement = () => {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-blue-200 bg-blue-50 shadow-sm">
-          <div className="border-b border-blue-200 px-5 py-4">
-            <h2 className="font-semibold">
+        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 shadow-sm">
+          <div className="border-b border-slate-800 px-5 py-4">
+            <h2 className="font-semibold text-white">
               Team Members
             </h2>
 
-            <p className="mt-1 text-sm text-black/70">
+            <p className="mt-1 text-sm text-slate-400">
               {members.length} member
               {members.length !== 1
                 ? "s"

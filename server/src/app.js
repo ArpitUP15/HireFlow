@@ -1,11 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
-
-// =====================================================
-// ROUTES
-// =====================================================
+import helmet from "helmet";
 
 import authRoutes from "./routes/authRoutes.js";
 import organizationRoutes from "./routes/organizationRoutes.js";
@@ -13,28 +9,26 @@ import jobRoutes from "./routes/jobRoutes.js";
 import candidateRoutes from "./routes/candidateRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
-import publicRoutes from "./routes/publicRoutes.js";
-
-
-// =====================================================
-// MIDDLEWARE
-// =====================================================
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorMiddleware.js";
 
+const app = express();
 
-// =====================================================
-// APP
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| Security
+|--------------------------------------------------------------------------
+*/
 
-const app =
-  express();
+app.use(helmet());
 
-
-// =====================================================
-// CORS
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| CORS
+|--------------------------------------------------------------------------
+*/
 
 app.use(
   cors({
@@ -46,14 +40,13 @@ app.use(
   })
 );
 
+/*
+|--------------------------------------------------------------------------
+| Body Parser
+|--------------------------------------------------------------------------
+*/
 
-// =====================================================
-// BODY PARSERS
-// =====================================================
-
-app.use(
-  express.json()
-);
+app.use(express.json());
 
 app.use(
   express.urlencoded({
@@ -61,148 +54,86 @@ app.use(
   })
 );
 
+/*
+|--------------------------------------------------------------------------
+| Cookie Parser
+|--------------------------------------------------------------------------
+*/
 
-// =====================================================
-// COOKIE PARSER
-// =====================================================
+app.use(cookieParser());
 
-app.use(
-  cookieParser()
-);
+/*
+|--------------------------------------------------------------------------
+| Health Check
+|--------------------------------------------------------------------------
+*/
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "HireFlow API is running 🚀",
+  });
+});
 
-// =====================================================
-// ROOT
-// =====================================================
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "healthy",
+    service: "HireFlow API",
+    timestamp:
+      new Date().toISOString(),
+  });
+});
 
-app.get(
-  "/",
-  (req, res) => {
-
-    res.status(200).json({
-      success: true,
-      message:
-        "HireFlow API is running 🚀",
-    });
-  }
-);
-
-
-// =====================================================
-// HEALTH CHECK
-// =====================================================
-
-app.get(
-  "/health",
-  (req, res) => {
-
-    res.status(200).json({
-      success: true,
-      status: "healthy",
-      service:
-        "HireFlow API",
-      timestamp:
-        new Date().toISOString(),
-    });
-  }
-);
-
-
-// =====================================================
-// PUBLIC ROUTES
-//
-// IMPORTANT:
-// These routes are BEFORE protected routes.
-// They do NOT require authentication.
-// They do NOT require x-organization-id.
-// =====================================================
-
-app.use(
-  "/api/public",
-  publicRoutes
-);
-
-
-// =====================================================
-// AUTH ROUTES
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
 app.use(
   "/api/auth",
   authRoutes
 );
 
-
-// =====================================================
-// ORGANIZATION ROUTES
-// =====================================================
-
 app.use(
   "/api/organizations",
   organizationRoutes
 );
-
-
-// =====================================================
-// JOB ROUTES
-// =====================================================
 
 app.use(
   "/api/jobs",
   jobRoutes
 );
 
-
-// =====================================================
-// CANDIDATE ROUTES
-// =====================================================
-
 app.use(
   "/api/candidates",
   candidateRoutes
 );
-
-
-// =====================================================
-// APPLICATION ROUTES
-// =====================================================
 
 app.use(
   "/api/applications",
   applicationRoutes
 );
 
-
-// =====================================================
-// INTERVIEW ROUTES — PHASE 6
-// =====================================================
-
 app.use(
   "/api/interviews",
   interviewRoutes
 );
 
-
-// =====================================================
-// 404 HANDLER
-// =====================================================
-
 app.use(
-  notFound
+  "/api/analytics",
+  analyticsRoutes
 );
 
+/*
+|--------------------------------------------------------------------------
+| Error Handling
+|--------------------------------------------------------------------------
+*/
 
-// =====================================================
-// ERROR HANDLER
-// =====================================================
+app.use(notFound);
 
-app.use(
-  errorHandler
-);
-
-
-// =====================================================
-// EXPORT
-// =====================================================
+app.use(errorHandler);
 
 export default app;

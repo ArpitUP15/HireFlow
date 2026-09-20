@@ -26,8 +26,8 @@ const OrganizationDashboard = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-blue-600 p-8 text-black">
-        <div className="rounded-xl bg-red-50 p-5 text-black">
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] p-8 text-slate-100">
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-5 text-red-300">
           {error}
         </div>
       </div>
@@ -36,25 +36,25 @@ const OrganizationDashboard = () => {
 
   if (!organization) {
     return (
-      <div className="min-h-screen bg-blue-600 p-8 text-black">
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] p-8 text-slate-100">
         No organization selected.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-blue-600 p-6 text-black lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
-          <p className="text-sm font-medium text-black">
+          <p className="text-sm font-medium text-slate-300">
             Organization
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-black">
+          <h1 className="mt-1 text-3xl font-bold text-white">
             {organization.name}
           </h1>
 
-          <p className="mt-2 text-black/70">
+          <p className="mt-2 text-slate-400">
             Manage your HireFlow workspace
           </p>
         </div>
@@ -100,16 +100,16 @@ const StatCard = ({
   value,
 }) => {
   return (
-    <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 text-black shadow-sm">
-      <div className="mb-4 text-black">
+    <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-5 text-slate-100 shadow-sm">
+      <div className="mb-4 text-slate-200">
         {icon}
       </div>
 
-      <p className="text-sm text-black/70">
+      <p className="text-sm text-slate-400">
         {title}
       </p>
 
-      <p className="mt-1 text-2xl font-bold capitalize">
+      <p className="mt-1 text-2xl font-bold capitalize text-white">
         {value}
       </p>
     </div>

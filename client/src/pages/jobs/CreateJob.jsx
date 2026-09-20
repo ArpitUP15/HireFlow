@@ -29,23 +29,23 @@ const CreateJob = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-white">
           Create Job
         </h1>
 
-        <p className="mt-2 text-gray-500">
+        <p className="mt-2 text-slate-400">
           Create a new job opening.
         </p>
 
         {error && (
-          <div className="mt-6 rounded-lg bg-red-50 p-4 text-red-600">
+          <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
             {error}
           </div>
         )}
 
-        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+        <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-sm">
           <JobForm
             onSubmit={
               handleSubmit

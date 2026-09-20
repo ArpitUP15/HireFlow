@@ -6,22 +6,22 @@ import {
 
 const statusStyles = {
   applied:
-    "bg-blue-50 text-blue-700",
+    "border border-blue-400/30 bg-blue-500/10 text-blue-300",
 
   screening:
-    "bg-yellow-50 text-yellow-700",
+    "border border-yellow-400/30 bg-yellow-500/10 text-yellow-300",
 
   shortlisted:
-    "bg-purple-50 text-purple-700",
+    "border border-purple-400/30 bg-purple-500/10 text-purple-300",
 
   interview:
-    "bg-orange-50 text-orange-700",
+    "border border-orange-400/30 bg-orange-500/10 text-orange-300",
 
   selected:
-    "bg-green-50 text-green-700",
+    "border border-green-400/30 bg-green-500/10 text-green-300",
 
   rejected:
-    "bg-red-50 text-red-700",
+    "border border-red-400/30 bg-red-500/10 text-red-300",
 };
 
 
@@ -38,7 +38,7 @@ const ApplicationCard = ({
     application.job;
 
   return (
-    <div className="rounded-2xl border border-gray-200     p-6 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-sm transition hover:border-slate-700 hover:shadow-lg">
 
       {/* Header */}
 
@@ -46,7 +46,7 @@ const ApplicationCard = ({
 
         <div className="flex items-center gap-3">
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-b from-slate-900 to-slate-700 text-white  font-bold">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-slate-500 font-bold text-white">
             {candidate?.firstName?.[0]}
             {candidate?.lastName?.[0]}
           </div>
@@ -59,13 +59,13 @@ const ApplicationCard = ({
                   application._id
                 )
               }
-              className="font-bold text-gray-900 hover:text-blue-600"
+              className="font-bold text-slate-100 hover:text-blue-400"
             >
               {candidate?.firstName}{" "}
               {candidate?.lastName}
             </button>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-400">
               {candidate?.headline ||
                 "Candidate"}
             </p>
@@ -79,7 +79,7 @@ const ApplicationCard = ({
             statusStyles[
               application.status
             ] ||
-            "bg-gray-100 text-gray-700"
+            "border border-slate-600 bg-slate-800 text-slate-200"
           }`}
         >
           {application.status}
@@ -90,7 +90,7 @@ const ApplicationCard = ({
 
       {/* Details */}
 
-      <div className="mt-5 space-y-2 text-sm text-gray-500">
+      <div className="mt-5 space-y-2 text-sm text-slate-400">
 
         <div className="flex items-center gap-2">
           <BriefcaseBusiness size={16} />
@@ -126,7 +126,7 @@ const ApplicationCard = ({
             .map((skill) => (
               <span
                 key={skill}
-                className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700"
+                className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-200"
               >
                 {skill}
               </span>
@@ -138,7 +138,7 @@ const ApplicationCard = ({
 
       {/* Actions */}
 
-      <div className="mt-6 border-t pt-5">
+      <div className="mt-6 border-t border-slate-800 pt-5">
 
         <div className="flex flex-wrap gap-2">
 
@@ -148,7 +148,7 @@ const ApplicationCard = ({
                 application._id
               )
             }
-            className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium hover:bg-gray-200"
+            className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700"
           >
             View
           </button>
@@ -164,29 +164,29 @@ const ApplicationCard = ({
                 event.target.value
               )
             }
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
           >
-            <option value="applied">
+            <option value="applied" className="bg-slate-900 text-slate-100">
               Applied
             </option>
 
-            <option value="screening">
+            <option value="screening" className="bg-slate-900 text-slate-100">
               Screening
             </option>
 
-            <option value="shortlisted">
+            <option value="shortlisted" className="bg-slate-900 text-slate-100">
               Shortlisted
             </option>
 
-            <option value="interview">
+            <option value="interview" className="bg-slate-900 text-slate-100">
               Interview
             </option>
 
-            <option value="selected">
+            <option value="selected" className="bg-slate-900 text-slate-100">
               Selected
             </option>
 
-            <option value="rejected">
+            <option value="rejected" className="bg-slate-900 text-slate-100">
               Rejected
             </option>
           </select>
@@ -198,7 +198,7 @@ const ApplicationCard = ({
                 application._id
               )
             }
-            className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-100"
+            className="rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-300 hover:bg-red-500/20"
           >
             Delete
           </button>

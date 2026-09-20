@@ -102,15 +102,15 @@ const Jobs = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 lg:p-8 bg-linear-to-b from- to-slate-900 text-white">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
           <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-white">
               Jobs
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-slate-400">
               Manage your organization's job openings.
             </p>
           </div>
@@ -120,7 +120,7 @@ const Jobs = () => {
               (window.location.href =
                 "/jobs/create")
             }
-            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700"
+            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-500"
           >
             <Plus size={18} />
             Create Job
@@ -131,7 +131,7 @@ const Jobs = () => {
           <div className="relative flex-1">
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2  text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
 
             <input
@@ -150,29 +150,29 @@ const Jobs = () => {
                 }
               }}
               placeholder="Search jobs..."
-              className="w-full rounded-lg border border-gray-300  py-2.5 pl-10 pr-4 outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-lg border border-slate-700 bg-slate-900/80 py-2.5 pl-10 pr-4 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
             />
           </div>
 
           <button
             onClick={loadJobs}
-            className="rounded-lg bg-gray-900 px-5 py-2.5 font-medium text-white"
+            className="rounded-lg bg-slate-100 px-5 py-2.5 font-medium text-slate-900 transition hover:bg-slate-200"
           >
             Search
           </button>
         </div>
 
         {loading ? (
-          <div className="py-20 text-center text-gray-500">
+          <div className="py-20 text-center text-slate-400">
             Loading jobs...
           </div>
         ) : jobs.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-dashed  py-20 text-center">
-            <h2 className="text-xl font-semibold">
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 py-20 text-center">
+            <h2 className="text-xl font-semibold text-white">
               No jobs found
             </h2>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-slate-400">
               Create your first job opening.
             </p>
           </div>

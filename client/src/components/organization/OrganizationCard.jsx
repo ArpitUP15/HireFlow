@@ -13,10 +13,10 @@ const OrganizationCard = ({
       className="
         rounded-2xl
         border
-        border-blue-200
-        bg-blue-50
-        text-black
+        border-slate-800
+        bg-slate-900/90
         p-6
+        text-slate-100
         shadow-sm
       "
     >
@@ -30,19 +30,19 @@ const OrganizationCard = ({
             items-center
             justify-center
             rounded-xl
-            bg-blue-200
-            text-black
+            bg-blue-500/20
+            text-blue-300
           "
         >
           <Building2 size={28} />
         </div>
 
         <div className="min-w-0">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold text-white">
             {organization.name}
           </h2>
 
-          <p className="mt-1 text-sm text-black/70">
+          <p className="mt-1 text-sm text-slate-400">
             {organization.industry ||
               "Industry not specified"}
           </p>
@@ -52,12 +52,14 @@ const OrganizationCard = ({
               mt-3
               inline-block
               rounded-full
-              bg-blue-200
+              border
+              border-blue-400/30
+              bg-blue-500/10
               px-3
               py-1
               text-xs
               font-medium
-              text-black
+              text-blue-300
             "
           >
             {membership?.role}
@@ -66,7 +68,7 @@ const OrganizationCard = ({
       </div>
 
       {organization.description && (
-        <p className="mt-5 text-sm leading-6 text-black/80">
+        <p className="mt-5 text-sm leading-6 text-slate-300">
           {organization.description}
         </p>
       )}
@@ -77,11 +79,12 @@ const OrganizationCard = ({
           grid
           gap-3
           border-t
+          border-slate-800
           pt-5
           sm:grid-cols-2
         "
       >
-        <div className="flex items-center gap-2 text-sm text-black/80">
+        <div className="flex items-center gap-2 text-sm text-slate-300">
           <Users size={17} />
           {organization.companySize ||
             "Size not specified"}
@@ -97,7 +100,7 @@ const OrganizationCard = ({
               items-center
               gap-2
               text-sm
-              text-black
+              text-blue-300
               hover:underline
             "
           >

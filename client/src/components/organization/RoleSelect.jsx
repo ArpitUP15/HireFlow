@@ -13,26 +13,29 @@ const RoleSelect = ({
       className="
         rounded-lg
         border
-        border-gray-300
-        bg-white
+        border-slate-700
+        bg-slate-950
         px-3
         py-2
         text-sm
+        text-slate-100
         outline-none
+        focus:border-blue-500
         focus:ring-2
         focus:ring-blue-500/20
-        disabled:bg-gray-100
+        disabled:bg-slate-800
+        disabled:text-slate-400
       "
     >
-      <option value="hr_admin">
+      <option value="hr_admin" className="bg-slate-900 text-slate-100">
         HR Admin
       </option>
 
-      <option value="recruiter">
+      <option value="recruiter" className="bg-slate-900 text-slate-100">
         Recruiter
       </option>
 
-      <option value="interviewer">
+      <option value="interviewer" className="bg-slate-900 text-slate-100">
         Interviewer
       </option>
     </select>

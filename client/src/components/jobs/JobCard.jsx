@@ -13,20 +13,22 @@ const JobCard = ({
   onClose,
   onView,
 }) => {
+  const isPublished = job.status === "published";
+
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-sm transition hover:border-slate-700 hover:shadow-lg">
       <div className="flex items-start justify-between gap-4">
         <div>
           <button
             onClick={() =>
               onView(job._id)
             }
-            className="text-left text-xl font-bold text-gray-900 hover:text-blue-600"
+            className="text-left text-xl font-bold text-slate-100 hover:text-blue-400"
           >
             {job.title}
           </button>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-slate-400">
             {job.department ||
               "General"}
           </p>
@@ -42,11 +44,11 @@ const JobCard = ({
             ${
               job.status ===
               "published"
-                ? "bg-green-50 text-green-700"
+                ? "border border-green-400/30 bg-green-500/10 text-green-300"
                 : job.status ===
                   "closed"
-                ? "bg-red-50 text-red-700"
-                : "bg-yellow-50 text-yellow-700"
+                ? "border border-red-400/30 bg-red-500/10 text-red-300"
+                : "border border-yellow-400/30 bg-yellow-500/10 text-yellow-300"
             }
           `}
         >
@@ -54,7 +56,7 @@ const JobCard = ({
         </span>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-500">
+      <div className="mt-5 flex flex-wrap gap-4 text-sm text-slate-400">
         <span className="flex items-center gap-1.5">
           <MapPin size={16} />
           {job.location ||
@@ -84,7 +86,7 @@ const JobCard = ({
             .map((skill) => (
               <span
                 key={skill}
-                className="rounded-full bg-blue-50 px-3 py-1 text-xs text-blue-700"
+                className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-200"
               >
                 {skill}
               </span>
@@ -92,12 +94,12 @@ const JobCard = ({
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap gap-2 border-t pt-5">
+      <div className="mt-6 flex flex-wrap gap-2 border-t border-slate-800 pt-5">
         <button
           onClick={() =>
             onView(job._id)
           }
-          className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium hover:bg-gray-200"
+          className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700"
         >
           View
         </button>
@@ -106,9 +108,25 @@ const JobCard = ({
           onClick={() =>
             onEdit(job._id)
           }
-          className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+          className="rounded-lg bg-blue-500/10 px-3 py-2 text-sm font-medium text-blue-300 hover:bg-blue-500/20"
         >
           Edit
+        </button>
+
+        <button
+          onClick={() =>
+            isPublished
+              ? (window.location.href =
+                  "/applications/create")
+              : onView(job._id)
+          }
+          className={`rounded-lg px-3 py-2 text-sm font-medium ${
+            isPublished
+              ? "bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/30 hover:from-blue-500 hover:to-indigo-500"
+              : "bg-slate-800 text-slate-400"
+          }`}
+        >
+          {isPublished ? "Apply" : "View Details"}
         </button>
 
         {job.status ===
@@ -117,7 +135,7 @@ const JobCard = ({
             onClick={() =>
               onPublish(job._id)
             }
-            className="rounded-lg bg-green-50 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-100"
+            className="rounded-lg bg-green-500/10 px-3 py-2 text-sm font-medium text-green-300 hover:bg-green-500/20"
           >
             Publish
           </button>
@@ -129,7 +147,7 @@ const JobCard = ({
             onClick={() =>
               onClose(job._id)
             }
-            className="rounded-lg bg-orange-50 px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100"
+            className="rounded-lg bg-orange-500/10 px-3 py-2 text-sm font-medium text-orange-300 hover:bg-orange-500/20"
           >
             Close
           </button>
@@ -139,7 +157,7 @@ const JobCard = ({
           onClick={() =>
             onDelete(job._id)
           }
-          className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-100"
+          className="rounded-lg bg-red-500/10 px-3 py-2 text-sm font-medium text-red-300 hover:bg-red-500/20"
         >
           Delete
         </button>

@@ -157,7 +157,7 @@ const Applications = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
 
       <div className="mx-auto max-w-7xl">
 
@@ -167,11 +167,11 @@ const Applications = () => {
 
           <div>
 
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-white">
               Applications
             </h1>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-slate-400">
               Manage your recruitment pipeline.
             </p>
 
@@ -183,7 +183,7 @@ const Applications = () => {
               (window.location.href =
                 "/applications/create")
             }
-            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700"
+            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-500"
           >
             <Plus size={18} />
             New Application
@@ -212,14 +212,14 @@ const Applications = () => {
                     0
                   );
                 }}
-                className="rounded-xl border    p-4 text-left shadow-sm hover:shadow-md"
+                className="rounded-xl border border-slate-700 bg-slate-900/80 p-4 text-left shadow-sm transition hover:border-blue-500/70 hover:bg-slate-800"
               >
 
-                <p className="text-xs font-medium uppercase text-gray-500">
+                <p className="text-xs font-medium uppercase text-slate-400">
                   {item.status}
                 </p>
 
-                <p className="mt-2 text-2xl font-bold">
+                <p className="mt-2 text-2xl font-bold text-white">
                   {item.count}
                 </p>
 
@@ -238,7 +238,7 @@ const Applications = () => {
 
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
 
             <input
@@ -259,7 +259,7 @@ const Applications = () => {
 
               }}
               placeholder="Search candidate or job..."
-              className="w-full rounded-lg border border-gray-300    py-2.5 pl-10 pr-4"
+              className="w-full rounded-lg border border-slate-700 bg-slate-900/80 py-2.5 pl-10 pr-4 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
             />
 
           </div>
@@ -274,34 +274,34 @@ const Applications = () => {
               );
 
             }}
-            className="rounded-lg border border-gray-300    px-4 py-2.5"
+            className="rounded-lg border border-slate-700 bg-slate-900/80 px-4 py-2.5 text-slate-100"
           >
 
-            <option value="">
+            <option value="" className="bg-slate-900 text-slate-100">
               All Statuses
             </option>
 
-            <option value="applied">
+            <option value="applied" className="bg-slate-900 text-slate-100">
               Applied
             </option>
 
-            <option value="screening">
+            <option value="screening" className="bg-slate-900 text-slate-100">
               Screening
             </option>
 
-            <option value="shortlisted">
+            <option value="shortlisted" className="bg-slate-900 text-slate-100">
               Shortlisted
             </option>
 
-            <option value="interview">
+            <option value="interview" className="bg-slate-900 text-slate-100">
               Interview
             </option>
 
-            <option value="selected">
+            <option value="selected" className="bg-slate-900 text-slate-100">
               Selected
             </option>
 
-            <option value="rejected">
+            <option value="rejected" className="bg-slate-900 text-slate-100">
               Rejected
             </option>
 
@@ -312,7 +312,7 @@ const Applications = () => {
             onClick={
               loadApplications
             }
-            className="rounded-lg bg-gray-900 px-5 py-2.5 font-medium text-white"
+            className="rounded-lg bg-slate-100 px-5 py-2.5 font-medium text-slate-900 transition hover:bg-slate-200"
           >
             Search
           </button>
@@ -324,20 +324,20 @@ const Applications = () => {
 
         {loading ? (
 
-          <div className="py-20 text-center text-gray-500">
+          <div className="py-20 text-center text-slate-400">
             Loading applications...
           </div>
 
         ) : applications.length ===
           0 ? (
 
-          <div className="mt-8 rounded-2xl border border-dashed    py-20 text-center">
+          <div className="mt-8 rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 py-20 text-center">
 
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold text-white">
               No applications found
             </h2>
 
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-slate-400">
               Create your first application.
             </p>
 

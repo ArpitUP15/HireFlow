@@ -9,13 +9,13 @@ const Button = ({
 }) => {
   const styles = {
     primary:
-      "bg-blue-600 hover:bg-blue-700 text-white",
+      "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20",
     secondary:
-      "bg-gray-100 hover:bg-gray-200 text-gray-800",
+      "bg-slate-800 hover:bg-slate-700 text-slate-100",
     danger:
-      "bg-red-600 hover:bg-red-700 text-white",
+      "bg-red-600 hover:bg-red-500 text-white",
     outline:
-      "border border-gray-300 hover:bg-gray-50 text-gray-700",
+      "border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-100",
   };
 
   return (

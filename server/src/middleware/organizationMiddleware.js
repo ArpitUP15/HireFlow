@@ -135,6 +135,7 @@ export const organizationMiddleware =
 export const loadOrganization =
   organizationMiddleware;
 
+export default organizationMiddleware;
 
 // =====================================================
 // ROLE AUTHORIZATION

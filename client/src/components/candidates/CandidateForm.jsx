@@ -150,7 +150,7 @@ const CandidateForm = ({
         />
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+          <label className="mb-1.5 block text-sm font-medium text-slate-200">
             Source
           </label>
 
@@ -158,29 +158,29 @@ const CandidateForm = ({
             name="source"
             value={form.source}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2.5"
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100"
           >
-            <option value="manual">
+            <option value="manual" className="bg-slate-900 text-slate-100">
               Manual
             </option>
 
-            <option value="linkedin">
+            <option value="linkedin" className="bg-slate-900 text-slate-100">
               LinkedIn
             </option>
 
-            <option value="referral">
+            <option value="referral" className="bg-slate-900 text-slate-100">
               Referral
             </option>
 
-            <option value="job-board">
+            <option value="job-board" className="bg-slate-900 text-slate-100">
               Job Board
             </option>
 
-            <option value="website">
+            <option value="website" className="bg-slate-900 text-slate-100">
               Website
             </option>
 
-            <option value="other">
+            <option value="other" className="bg-slate-900 text-slate-100">
               Other
             </option>
           </select>
@@ -196,7 +196,7 @@ const CandidateForm = ({
       />
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-sm font-medium text-slate-200">
           Professional Summary
         </label>
 
@@ -205,7 +205,7 @@ const CandidateForm = ({
           value={form.summary}
           onChange={handleChange}
           rows="6"
-          className="w-full rounded-lg border border-gray-300 p-3"
+          className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
           placeholder="Candidate summary..."
         />
       </div>

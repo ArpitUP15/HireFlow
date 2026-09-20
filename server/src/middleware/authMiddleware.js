@@ -139,6 +139,8 @@ export const protect = async (
 // ROLE AUTHORIZATION
 // =====================================================
 
+export default protect;
+
 export const authorize =
   (...roles) => {
 

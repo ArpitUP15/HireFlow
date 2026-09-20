@@ -39,7 +39,7 @@ import ApplicationDetails from "../pages/applications/ApplicationDetails";
 import Interviews from "../pages/interviews/Interviews";
 import CreateInterview from "../pages/interviews/CreateInterview";
 import InterviewDetails from "../pages/interviews/InterviewDetails";
-
+import EditInterview from "../pages/interviews/EditInterview";
 import NotFound from "../pages/NotFound";
 import Unauthorized from "../pages/Unauthorized";
 
@@ -186,6 +186,11 @@ const AppRoutes = () => {
           <Route
             path="/interviews/:id"
             element={<InterviewDetails />}
+          />
+
+          <Route
+            path="/interviews/:id/edit"
+            element={<EditInterview />}
           />
 
         </Route>

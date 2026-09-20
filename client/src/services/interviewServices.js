@@ -35,7 +35,6 @@ export const getInterviewById =
     return response.data;
   };
 
-
 // =====================================================
 // CREATE INTERVIEW
 // =====================================================
