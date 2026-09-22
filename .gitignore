@@ -1,17 +1,14 @@
 node_modules/
-
 .env
+.env.test
 .env.local
 .env.production
 
-.env.test
-
-logs/
-*.log
-
-coverage/
 dist/
 build/
 
-.DS_Store
-Thumbs.db
+coverage/
+*.log
+
+server/uploads/*
+!server/uploads/.gitkeep
