@@ -1,16 +1,7 @@
 import mongoose from "mongoose";
 
-
-// =====================================================
-// INTERVIEW SCHEMA
-// =====================================================
-
 const interviewSchema = new mongoose.Schema(
   {
-    // -------------------------------------------------
-    // Organization
-    // -------------------------------------------------
-
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
@@ -18,33 +9,11 @@ const interviewSchema = new mongoose.Schema(
       index: true,
     },
 
-
-    // -------------------------------------------------
-    // Application
-    // -------------------------------------------------
-
     application: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Application",
       required: true,
-      index: true,
     },
-
-
-    // -------------------------------------------------
-    // Job
-    // -------------------------------------------------
-
-    job: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Job",
-      required: true,
-    },
-
-
-    // -------------------------------------------------
-    // Candidate
-    // -------------------------------------------------
 
     candidate: {
       type: mongoose.Schema.Types.ObjectId,
@@ -52,223 +21,112 @@ const interviewSchema = new mongoose.Schema(
       required: true,
     },
 
-
-    // -------------------------------------------------
-    // Interview Title
-    // -------------------------------------------------
-
-    title: {
-      type: String,
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
       required: true,
-      trim: true,
     },
 
+    interviewer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
-    // -------------------------------------------------
-    // Interview Round
-    // -------------------------------------------------
-
-    round: {
+    interviewType: {
       type: String,
       enum: [
-        "screening",
-        "technical",
-        "hr",
-        "managerial",
-        "final",
-        "custom",
+        "Technical",
+        "HR",
+        "Behavioral",
+        "Screening",
+        "Final",
       ],
-      default: "technical",
+      required: true,
     },
 
-
-    // -------------------------------------------------
-    // Custom Round Name
-    // -------------------------------------------------
-
-    roundName: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
-
-    // -------------------------------------------------
-    // Interview Type
-    // -------------------------------------------------
-
-    type: {
-      type: String,
-      enum: [
-        "video",
-        "phone",
-        "onsite",
-      ],
-      default: "video",
-    },
-
-
-    // -------------------------------------------------
-    // Interview Date
-    // -------------------------------------------------
-
-    scheduledAt: {
+    interviewDate: {
       type: Date,
       required: true,
     },
 
+    startTime: String,
 
-    // -------------------------------------------------
-    // Duration
-    // -------------------------------------------------
+    endTime: String,
 
-    duration: {
-      type: Number,
-      required: true,
-      min: 15,
-      default: 60,
-    },
-
-
-    // -------------------------------------------------
-    // Meeting Information
-    // -------------------------------------------------
-
-    meetingLink: {
+    mode: {
       type: String,
-      trim: true,
-      default: "",
+      enum: [
+        "Online",
+        "Offline",
+        "Hybrid",
+      ],
+      default: "Online",
     },
 
+    location: String,
 
-    location: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
-
-    // -------------------------------------------------
-    // Interviewers
-    // -------------------------------------------------
-
-    interviewers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-
-
-    // -------------------------------------------------
-    // Status
-    // -------------------------------------------------
+    meetingLink: String,
 
     status: {
       type: String,
       enum: [
-        "scheduled",
-        "in_progress",
-        "completed",
-        "cancelled",
-        "rescheduled",
+        "Scheduled",
+        "Confirmed",
+        "Completed",
+        "Cancelled",
+        "Rescheduled",
+        "No Show",
       ],
-      default: "scheduled",
+      default: "Scheduled",
     },
-
-
-    // -------------------------------------------------
-    // Feedback
-    // -------------------------------------------------
 
     feedback: {
       type: String,
-      trim: true,
       default: "",
     },
 
+    scores: {
+      dsa: {
+        type: Number,
+        min: 0,
+        max: 10,
+      },
 
-    // -------------------------------------------------
-    // Score
-    // -------------------------------------------------
+      react: {
+        type: Number,
+        min: 0,
+        max: 10,
+      },
 
-    score: {
+      node: {
+        type: Number,
+        min: 0,
+        max: 10,
+      },
+
+      communication: {
+        type: Number,
+        min: 0,
+        max: 10,
+      },
+    },
+
+    overallScore: {
       type: Number,
       min: 0,
       max: 10,
-      default: null,
     },
-
-
-    // -------------------------------------------------
-    // Recommendation
-    // -------------------------------------------------
-
-    recommendation: {
-      type: String,
-      enum: [
-        "strong_yes",
-        "yes",
-        "neutral",
-        "no",
-        "strong_no",
-        "",
-      ],
-      default: "",
-    },
-
-
-    // -------------------------------------------------
-    // Hiring Decision
-    // -------------------------------------------------
-
-    hiringDecision: {
-      type: String,
-      enum: [
-        "pending",
-        "hire",
-        "reject",
-        "hold",
-      ],
-      default: "pending",
-    },
-
-
-    // -------------------------------------------------
-    // Notes
-    // -------------------------------------------------
 
     notes: {
       type: String,
-      trim: true,
       default: "",
     },
   },
-
   {
     timestamps: true,
   }
 );
-
-
-// =====================================================
-// INDEXES
-// =====================================================
-
-interviewSchema.index({
-  organization: 1,
-  scheduledAt: 1,
-});
-
-interviewSchema.index({
-  organization: 1,
-  status: 1,
-});
-
-interviewSchema.index({
-  application: 1,
-});
-
 
 export default mongoose.model(
   "Interview",

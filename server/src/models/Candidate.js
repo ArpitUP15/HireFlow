@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const candidateSchema = new mongoose.Schema(
   {
+    // --------------------------------------------------
+    // ORGANIZATION
+    // --------------------------------------------------
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
@@ -9,12 +12,9 @@ const candidateSchema = new mongoose.Schema(
       index: true,
     },
 
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-
+    // --------------------------------------------------
+    // BASIC INFORMATION
+    // --------------------------------------------------
     firstName: {
       type: String,
       required: true,
@@ -37,29 +37,16 @@ const candidateSchema = new mongoose.Schema(
     phone: {
       type: String,
       trim: true,
+      default: "",
     },
 
-    location: {
-      type: String,
-      trim: true,
+    // --------------------------------------------------
+    // PROFESSIONAL INFORMATION
+    // --------------------------------------------------
+    skills: {
+      type: [String],
+      default: [],
     },
-
-    headline: {
-      type: String,
-      trim: true,
-    },
-
-    summary: {
-      type: String,
-      trim: true,
-    },
-
-    skills: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
 
     experience: {
       type: Number,
@@ -67,40 +54,71 @@ const candidateSchema = new mongoose.Schema(
       min: 0,
     },
 
-    education: [
-      {
-        degree: String,
-        institution: String,
-        graduationYear: Number,
-      },
-    ],
+    education: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    location: {
+      type: String,
+      trim: true,
+      default: "",
+    },
 
     resumeUrl: {
       type: String,
+      trim: true,
       default: "",
     },
 
-    linkedinUrl: {
+    resumeFileName: {
       type: String,
+      trim: true,
       default: "",
     },
 
-    portfolioUrl: {
-      type: String,
-      default: "",
-    },
+    // --------------------------------------------------
+    // AI SCREENING
+    // --------------------------------------------------
+    aiScreening: {
+      matchScore: {
+        type: Number,
+        default: null,
+        min: 0,
+        max: 100,
+      },
 
-    source: {
-      type: String,
-      enum: [
-        "website",
-        "linkedin",
-        "referral",
-        "job-board",
-        "manual",
-        "other",
-      ],
-      default: "manual",
+      skillsMatched: {
+        type: [String],
+        default: [],
+      },
+
+      skillsMissing: {
+        type: [String],
+        default: [],
+      },
+
+      strengths: {
+        type: [String],
+        default: [],
+      },
+
+      concerns: {
+        type: [String],
+        default: [],
+      },
+
+      recommendation: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      analyzedAt: {
+        type: Date,
+        default: null,
+      },
     },
   },
   {
@@ -108,12 +126,30 @@ const candidateSchema = new mongoose.Schema(
   }
 );
 
+// --------------------------------------------------
+// INDEX FOR AI-ASSISTED CANDIDATE RANKING
+// --------------------------------------------------
 candidateSchema.index({
   organization: 1,
-  email: 1,
+  "aiScreening.matchScore": -1,
 });
 
-export default mongoose.model(
+// --------------------------------------------------
+// OPTIONAL COMPOUND INDEX
+// Helps find candidates within an organization
+// sorted by latest AI analysis.
+// --------------------------------------------------
+candidateSchema.index({
+  organization: 1,
+  "aiScreening.analyzedAt": -1,
+});
+
+// --------------------------------------------------
+// MODEL
+// --------------------------------------------------
+const Candidate = mongoose.model(
   "Candidate",
   candidateSchema
 );
+
+export default Candidate;

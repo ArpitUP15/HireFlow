@@ -10,10 +10,14 @@ import candidateRoutes from "./routes/candidateRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import publicRoutes from "./routes/publicRoutes.js";
 
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorMiddleware.js";
 
+import aiRoutes from "./routes/aiRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 const app = express();
 
 /*
@@ -92,6 +96,11 @@ app.get("/health", (req, res) => {
 */
 
 app.use(
+  "/api/public",
+  publicRoutes
+);
+
+app.use(
   "/api/auth",
   authRoutes
 );
@@ -126,6 +135,17 @@ app.use(
   analyticsRoutes
 );
 
+app.use(
+  "/api/ai",
+  aiRoutes
+);
+
+app.use(
+  "/api/notifications",
+  notificationRoutes
+);
+
+app.use("/api/admin", adminRoutes);
 /*
 |--------------------------------------------------------------------------
 | Error Handling

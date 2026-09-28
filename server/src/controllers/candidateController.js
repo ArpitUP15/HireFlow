@@ -1,5 +1,8 @@
 import Candidate from "../models/Candidate.js";
-
+import {
+  extractResumeText,
+  deleteResumeFile,
+} from "../services/resumeService.js";
 
 // CREATE CANDIDATE
 const createCandidate = async (
@@ -289,11 +292,76 @@ const deleteCandidate =
     }
   };
 
+//Upload Candidate resume
+const uploadCandidateResume = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { id } = req.params;
 
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Resume file is required",
+      });
+    }
+
+    const candidate = await Candidate.findOne({
+      _id: id,
+      organization: req.headers["x-organization-id"],
+    });
+
+    if (!candidate) {
+      await deleteResumeFile(req.file.path);
+
+      return res.status(404).json({
+        success: false,
+        message: "Candidate not found",
+      });
+    }
+
+    if (candidate.resume?.filePath) {
+      await deleteResumeFile(
+        candidate.resume.filePath
+      );
+    }
+
+    let resumeText = "";
+
+    if (req.file.mimetype === "application/pdf") {
+      resumeText = await extractResumeText(
+        req.file.path
+      );
+    }
+
+    candidate.resume = {
+      originalName: req.file.originalname,
+      fileName: req.file.filename,
+      filePath: req.file.path,
+      mimeType: req.file.mimetype,
+      uploadedAt: new Date(),
+    };
+
+    candidate.resumeText = resumeText;
+
+    await candidate.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Resume uploaded successfully",
+      candidate,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   createCandidate,
   getCandidates,
   getCandidateById,
   updateCandidate,
   deleteCandidate,
+  uploadCandidateResume
 };

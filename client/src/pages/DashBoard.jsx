@@ -4,6 +4,10 @@ import {
 } from "react";
 
 import {
+  useNavigate,
+} from "react-router-dom";
+
+import {
   BriefcaseBusiness,
   Users,
   FileText,
@@ -11,13 +15,32 @@ import {
   Loader2,
   AlertCircle,
   TrendingUp,
+  Building2,
 } from "lucide-react";
 
+import {
+  useAuth,
+} from "../context/useAuth";
+import {
+  useOrganization,
+} from "../context/OrganizationContext";
 import {
   getDashboardAnalytics,
 } from "../services/analyticsService";
 
 const DashBoard = () => {
+  const navigate =
+    useNavigate();
+
+  const {
+    user,
+  } = useAuth();
+
+  const {
+    organizations,
+    loading: organizationLoading,
+  } = useOrganization();
+
   const [
     dashboardData,
     setDashboardData,
@@ -232,6 +255,14 @@ const DashBoard = () => {
     },
   ];
 
+  const canCreateOrganization =
+    user?.role !== "candidate";
+
+  const showOrganizationSetupCard =
+    canCreateOrganization &&
+    !organizationLoading &&
+    organizations.length === 0;
+
   return (
     <div className="min-h-screen bg-slate-950 p-4 text-white sm:p-6 lg:p-8">
 
@@ -250,6 +281,36 @@ const DashBoard = () => {
           and hiring performance.
         </p>
       </div>
+
+      {showOrganizationSetupCard && (
+        <div className="mb-8 rounded-2xl border border-blue-500/30 bg-blue-500/10 p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="rounded-xl bg-blue-500/15 p-3 text-blue-300">
+                <Building2 size={22} />
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold text-white">
+                  Create your organization
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-300">
+                  Set up your workspace to manage jobs, candidates, and team access.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/organization/setup")}
+              className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500"
+            >
+              Create organization
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Statistics */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

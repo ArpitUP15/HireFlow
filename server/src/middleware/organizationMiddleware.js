@@ -11,10 +11,28 @@ export const organizationMiddleware =
   async (req, res, next) => {
     try {
 
+      if (req.user?.role === "candidate") {
+        req.organization = null;
+        req.organizationMember = null;
+        return next();
+      }
+
       let organizationId =
         req.headers[
           "x-organization-id"
         ];
+
+      const firstMembership =
+        await OrganizationMember.findOne({
+          user: req.user._id,
+          status: "active",
+        })
+          .sort({
+            createdAt: 1,
+          })
+          .populate(
+            "organization"
+          );
 
 
       // -------------------------------------------------
@@ -25,39 +43,21 @@ export const organizationMiddleware =
 
       if (!organizationId) {
 
-        const firstMembership =
-          await OrganizationMember.findOne({
-            user: req.user._id,
-            status: "active",
-          })
-            .sort({
-              createdAt: 1,
-            })
-            .populate(
-              "organization"
-            );
-
-
-        // -----------------------------------------------
-        // User has no organization
-        // -----------------------------------------------
-
         if (!firstMembership) {
-
-          res.status(404);
-
-          throw new Error(
-            "No organization found. Please create or join an organization first."
+          if (typeof res?.status === "function") {
+            res.status(404);
+          }
+          return next(
+            new Error(
+              "No organization found. Please create or join an organization first."
+            )
           );
         }
 
-
         req.organization =
           firstMembership.organization;
-
         req.organizationMember =
           firstMembership;
-
         return next();
       }
 
@@ -71,11 +71,21 @@ export const organizationMiddleware =
           organizationId
         )
       ) {
+        if (firstMembership) {
+          req.organization =
+            firstMembership.organization;
+          req.organizationMember =
+            firstMembership;
+          return next();
+        }
 
-        res.status(400);
-
-        throw new Error(
-          "Invalid organization ID"
+        if (typeof res?.status === "function") {
+          res.status(404);
+        }
+        return next(
+          new Error(
+            "No organization found. Please create or join an organization first."
+          )
         );
       }
 
@@ -99,11 +109,21 @@ export const organizationMiddleware =
 
 
       if (!member) {
+        if (firstMembership) {
+          req.organization =
+            firstMembership.organization;
+          req.organizationMember =
+            firstMembership;
+          return next();
+        }
 
-        res.status(403);
-
-        throw new Error(
-          "You are not a member of this organization"
+        if (typeof res?.status === "function") {
+          res.status(404);
+        }
+        return next(
+          new Error(
+            "No organization found. Please create or join an organization first."
+          )
         );
       }
 

@@ -2,10 +2,12 @@ import {
   Routes,
   Route,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import { useAuth } from "../context/useAuth";
 
 import DashboardLayout from "../components/common/DashboardLayout";
 
@@ -42,6 +44,21 @@ import InterviewDetails from "../pages/interviews/InterviewDetails";
 import EditInterview from "../pages/interviews/EditInterview";
 import NotFound from "../pages/NotFound";
 import Unauthorized from "../pages/Unauthorized";
+import Pipeline from "../pages/pipeline/Pipeline";
+
+const RecruiterOnlyRoute = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user.role === "candidate") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
+};
 
 const AppRoutes = () => {
   return (
@@ -97,22 +114,24 @@ const AppRoutes = () => {
             element={<Dashboard />}
           />
 
-          {/* Organization */}
-          <Route
-            path="/organization"
-            element={<OrganizationDashboard />}
-          />
+          <Route element={<RecruiterOnlyRoute />}>
+            {/* Organization */}
+            <Route
+              path="/organization"
+              element={<OrganizationDashboard />}
+            />
 
-          <Route
-            path="/organization/settings"
-            element={<OrganizationSettings />}
-          />
+            <Route
+              path="/organization/settings"
+              element={<OrganizationSettings />}
+            />
 
-          {/* Team */}
-          <Route
-            path="/team"
-            element={<TeamManagement />}
-          />
+            {/* Team */}
+            <Route
+              path="/team"
+              element={<TeamManagement />}
+            />
+          </Route>
 
           {/* Jobs */}
           <Route
@@ -191,6 +210,11 @@ const AppRoutes = () => {
           <Route
             path="/interviews/:id/edit"
             element={<EditInterview />}
+          />
+          {/* Pipeline */}
+          <Route
+            path="/pipeline"
+            element={<Pipeline />}
           />
 
         </Route>

@@ -5,99 +5,25 @@ import {
   getInterviews,
   getInterviewById,
   updateInterview,
-  updateInterviewStatus,
-  addInterviewFeedback,
-  updateHiringDecision,
   deleteInterview,
 } from "../controllers/interviewController.js";
 
-import {
-  protect,
-} from "../middleware/authMiddleware.js";
+import protect from "../middleware/authMiddleware.js";
+import organizationMiddleware from "../middleware/organizationMiddleware.js";
 
-import {
-  organizationMiddleware,
-} from "../middleware/organizationMiddleware.js";
-
-
-// =====================================================
-// ROUTER
-// =====================================================
-
-const router =
-  express.Router();
-
-
-// =====================================================
-// PROTECTED ORGANIZATION ROUTES
-// =====================================================
+const router = express.Router();
 
 router.use(protect);
+router.use(organizationMiddleware);
 
-router.use(
-  organizationMiddleware
-);
+router.post("/", createInterview);
 
+router.get("/", getInterviews);
 
-// =====================================================
-// INTERVIEWS
-// =====================================================
+router.get("/:id", getInterviewById);
 
-router.post(
-  "/",
-  createInterview
-);
+router.put("/:id", updateInterview);
 
-
-router.get(
-  "/",
-  getInterviews
-);
-
-
-// =====================================================
-// IMPORTANT
-// Specific routes MUST come before /:id
-// =====================================================
-
-router.patch(
-  "/:id/status",
-  updateInterviewStatus
-);
-
-
-router.patch(
-  "/:id/feedback",
-  addInterviewFeedback
-);
-
-
-router.patch(
-  "/:id/hiring-decision",
-  updateHiringDecision
-);
-
-
-// =====================================================
-// SINGLE INTERVIEW
-// =====================================================
-
-router.get(
-  "/:id",
-  getInterviewById
-);
-
-
-router.put(
-  "/:id",
-  updateInterview
-);
-
-
-router.delete(
-  "/:id",
-  deleteInterview
-);
-
+router.delete("/:id", deleteInterview);
 
 export default router;

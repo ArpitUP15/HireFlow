@@ -8,9 +8,12 @@ import {
   Building2,
   Settings,
   X,
+  KanbanSquare,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
+
+import { useAuth } from "../../context/useAuth";
 
 const navigationItems = [
   {
@@ -53,12 +56,29 @@ const navigationItems = [
     path: "/organization/settings",
     icon: Settings,
   },
+  {
+    name: "Pipeline",
+    path: "/pipeline",
+    icon: KanbanSquare,
+  }
 ];
 
 const Sidebar = ({
   isOpen,
   onClose,
 }) => {
+  const {
+    user,
+  } = useAuth();
+
+  const visibleNavigationItems = navigationItems.filter((item) => {
+    if (user?.role === "candidate") {
+      return item.path !== "/organization" && item.path !== "/organization/settings";
+    }
+
+    return true;
+  });
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -125,7 +145,7 @@ const Sidebar = ({
           </p>
 
           <div className="space-y-1">
-            {navigationItems.map(
+            {visibleNavigationItems.map(
               ({
                 name,
                 path,

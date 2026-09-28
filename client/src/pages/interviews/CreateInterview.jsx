@@ -1,241 +1,157 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
-import {
-  Loader2,
-} from "lucide-react";
-
-import InterviewForm from "../../components/interviews/InterviewForm";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   createInterview,
 } from "../../services/interviewServices";
 
-import {
-  getApplications,
-} from "../../services/applicationService";
-
-import {
-  getMembers,
-} from "../../services/organizationService";
-
-
 const CreateInterview = () => {
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
+  const [form, setForm] = useState({
+    application: "",
+    candidate: "",
+    job: "",
+    interviewer: "",
+    interviewType: "Technical",
+    interviewDate: "",
+    startTime: "",
+    endTime: "",
+    mode: "Online",
+    location: "",
+    meetingLink: "",
+  });
 
+  const [loading, setLoading] = useState(false);
 
-  const [
-    applications,
-    setApplications,
-  ] = useState([]);
+  const handleChange = (event) => {
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value,
+    });
+  };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const [
-    members,
-    setMembers,
-  ] = useState([]);
+    try {
+      setLoading(true);
 
+      await createInterview(form);
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
-
-
-  const [
-    saving,
-    setSaving,
-  ] = useState(false);
-
-
-  const [
-    error,
-    setError,
-  ] = useState("");
-
-
-  useEffect(() => {
-
-    const loadData =
-      async () => {
-
-        try {
-
-          setLoading(true);
-
-
-          const [
-            applicationsResponse,
-            membersResponse,
-          ] = await Promise.all([
-            getApplications(),
-            getMembers(),
-          ]);
-
-
-          setApplications(
-            applicationsResponse
-              ?.applications || []
-          );
-
-
-          setMembers(
-            membersResponse
-              ?.members || []
-          );
-
-        } catch (error) {
-
-          console.error(
-            "Failed to load interview data:",
-            error
-          );
-
-
-          setError(
-            error?.response
-              ?.data
-              ?.message ||
-            "Unable to load required data."
-          );
-
-        } finally {
-
-          setLoading(false);
-        }
-      };
-
-
-    loadData();
-
-  }, []);
-
-
-  const handleSubmit =
-    async (data) => {
-
-      try {
-
-        setSaving(true);
-
-        setError("");
-
-
-        await createInterview(
-          data
-        );
-
-
-        navigate(
-          "/interviews",
-          {
-            replace: true,
-          }
-        );
-
-      } catch (error) {
-
-        setError(
-          error?.response
-            ?.data
-            ?.message ||
-          "Failed to schedule interview."
-        );
-
-        throw error;
-
-      } finally {
-
-        setSaving(false);
-      }
-    };
-
-
-  if (loading) {
-
-    return (
-
-      <div className="flex min-h-screen items-center justify-center bg-slate-950">
-
-        <Loader2
-          size={35}
-          className="animate-spin text-blue-500"
-        />
-
-      </div>
-    );
-  }
-
+      navigate("/interviews");
+    } catch (error) {
+      console.error(
+        "Failed to create interview:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-
-    <div className="min-h-screen bg-slate-950 px-6 py-8 text-white">
-
+    <div className="p-6">
       <div className="mx-auto max-w-3xl">
-
-
-        <h1 className="mb-2 text-3xl font-bold">
-
+        <h1 className="text-3xl font-bold text-white">
           Schedule Interview
-
         </h1>
 
-
-        <p className="mb-8 text-slate-400">
-
-          Schedule an interview for a candidate application.
-
-        </p>
-
-
-        {error && (
-
-          <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-red-400">
-
-            {error}
-
-          </div>
-
-        )}
-
-
-        <div className="rounded-2xl border border-white/10 bg-slate-900 p-6">
-
-          <InterviewForm
-            applications={
-              applications
-            }
-            members={
-              members
-            }
-            onSubmit={
-              handleSubmit
-            }
-            onCancel={() =>
-              navigate(
-                "/interviews"
-              )
-            }
-            loading={
-              saving
-            }
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-6 rounded-2xl border border-white/10 bg-white/5 p-6"
+        >
+          <input
+            name="application"
+            placeholder="Application ID"
+            value={form.application}
+            onChange={handleChange}
+            required
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
           />
 
-        </div>
+          <input
+            name="candidate"
+            placeholder="Candidate ID"
+            value={form.candidate}
+            onChange={handleChange}
+            required
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          />
 
+          <input
+            name="job"
+            placeholder="Job ID"
+            value={form.job}
+            onChange={handleChange}
+            required
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          />
+
+          <input
+            name="interviewer"
+            placeholder="Interviewer User ID"
+            value={form.interviewer}
+            onChange={handleChange}
+            required
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          />
+
+          <select
+            name="interviewType"
+            value={form.interviewType}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          >
+            <option>Technical</option>
+            <option>HR</option>
+            <option>Behavioral</option>
+            <option>Screening</option>
+            <option>Final</option>
+          </select>
+
+          <input
+            type="datetime-local"
+            name="interviewDate"
+            value={form.interviewDate}
+            onChange={handleChange}
+            required
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          />
+
+          <select
+            name="mode"
+            value={form.mode}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+          >
+            <option>Online</option>
+            <option>Offline</option>
+            <option>Hybrid</option>
+          </select>
+
+          {form.mode !== "Offline" && (
+            <input
+              name="meetingLink"
+              placeholder="Meeting Link"
+              value={form.meetingLink}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-white/10 bg-slate-900 p-3 text-white"
+            />
+          )}
+
+          <button
+            disabled={loading}
+            className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
+          >
+            {loading
+              ? "Scheduling..."
+              : "Schedule Interview"}
+          </button>
+        </form>
       </div>
-
     </div>
   );
 };
-
 
 export default CreateInterview;

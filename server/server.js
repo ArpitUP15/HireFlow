@@ -1,75 +1,42 @@
 import dotenv from "dotenv";
+import http from "http";
 
 import app from "./src/app.js";
-
 import connectDB from "./src/db/db.js";
-
-
-// =====================================================
-// ENVIRONMENT VARIABLES
-// =====================================================
+import {
+  initializeSocket,
+} from "./src/socket.js";
 
 dotenv.config();
 
-
-// =====================================================
-// PORT
-// =====================================================
-
 const PORT =
-  process.env.PORT ||
-  5001;
+  process.env.PORT || 5001;
 
+const startServer = async () => {
+  try {
+    await connectDB();
 
-// =====================================================
-// START SERVER
-// =====================================================
+    const server = http.createServer(app);
 
-const startServer =
-  async () => {
+    initializeSocket(server);
 
-    try {
-
-      // -------------------------------------------------
-      // Database
-      // -------------------------------------------------
-
-      await connectDB();
-
-
-      // -------------------------------------------------
-      // Start Express
-      // -------------------------------------------------
-
-      app.listen(
-        PORT,
-        () => {
-
-          console.log(
-            `🚀 HireFlow server running on port ${PORT}`
-          );
-
-          console.log(
-            `http://localhost:${PORT}`
-          );
-
-        }
+    server.listen(PORT, () => {
+      console.log(
+        `🚀 HireFlow server running on port ${PORT}`
       );
 
-    } catch (error) {
-
-      console.error(
-        "Failed to start server:",
-        error.message
+      console.log(
+        `http://localhost:${PORT}`
       );
+    });
+  } catch (error) {
+    console.error(
+      "Failed to start server:",
+      error.message
+    );
 
-      process.exit(1);
-    }
-  };
-
-
-// =====================================================
-// RUN
-// =====================================================
+    process.exit(1);
+  }
+};
 
 startServer();

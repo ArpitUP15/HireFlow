@@ -9,7 +9,7 @@ export const getApplications =
         "/applications"
       );
 
-    return response;
+    return response.data;
   };
 
 
@@ -68,7 +68,7 @@ export const updateApplicationStatus =
         }
       );
 
-    return response;
+    return response.data;
   };
 
 

@@ -1,152 +1,88 @@
 import api from "./api";
 
+export const getInterviews = async () => {
+  const response = await api.get("/interviews");
 
-// =====================================================
-// GET INTERVIEWS
-// =====================================================
+  return response.data;
+};
 
-export const getInterviews =
-  async (params = {}) => {
+export const getInterviewById = async (id) => {
+  const response = await api.get(
+    `/interviews/${id}`
+  );
 
-    const response =
-      await api.get(
-        "/interviews",
-        {
-          params,
-        }
-      );
+  return response.data;
+};
 
-    return response.data;
-  };
+export const createInterview = async (data) => {
+  const response = await api.post(
+    "/interviews",
+    data
+  );
 
+  return response.data;
+};
 
-// =====================================================
-// GET INTERVIEW BY ID
-// =====================================================
+export const updateInterview = async (
+  id,
+  data
+) => {
+  const response = await api.put(
+    `/interviews/${id}`,
+    data
+  );
 
-export const getInterviewById =
-  async (id) => {
+  return response.data;
+};
 
-    const response =
-      await api.get(
-        `/interviews/${id}`
-      );
+export const deleteInterview = async (id) => {
+  const response = await api.delete(
+    `/interviews/${id}`
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
-// =====================================================
-// CREATE INTERVIEW
-// =====================================================
+export const updateInterviewStatus = async (
+  id,
+  status
+) => {
+  const response = await api.put(
+    `/interviews/${id}`,
+    { status }
+  );
 
-export const createInterview =
-  async (interviewData) => {
+  return response.data;
+};
 
-    const response =
-      await api.post(
-        "/interviews",
-        interviewData
-      );
+export const addInterviewFeedback = async (
+  id,
+  data = {}
+) => {
+  const response = await api.put(
+    `/interviews/${id}`,
+    {
+      feedback: data.feedback ?? "",
+      overallScore:
+        data.score ?? undefined,
+      notes: data.recommendation ?? "",
+    }
+  );
 
-    return response.data;
-  };
+  return response.data;
+};
 
+export const updateHiringDecision = async (
+  id,
+  decision
+) => {
+  const response = await api.put(
+    `/interviews/${id}`,
+    {
+      status: decision,
+      notes: `Hiring decision: ${decision}`,
+    }
+  );
 
-// =====================================================
-// UPDATE INTERVIEW
-// =====================================================
-
-export const updateInterview =
-  async (
-    id,
-    interviewData
-  ) => {
-
-    const response =
-      await api.put(
-        `/interviews/${id}`,
-        interviewData
-      );
-
-    return response.data;
-  };
-
-
-// =====================================================
-// UPDATE STATUS
-// =====================================================
-
-export const updateInterviewStatus =
-  async (
-    id,
-    status
-  ) => {
-
-    const response =
-      await api.patch(
-        `/interviews/${id}/status`,
-        {
-          status,
-        }
-      );
-
-    return response.data;
-  };
-
-
-// =====================================================
-// ADD FEEDBACK
-// =====================================================
-
-export const addInterviewFeedback =
-  async (
-    id,
-    feedbackData
-  ) => {
-
-    const response =
-      await api.patch(
-        `/interviews/${id}/feedback`,
-        feedbackData
-      );
-
-    return response.data;
-  };
-
-
-// =====================================================
-// UPDATE HIRING DECISION
-// =====================================================
-
-export const updateHiringDecision =
-  async (
-    id,
-    hiringDecision
-  ) => {
-
-    const response =
-      await api.patch(
-        `/interviews/${id}/hiring-decision`,
-        {
-          hiringDecision,
-        }
-      );
-
-    return response.data;
-  };
-
-
-// =====================================================
-// DELETE INTERVIEW
-// =====================================================
-
-export const deleteInterview =
-  async (id) => {
-
-    const response =
-      await api.delete(
-        `/interviews/${id}`
-      );
-
-    return response.data;
-  };
+  return response.data;
+};

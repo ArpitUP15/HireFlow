@@ -20,15 +20,32 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const organizationId =
+    const rawOrganizationId =
       localStorage.getItem(
         "currentOrganizationId"
       );
 
-    if (organizationId) {
-      config.headers[
-        "x-organization-id"
-      ] = organizationId;
+    if (
+      rawOrganizationId &&
+      rawOrganizationId !== "null" &&
+      rawOrganizationId !== "undefined"
+    ) {
+      const organizationId =
+        rawOrganizationId.trim();
+
+      if (
+        /^[a-fA-F0-9]{24}$/.test(
+          organizationId
+        )
+      ) {
+        config.headers[
+          "x-organization-id"
+        ] = organizationId;
+      } else {
+        localStorage.removeItem(
+          "currentOrganizationId"
+        );
+      }
     }
 
     return config;

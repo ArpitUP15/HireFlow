@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useState,
 } from "react";
 
@@ -12,7 +13,11 @@ import {
 } from "lucide-react";
 
 import {
+  useAuth,
+} from "../../context/useAuth";
+import {
   createOrganization,
+  getMyOrganizations,
 } from "../../services/organizationService";
 
 
@@ -21,6 +26,46 @@ const OrganizationSetup = () => {
   const navigate =
     useNavigate();
 
+  const {
+    user,
+  } = useAuth();
+
+  useEffect(() => {
+    const redirectIfExistingOrganization = async () => {
+      if (!user) {
+        return;
+      }
+
+      if (user.role === "candidate") {
+        navigate("/dashboard", {
+          replace: true,
+        });
+
+        return;
+      }
+
+      try {
+        const response =
+          await getMyOrganizations();
+
+        const hasOrganization =
+          (response?.organizations || []).length > 0;
+
+        if (hasOrganization) {
+          navigate("/organization", {
+            replace: true,
+          });
+        }
+      } catch (error) {
+        console.error(
+          "Organization redirect check failed:",
+          error
+        );
+      }
+    };
+
+    redirectIfExistingOrganization();
+  }, [navigate, user]);
 
   const [
     formData,

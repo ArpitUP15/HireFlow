@@ -6,12 +6,14 @@ import {
   getCandidateById,
   updateCandidate,
   deleteCandidate,
+  uploadCandidateResume,
 } from "../controllers/candidateController.js";
 
 import {
   protect,
 } from "../middleware/authMiddleware.js";
 
+import upload from "../middleware/uploadMiddleware.js";
 import {
   organizationMiddleware,
 } from "../middleware/organizationMiddleware.js";
@@ -44,6 +46,13 @@ router.put(
 router.delete(
   "/:id",
   deleteCandidate
+);
+router.post(
+  "/:id/resume",
+  protect,
+  organizationMiddleware,
+  upload.single("resume"),
+  uploadCandidateResume
 );
 
 export default router;

@@ -18,6 +18,9 @@ import {
 import {
   useAuth,
 } from "../../context/useAuth";
+import {
+  getMyOrganizations,
+} from "../../services/organizationService";
 
 
 function Login() {
@@ -118,17 +121,35 @@ function Login() {
         setLoading(true);
 
 
-        await login(
-          email,
-          formData.password
-        );
+        const authResponse =
+          await login(
+            email,
+            formData.password
+          );
 
+        const userRole =
+          authResponse?.user?.role;
 
-        const redirectPath =
+        let redirectPath =
           location.state?.from
             ?.pathname ||
           "/dashboard";
 
+        if (
+          userRole !== "candidate"
+        ) {
+          const organizationResponse =
+            await getMyOrganizations();
+
+          const hasOrganization =
+            (organizationResponse?.organizations ||
+              []).length > 0;
+
+          if (hasOrganization) {
+            redirectPath =
+              "/organization";
+          }
+        }
 
         navigate(
           redirectPath,
