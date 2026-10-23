@@ -1,43 +1,146 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
+@theme {
+  --color-primary: #CCD0CF;
+  --color-secondary: #9BA8AB;
+  --color-tertiary: #4A5C6A;
+  --color-neutral: #253745;
+  --color-surface: #11212D;
+  --color-on-tertiary: var(--theme-accent-text);
+  --color-border: #06141B;
 
-/* =====================================================
-   GLOBAL
-===================================================== */
+  --color-white: var(--theme-surface);
+  --color-black: var(--theme-text);
+
+  --color-slate-50: var(--color-surface);
+  --color-slate-100: var(--color-primary);
+  --color-slate-200: var(--color-primary);
+  --color-slate-300: var(--color-primary);
+  --color-slate-400: var(--color-secondary);
+  --color-slate-500: var(--color-secondary);
+  --color-slate-600: var(--color-secondary);
+  --color-slate-700: var(--color-tertiary);
+  --color-slate-800: var(--color-neutral);
+  --color-slate-900: var(--color-surface);
+  --color-slate-950: var(--color-neutral);
+
+  --color-gray-50: var(--color-surface);
+  --color-gray-100: var(--color-surface);
+  --color-gray-200: var(--color-border);
+  --color-gray-300: var(--color-primary);
+  --color-gray-400: var(--color-secondary);
+  --color-gray-500: var(--color-secondary);
+  --color-gray-600: var(--color-secondary);
+  --color-gray-700: var(--color-tertiary);
+  --color-gray-900: var(--color-neutral);
+
+  --color-blue-50: var(--color-surface);
+  --color-blue-100: var(--color-surface);
+  --color-blue-300: var(--color-primary);
+  --color-blue-400: var(--color-secondary);
+  --color-blue-500: var(--color-secondary);
+  --color-blue-600: var(--color-tertiary);
+  --color-blue-700: var(--color-tertiary);
+  --color-blue-900: var(--color-neutral);
+  --color-blue-950: var(--color-border);
+
+  --color-red-50: var(--color-surface);
+  --color-red-100: var(--color-surface);
+  --color-red-200: var(--color-border);
+  --color-red-300: var(--color-primary);
+  --color-red-400: var(--color-secondary);
+  --color-red-500: var(--color-secondary);
+  --color-red-600: var(--color-tertiary);
+  --color-red-700: var(--color-tertiary);
+
+  --color-green-50: var(--color-surface);
+  --color-green-100: var(--color-surface);
+  --color-green-300: var(--color-primary);
+  --color-green-400: var(--color-secondary);
+  --color-green-500: var(--color-secondary);
+  --color-green-600: var(--color-tertiary);
+  --color-green-700: var(--color-tertiary);
+
+  --color-emerald-300: var(--color-primary);
+  --color-emerald-400: var(--color-secondary);
+  --color-emerald-500: var(--color-secondary);
+  --color-yellow-100: var(--color-surface);
+  --color-yellow-300: var(--color-primary);
+  --color-yellow-400: var(--color-secondary);
+  --color-yellow-500: var(--color-secondary);
+  --color-yellow-700: var(--color-tertiary);
+  --color-orange-300: var(--color-primary);
+  --color-orange-400: var(--color-secondary);
+  --color-orange-500: var(--color-secondary);
+  --color-purple-300: var(--color-primary);
+  --color-purple-400: var(--color-secondary);
+  --color-purple-500: var(--color-secondary);
+  --color-violet-300: var(--color-primary);
+  --color-violet-400: var(--color-secondary);
+  --color-violet-500: var(--color-secondary);
+  --color-cyan-300: var(--color-primary);
+  --color-cyan-400: var(--color-secondary);
+  --color-cyan-500: var(--color-secondary);
+  --color-indigo-500: var(--color-secondary);
+  --color-indigo-600: var(--color-tertiary);
+
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 4px;
+  --radius-xl: 8px;
+  --radius-2xl: 8px;
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, var(--color-border) 12%, transparent);
+  --shadow-md: 0 1px 4px color-mix(in srgb, var(--color-border) 14%, transparent);
+  --shadow-lg: 0 2px 6px color-mix(in srgb, var(--color-border) 16%, transparent);
+  --shadow-xl: 0 2px 8px color-mix(in srgb, var(--color-border) 18%, transparent);
+  --shadow-2xl: 0 4px 12px color-mix(in srgb, var(--color-border) 18%, transparent);
+}
+
+:root {
+  color-scheme: light;
+  --theme-page: var(--color-primary);
+  --theme-surface: var(--color-primary);
+  --theme-text: var(--color-border);
+  --theme-muted: var(--color-neutral);
+  --theme-accent: var(--color-secondary);
+  --theme-accent-hover: var(--color-tertiary);
+  --theme-accent-text: var(--color-border);
+  --theme-border: var(--color-border);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-page: var(--color-neutral);
+  --theme-surface: var(--color-surface);
+  --theme-text: var(--color-primary);
+  --theme-muted: var(--color-secondary);
+  --theme-accent: var(--color-tertiary);
+  --theme-accent-hover: var(--color-secondary);
+  --theme-accent-text: var(--color-primary);
+  --theme-border: var(--color-tertiary);
+}
 
 * {
   box-sizing: border-box;
 }
 
-
 html {
   scroll-behavior: smooth;
 }
 
-
 body {
-  margin: 0;
-
   min-width: 320px;
-
-  background:
-    #020617;
-
-  color: white;
-
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  -webkit-font-smoothing:
-    antialiased;
+  margin: 0;
+  background: var(--theme-page);
+  color: var(--theme-text);
+  font-family: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
 }
-
 
 button,
 input,
@@ -46,84 +149,185 @@ select {
   font: inherit;
 }
 
-
 button,
 a {
-  -webkit-tap-highlight-color:
-    transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-
 
 button {
   cursor: pointer;
 }
 
-
 a {
+  color: inherit;
   text-decoration: none;
 }
 
-
-::selection {
-  background:
-    rgba(37, 99, 235, 0.35);
-
-  color: white;
+h1 {
+  font-family: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
 }
 
+label {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
 
-/* =====================================================
-   SCROLLBAR
-===================================================== */
+::selection {
+  background: color-mix(in srgb, var(--color-secondary) 35%, transparent);
+  color: var(--theme-text);
+}
 
 ::-webkit-scrollbar {
   width: 8px;
 }
 
-
 ::-webkit-scrollbar-track {
-  background:
-    #020617;
+  background: var(--color-neutral);
 }
-
 
 ::-webkit-scrollbar-thumb {
   border-radius: 999px;
-
-  background:
-    #1e293b;
+  background: var(--color-tertiary);
 }
-
 
 ::-webkit-scrollbar-thumb:hover {
-  background:
-    #334155;
+  background: var(--color-secondary);
 }
 
+select,
+select option {
+  border-color: var(--theme-border);
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+}
 
-/* =====================================================
-   REDUCED MOTION
-===================================================== */
+select:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-secondary) 45%, transparent);
+}
 
-@media (
-  prefers-reduced-motion: reduce
-) {
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea,
+select {
+  border-radius: var(--radius-sm);
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+  padding: 10px 14px;
+}
 
+[class~="pl-10"] {
+  padding-left: 2.5rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--theme-muted);
+  opacity: 0.75;
+}
+
+[class*="border-white/"],
+[class~="border-border"] {
+  border-color: var(--theme-border);
+}
+
+.text-white,
+.text-black,
+.text-primary,
+.text-secondary,
+.text-tertiary,
+.text-neutral,
+.text-surface,
+.text-border,
+.text-on-tertiary,
+[class*="text-slate-"],
+[class*="text-gray-"],
+[class*="text-blue-"],
+[class*="text-red-"],
+[class*="text-green-"],
+[class*="text-emerald-"],
+[class*="text-yellow-"],
+[class*="text-orange-"],
+[class*="text-purple-"],
+[class*="text-violet-"],
+[class*="text-cyan-"],
+[class*="text-indigo-"] {
+  color: var(--theme-text);
+}
+
+.bg-neutral,
+.bg-slate-700,
+.bg-slate-800,
+.bg-slate-900,
+.bg-surface,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-900,
+.bg-blue-50,
+.bg-blue-100,
+.bg-red-50,
+.bg-red-100,
+.bg-green-50,
+.bg-green-100,
+.bg-yellow-100,
+.bg-slate-900\/30,
+.bg-slate-900\/40,
+.bg-slate-900\/60,
+.bg-slate-900\/70,
+.bg-slate-900\/80,
+.bg-slate-900\/90,
+.bg-slate-950\/50,
+.bg-slate-950\/70,
+.bg-slate-950\/75,
+.bg-slate-950\/90 {
+  background-color: var(--theme-surface);
+}
+
+.bg-neutral,
+.bg-slate-950 {
+  background-color: var(--theme-page);
+}
+
+.bg-blue-600,
+.bg-blue-700,
+.bg-red-500,
+.bg-red-600,
+.bg-red-700,
+.bg-slate-100,
+.bg-slate-200,
+.bg-tertiary {
+  background-color: var(--theme-accent);
+  color: var(--theme-accent-text);
+}
+
+.bg-slate-900\/30,
+.bg-slate-900\/40,
+.bg-slate-900\/60,
+.bg-slate-900\/70,
+.bg-slate-900\/80,
+.bg-slate-900\/90,
+.bg-slate-950\/50,
+.bg-slate-950\/70,
+.bg-slate-950\/75,
+.bg-slate-950\/90 {
+  background-color: color-mix(in srgb, var(--theme-page) 90%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior:
-      auto;
+    scroll-behavior: auto;
   }
 
   *,
   *::before,
   *::after {
-    animation-duration:
-      0.01ms !important;
-
-    animation-iteration-count:
-      1 !important;
-
-    transition-duration:
-      0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

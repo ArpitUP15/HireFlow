@@ -14,6 +14,7 @@ import {
 import { NavLink } from "react-router-dom";
 
 import { useAuth } from "../../context/useAuth";
+import ThemeToggle from "./ThemeToggle";
 
 const navigationItems = [
   {
@@ -169,8 +170,8 @@ const Sidebar = ({
                     transition
                     ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                        : "text-slate-400 hover:bg-white/5 hover:text-white"
+                        ? "bg-tertiary text-on-tertiary"
+                        : "text-secondary hover:bg-white/5 hover:text-primary"
                     }
                     `
                   }
@@ -189,6 +190,7 @@ const Sidebar = ({
 
         {/* Bottom Section */}
         <div className="border-t border-white/10 p-4">
+          <ThemeToggle className="mb-4 w-full" />
           <div className="rounded-xl border border-blue-500/10 bg-blue-500/5 p-4">
             <p className="text-sm font-semibold text-white">
               HireFlow

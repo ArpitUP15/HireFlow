@@ -26,6 +26,8 @@ import {
   Rocket,
   Search,
   Send,
+  Sun,
+  Moon,
   ShieldCheck,
   Sparkles,
   Target,
@@ -38,6 +40,9 @@ import {
   getPublicStats,
   submitContactMessage,
 } from "../services/publicService";
+import {
+  useTheme,
+} from "../context/useTheme";
 
 
 // =====================================================
@@ -281,6 +286,10 @@ const FAQItem = ({
 // =====================================================
 
 function Home() {
+  const {
+    theme,
+    toggleTheme,
+  } = useTheme();
 
   const [
     mobileMenu,
@@ -621,14 +630,14 @@ function Home() {
 
   return (
 
-    <div className="min-h-screen overflow-hidden bg-slate-950 text-white">
+    <div className="min-h-screen overflow-hidden  text-white">
 
 
       {/* =================================================
           NAVBAR
       ================================================= */}
 
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-slate-950/75 backdrop-blur-xl">
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 backdrop-blur-xl">
 
         <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
 
@@ -710,6 +719,21 @@ function Home() {
           {/* DESKTOP ACTIONS */}
 
           <div className="hidden items-center gap-3 md:flex">
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+              aria-pressed={theme === "dark"}
+              className="inline-flex items-center gap-2 rounded-md border border-white/10 px-3 py-2.5 text-sm font-medium transition hover:bg-white/5"
+            >
+              {theme === "light" ? (
+                <Moon size={17} aria-hidden="true" />
+              ) : (
+                <Sun size={17} aria-hidden="true" />
+              )}
+              <span>{theme === "light" ? "Dark mode" : "Light mode"}</span>
+            </button>
 
             <Link
               to="/login"
@@ -809,6 +833,21 @@ function Home() {
 
 
               <div className="mt-3 flex gap-3 border-t border-white/10 pt-4">
+
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+                  aria-pressed={theme === "dark"}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm"
+                >
+                  {theme === "light" ? (
+                    <Moon size={17} aria-hidden="true" />
+                  ) : (
+                    <Sun size={17} aria-hidden="true" />
+                  )}
+                  <span>{theme === "light" ? "Dark" : "Light"}</span>
+                </button>
 
                 <Link
                   to="/login"

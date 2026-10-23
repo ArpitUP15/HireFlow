@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
+import ThemeToggle from "./ThemeToggle";
 
 const DashboardLayout = () => {
   const [
@@ -50,6 +51,7 @@ const DashboardLayout = () => {
               Flow
             </span>
           </div>
+          <ThemeToggle className="ml-auto" />
         </header>
 
         <main className="min-h-[calc(100vh-4rem)]">

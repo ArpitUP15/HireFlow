@@ -264,7 +264,7 @@ const DashBoard = () => {
     organizations.length === 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 p-4 text-white sm:p-6 lg:p-8">
+    <div className="min-h-screen  p-4 text-white sm:p-6 lg:p-8">
 
       {/* Header */}
       <div className="mb-8">
@@ -363,7 +363,7 @@ const DashBoard = () => {
             (item) => (
               <div
                 key={item.label}
-                className="rounded-xl border border-white/10 bg-slate-900/60 p-4"
+                className="rounded-xl border border-white/10  p-4"
               >
                 <p className="text-sm text-slate-500">
                   {item.label}

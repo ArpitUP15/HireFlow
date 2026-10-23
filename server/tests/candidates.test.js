@@ -18,7 +18,8 @@ describe("Candidates API", () => {
         firstName: "Candidate",
         lastName: "Tester",
         email: "candidatetester@example.com",
-        password: "Password123"
+        password: "Password123",
+        role: "recruiter"
       });
 
     const userId = registerResponse.body.user._id;
@@ -97,5 +98,19 @@ describe("Candidates API", () => {
   ).toBe(
     "arpitcandidate@example.com"
   );
+
+  const candidatesResponse = await agent
+    .get("/api/candidates")
+    .set(
+      "x-organization-id",
+      organization._id.toString()
+    );
+
+  expect(candidatesResponse.statusCode).toBe(200);
+  expect(candidatesResponse.body.candidates).toHaveLength(1);
+  expect(candidatesResponse.body.candidates[0].createdBy).toMatchObject({
+    firstName: "Candidate",
+    lastName: "Tester",
+  });
   });
 });

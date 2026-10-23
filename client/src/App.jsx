@@ -3,6 +3,9 @@ import {
 } from "react-router-dom";
 
 import AppRoutes from "./routes/AppRoutes";
+import {
+  ThemeProvider,
+} from "./context/ThemeProvider";
 
 import "./App.css";
 
@@ -11,11 +14,13 @@ function App() {
 
   return (
 
-    <BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
 
-      <AppRoutes />
+        <AppRoutes />
 
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

@@ -28,9 +28,10 @@ const Modal = ({
         className="
           w-full
           max-w-lg
-          rounded-2xl
-          bg-blue-50
-          text-black
+          rounded-md
+          border border-border
+          bg-surface
+          text-primary
           shadow-2xl
         "
         onClick={(event) =>
@@ -56,8 +57,8 @@ const Modal = ({
             className="
               rounded-lg
               p-2
-              text-black
-              hover:bg-gray-100
+              text-secondary
+              hover:bg-neutral
             "
           >
             <X size={20} />

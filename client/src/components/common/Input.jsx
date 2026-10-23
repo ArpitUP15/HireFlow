@@ -34,22 +34,22 @@ const Input = ({
         required={required}
         className={`
           w-full
-          rounded-lg
+          rounded-sm
           border
-          bg-slate-950
+          bg-surface
           px-3.5
           py-2.5
-          text-slate-100
-          placeholder:text-slate-500
+          text-primary
+          placeholder:text-secondary
           outline-none
           transition
-          focus:border-blue-500
+          focus:border-secondary
           focus:ring-2
-          focus:ring-blue-500/20
+          focus:ring-secondary/20
           ${
             error
               ? "border-red-500"
-              : "border-slate-700"
+              : "border-border"
           }
         `}
       />

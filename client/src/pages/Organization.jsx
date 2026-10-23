@@ -449,7 +449,7 @@ const Organization = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050b1c] p-8 text-white">
+      <div className="min-h-screen bg-neutral p-8 text-white">
         <div className="flex min-h-100 items-center justify-center">
           <div className="text-center">
             <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-700 border-t-blue-500" />
@@ -469,7 +469,7 @@ const Organization = () => {
 
   if (!organization) {
     return (
-      <div className="min-h-screen bg-[#050b1c] p-8 text-white">
+      <div className="min-h-screen bg-neutral p-8 text-white">
         <div className="mx-auto max-w-5xl">
           {/* PAGE HEADER */}
 
@@ -514,7 +514,7 @@ const Organization = () => {
 
           {/* EMPTY STATE */}
 
-          <div className="rounded-2xl border border-white/10 bg-[#0b1228] p-10 text-center">
+          <div className="rounded-2xl border border-white/10 bg-surface p-10 text-center">
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/10 text-3xl">
               🏢
             </div>
@@ -565,7 +565,7 @@ const Organization = () => {
 
         {showCreateForm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-            <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-[#0b1228] shadow-2xl">
+            <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/10 bg-surface shadow-2xl">
               {/* MODAL HEADER */}
 
               <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
@@ -629,7 +629,7 @@ const Organization = () => {
                     placeholder="e.g. HireFlow Technologies"
                     required
                     disabled={creating}
-                    className="w-full rounded-xl border border-white/10 bg-[#070d20] px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/10 bg-surface px-4 py-3 text-primary outline-none placeholder:text-secondary focus:border-secondary disabled:opacity-50"
                   />
                 </div>
 
@@ -651,7 +651,7 @@ const Organization = () => {
                     }
                     placeholder="Software / IT"
                     disabled={creating}
-                    className="w-full rounded-xl border border-white/10 bg-[#070d20] px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/10 bg-surface px-4 py-3 text-primary outline-none placeholder:text-secondary focus:border-secondary disabled:opacity-50"
                   />
                 </div>
 
@@ -673,7 +673,7 @@ const Organization = () => {
                     }
                     placeholder="Delhi, India"
                     disabled={creating}
-                    className="w-full rounded-xl border border-white/10 bg-[#070d20] px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/10 bg-surface px-4 py-3 text-primary outline-none placeholder:text-secondary focus:border-secondary disabled:opacity-50"
                   />
                 </div>
 
@@ -695,7 +695,7 @@ const Organization = () => {
                     }
                     placeholder="https://example.com"
                     disabled={creating}
-                    className="w-full rounded-xl border border-white/10 bg-[#070d20] px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/10 bg-surface px-4 py-3 text-primary outline-none placeholder:text-secondary focus:border-secondary disabled:opacity-50"
                   />
                 </div>
 
@@ -717,7 +717,7 @@ const Organization = () => {
                     rows="4"
                     placeholder="Tell us about your organization..."
                     disabled={creating}
-                    className="w-full resize-none rounded-xl border border-white/10 bg-[#070d20] px-4 py-3 text-white outline-none placeholder:text-gray-500 focus:border-blue-500 disabled:opacity-50"
+                    className="w-full resize-none rounded-xl border border-white/10 bg-surface px-4 py-3 text-primary outline-none placeholder:text-secondary focus:border-secondary disabled:opacity-50"
                   />
                 </div>
 
@@ -763,7 +763,7 @@ const Organization = () => {
   // ============================================================
 
   return (
-    <div className="min-h-screen bg-[#050b1c] p-8 text-white">
+    <div className="min-h-screen bg-neutral p-8 text-white">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">
@@ -775,7 +775,7 @@ const Organization = () => {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-[#0b1228] p-7">
+        <div className="rounded-2xl border border-white/10 bg-surface p-7">
           <div className="flex items-start gap-5">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600/20 text-2xl">
               🏢
@@ -826,4 +826,3 @@ const Organization = () => {
 };
 
 export default Organization;
-

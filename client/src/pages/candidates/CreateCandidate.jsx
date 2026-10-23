@@ -39,7 +39,7 @@ const CreateCandidate = () => {
     };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
+    <div className="min-h-screen bg-neutral px-4 py-6 text-primary lg:px-8">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-3xl font-bold text-white">
           Add Candidate

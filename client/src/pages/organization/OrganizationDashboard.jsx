@@ -26,7 +26,7 @@ const OrganizationDashboard = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] p-8 text-slate-100">
+      <div className="min-h-screen bg-neutral p-8 text-primary">
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-5 text-red-300">
           {error}
         </div>
@@ -36,14 +36,14 @@ const OrganizationDashboard = () => {
 
   if (!organization) {
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] p-8 text-slate-100">
+      <div className="min-h-screen bg-neutral p-8 text-primary">
         No organization selected.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_30%),linear-gradient(180deg,#020817_0%,#0f172a_100%)] px-4 py-6 text-slate-100 lg:px-8">
+    <div className="min-h-screen bg-neutral px-4 py-6 text-primary lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8">
           <p className="text-sm font-medium text-slate-300">

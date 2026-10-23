@@ -12,6 +12,11 @@ const candidateSchema = new mongoose.Schema(
       index: true,
     },
 
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
     // --------------------------------------------------
     // BASIC INFORMATION
     // --------------------------------------------------

@@ -4,18 +4,18 @@
 
 select,
 select option {
-  background-color: #0f172a;
-  color: #e2e8f0;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
 }
 
 select {
-  border-color: #334155;
+  border-color: var(--color-border);
 }
 
 select:focus {
   outline: none;
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.45);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-secondary) 45%, transparent);
 }
 
 /* =====================================================
@@ -30,13 +30,13 @@ select:focus {
 .hero-grid {
   background-image:
     linear-gradient(
-      rgba(255, 255, 255, 0.025)
+      color-mix(in srgb, var(--color-primary) 2.5%, transparent)
       1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.025)
+      color-mix(in srgb, var(--color-primary) 2.5%, transparent)
       1px,
       transparent 1px
     );
@@ -47,8 +47,8 @@ select:focus {
   mask-image:
     linear-gradient(
       to bottom,
-      black 0%,
-      black 55%,
+      var(--color-primary) 0%,
+      var(--color-primary) 55%,
       transparent 100%
     );
 }
@@ -79,7 +79,7 @@ select:focus {
   left: -15%;
 
   background:
-    #2563eb;
+    var(--color-tertiary);
 
   animation:
     glowFloat 8s ease-in-out infinite;
@@ -92,7 +92,7 @@ select:focus {
   bottom: 5%;
 
   background:
-    #7c3aed;
+    var(--color-secondary);
 
   animation:
     glowFloat 10s ease-in-out
@@ -127,11 +127,11 @@ select:focus {
   height: 5px;
 
   background:
-    #60a5fa;
+    var(--color-secondary);
 
   box-shadow:
     0 0 20px
-    #60a5fa;
+    var(--color-secondary);
 
   animation:
     particleFloat 5s ease-in-out
@@ -149,11 +149,11 @@ select:focus {
   height: 4px;
 
   background:
-    #a78bfa;
+    var(--color-primary);
 
   box-shadow:
     0 0 18px
-    #a78bfa;
+    var(--color-primary);
 
   animation:
     particleFloat 7s ease-in-out
@@ -171,11 +171,11 @@ select:focus {
   height: 6px;
 
   background:
-    #22d3ee;
+    var(--color-secondary);
 
   box-shadow:
     0 0 20px
-    #22d3ee;
+    var(--color-secondary);
 
   animation:
     particleFloat 6s ease-in-out
@@ -204,29 +204,9 @@ select:focus {
 ===================================================== */
 
 .hero-gradient-text {
-  background:
-    linear-gradient(
-      100deg,
-      #60a5fa 0%,
-      #3b82f6 40%,
-      #8b5cf6 100%
-    );
-
-  -webkit-background-clip:
-    text;
-
-  background-clip:
-    text;
-
-  color:
-    transparent;
-
-  background-size:
-    200% 100%;
-
-  animation:
-    gradientMove 5s ease
-    infinite;
+  background: none;
+  color: var(--theme-text);
+  -webkit-text-fill-color: var(--theme-text);
 }
 
 
@@ -284,12 +264,7 @@ select:focus {
     linear-gradient(
       120deg,
       transparent 20%,
-      rgba(
-        59,
-        130,
-        246,
-        0.15
-      ),
+      color-mix(in srgb, var(--color-secondary) 15%, transparent),
       transparent 80%
     );
 
@@ -311,29 +286,14 @@ select:focus {
     translateY(-8px);
 
   border-color:
-    rgba(
-      59,
-      130,
-      246,
-      0.28
-    );
+    color-mix(in srgb, var(--color-secondary) 28%, transparent);
 
   background:
-    rgba(
-      59,
-      130,
-      246,
-      0.035
-    );
+    color-mix(in srgb, var(--color-secondary) 3.5%, transparent);
 
   box-shadow:
-    0 25px 70px
-    rgba(
-      15,
-      23,
-      42,
-      0.5
-    );
+    0 1px 4px
+    color-mix(in srgb, var(--color-border) 18%, transparent);
 }
 
 
@@ -369,12 +329,7 @@ select:focus {
 
   border:
     1px solid
-    rgba(
-      59,
-      130,
-      246,
-      0.18
-    );
+    color-mix(in srgb, var(--color-secondary) 18%, transparent);
 
   animation:
     nodeRipple 2.5s ease-out
@@ -413,20 +368,10 @@ select:focus {
     translateY(-6px);
 
   border-color:
-    rgba(
-      59,
-      130,
-      246,
-      0.25
-    );
+    color-mix(in srgb, var(--color-secondary) 25%, transparent);
 
   background:
-    rgba(
-      59,
-      130,
-      246,
-      0.04
-    );
+    color-mix(in srgb, var(--color-secondary) 4%, transparent);
 }
 
 
@@ -575,23 +520,13 @@ select:focus {
   100% {
     box-shadow:
       0 0 0
-      rgba(
-        59,
-        130,
-        246,
-        0
-      );
+      color-mix(in srgb, var(--color-secondary) 0%, transparent);
   }
 
   50% {
     box-shadow:
       0 0 35px
-      rgba(
-        59,
-        130,
-        246,
-        0.14
-      );
+      color-mix(in srgb, var(--color-secondary) 14%, transparent);
   }
 }
 
