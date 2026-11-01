@@ -397,6 +397,22 @@ button:disabled {
     box-shadow 0.25s ease,
     transform 0.25s ease;
 }
+.landing-navbar {
+  position: sticky;
+}
+.landing-nav {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.landing-actions {
+  margin-left: auto;
+  gap: 12px;
+}
 .workspace-navbar.is-scrolled {
   background: color-mix(in srgb, var(--surface) 94%, transparent);
   border-bottom-color: color-mix(in srgb, var(--border) 65%, transparent);
@@ -495,6 +511,14 @@ button:disabled {
   }
   .workspace-navbar {
     padding: 14px 18px;
+  }
+  .landing-nav {
+    position: static;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 24px;
+    transform: none;
   }
   .portal-stats {
     grid-template-columns: repeat(2, 1fr);

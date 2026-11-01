@@ -123,7 +123,7 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen landing-page" ref={page}>
-      <header className="workspace-navbar">
+      <header className="workspace-navbar landing-navbar">
         <Link
           to="/"
           aria-label="HireFlow home"
@@ -136,14 +136,14 @@ export default function Home() {
           />
           <p className="brand-name">HireFlow</p>
         </Link>
-        <nav
-          className="portal-actions"
-          style={{ gap: "20px", alignItems: "center" }}
-        >
+        <nav className="landing-nav" aria-label="Main navigation">
+          <Link to="/">Home</Link>
+          <Link to="/dashboard">Dashboard</Link>
           <a href="#features">Features</a>
           <a href="#faq">FAQ's</a>
           <a href="#contact">Contact</a>
-
+        </nav>
+        <div className="portal-actions landing-actions">
           {user && (
             <NotificationBell
               canLoadNotifications={
@@ -180,7 +180,7 @@ export default function Home() {
               </Link>
             </>
           )}
-        </nav>
+        </div>
       </header>
       <main className="portal-page">
         <section className="home-hero">
