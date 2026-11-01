@@ -137,7 +137,7 @@ export default function Home() {
           <p className="brand-name">HireFlow</p>
         </Link>
         <nav className="landing-nav" aria-label="Main navigation">
-          <Link to="/">Home</Link>
+          <a href="#home">Home</a>
           <Link to="/dashboard">Dashboard</Link>
           <a href="#features">Features</a>
           <a href="#faq">FAQ's</a>
@@ -183,7 +183,7 @@ export default function Home() {
         </div>
       </header>
       <main className="portal-page">
-        <section className="home-hero">
+        <section id="home" className="home-hero">
           <p className="eyebrow">RECRUITMENT AND HR MANAGEMENT</p>
           <h1>
             <span className="hero-line">Manage hiring from job posting</span>{" "}
