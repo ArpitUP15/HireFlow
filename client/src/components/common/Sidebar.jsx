@@ -67,7 +67,7 @@ const navigationItems = [
   },
 ];
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({ isOpen, isVisible, onClose }) => {
   const { user } = useAuth();
   const { hasPermission, hasRole } = useOrganization();
   const permissions = {
@@ -93,10 +93,17 @@ const Sidebar = ({ isOpen, onClose }) => {
             if (user?.role === "recruiter" && item.path === "/candidates")
               return false;
             if (item.path === "/organization/settings")
-              return hasRole("owner", "hr_admin");
-            return (
-              !permissions[item.path] || hasPermission(permissions[item.path])
-            );
+            return hasRole("owner");
+          if (
+            user?.role === "recruiter" &&
+            ["/dashboard", "/jobs", "/applications", "/interviews"].includes(
+              item.path,
+            )
+          )
+            return true;
+          return (
+            !permissions[item.path] || hasPermission(permissions[item.path])
+          );
           });
 
   return (
@@ -125,8 +132,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           bg-background
           transition-transform
           duration-300
-          lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isVisible ? "lg:translate-x-0" : "lg:-translate-x-full"}
         `}
       >
         {/* Logo */}
@@ -144,9 +151,10 @@ const Sidebar = ({ isOpen, onClose }) => {
             />
           </NavLink>
 
-          {/* Mobile Close */}
           <button
             type="button"
+            aria-label="Close navigation"
+            title="Close navigation"
             onClick={onClose}
             className="rounded-lg p-2 text-muted transition-opacity hover:bg-primary/5 hover:text-text lg:hidden"
           >

@@ -1,11 +1,11 @@
-import { Menu, LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import ThemeToggle from "./ThemeToggle";
 import NotificationBell from "./NotificationBell";
 import { useOrganization } from "../../context/useOrganization";
-export default function Navbar({ onMenu }) {
+export default function Navbar({ onMenu, sidebarVisible }) {
   const { user, logout } = useAuth();
   const { organization } = useOrganization();
   const navigate = useNavigate();
@@ -21,8 +21,10 @@ export default function Navbar({ onMenu }) {
   return (
     <header className="workspace-navbar">
       <button
-        aria-label="Open navigation"
-        className="lg:hidden"
+        type="button"
+        aria-label={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
+        aria-expanded={sidebarVisible}
+        title={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
         onClick={onMenu}
       >
         <Menu size={22} />

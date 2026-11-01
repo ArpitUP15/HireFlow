@@ -49,6 +49,14 @@ const CandidateOnly = () =>
   ) : (
     <Navigate to="/dashboard" replace />
   );
+const OrganizationOwnerOnly = () => {
+  const { hasRole } = useOrganization();
+  return hasRole("owner") ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/dashboard" replace />
+  );
+};
 const CandidateManagement = () =>
   useAuth().user.role === "recruiter" ? (
     <Navigate to="/applications" replace />
@@ -70,6 +78,8 @@ const DashboardPage = () => {
     <CandidateDashboard />
   ) : !membership ? (
     <OrganizationDashboard />
+  ) : user.role === "recruiter" ? (
+    <Dashboard />
   ) : hasPermission("viewAnalytics") ? (
     <Dashboard />
   ) : hasPermission("manageInterviews") ? (
@@ -103,10 +113,12 @@ export default function AppRoutes() {
           </Route>
           <Route element={<StaffOnly />}>
             <Route path="/organization" element={<OrganizationDashboard />} />
-            <Route
-              path="/organization/settings"
-              element={<OrganizationSettings />}
-            />
+            <Route element={<OrganizationOwnerOnly />}>
+              <Route
+                path="/organization/settings"
+                element={<OrganizationSettings />}
+              />
+            </Route>
             <Route path="/team" element={<TeamManagement />} />
             <Route path="/jobs/create" element={<CreateJob />} />
             <Route path="/jobs/:id" element={<JobDetails />} />

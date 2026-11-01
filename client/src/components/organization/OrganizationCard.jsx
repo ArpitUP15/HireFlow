@@ -1,52 +1,99 @@
-import { Building2, Globe, Users } from "lucide-react";
+import {
+  Building2,
+  BriefcaseBusiness,
+  FileText,
+  Globe,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 
 const OrganizationCard = ({ organization, membership }) => {
   return (
-    <div className="\n        rounded-2xl\n        border\n        border-border\n        bg-surface/90\n        p-6\n        text-text\n        shadow-sm\n      ">
-      <div className="flex items-start gap-4">
-        <div className="\n            flex\n            h-14\n            w-14\n            shrink-0\n            items-center\n            justify-center\n            rounded-xl\n            bg-primary/20\n            text-primary\n          ">
-          <Building2 size={28} />
+    <div className="grid gap-5 lg:grid-cols-2">
+      <section className="rounded-2xl border border-border bg-surface/90 p-6 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md lg:col-span-2">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+            <Building2 size={28} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+              Workspace
+            </p>
+            <h2 className="mt-1 wrap-break-word text-xl font-bold text-text sm:text-2xl">
+              {organization.name}
+            </h2>
+          </div>
         </div>
+      </section>
 
-        <div className="min-w-0">
-          <h2 className="text-xl font-bold text-text">
-            {organization.name}
-          </h2>
-
-          <p className="mt-1 text-sm text-muted">
-            {organization.industry || "Industry not specified"}
-          </p>
-
-          <span className="\n              mt-3\n              inline-block\n              rounded-full\n              border\n              border-primary/30\n              bg-primary/10\n              px-3\n              py-1\n              text-xs\n              font-medium\n              text-primary\n            ">
-            {membership?.role}
+      <section className="rounded-2xl border border-border bg-surface/90 p-5 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <BriefcaseBusiness size={19} />
           </span>
+          <h3 className="text-sm font-semibold text-muted">Industry</h3>
         </div>
-      </div>
-
-      {organization.description && (
-        <p className="mt-5 text-sm leading-6 text-text">
-          {organization.description}
+        <p className="mt-4 text-lg font-semibold">
+          {organization.industry || "Not specified"}
         </p>
-      )}
+      </section>
 
-      <div className="\n          mt-6\n          grid\n          gap-3\n          border-t\n          border-border\n          pt-5\n          sm:grid-cols-2\n        ">
-        <div className="flex items-center gap-2 text-sm text-text">
-          <Users size={17} />
-          {organization.companySize || "Size not specified"}
+      <section className="rounded-2xl border border-border bg-surface/90 p-5 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <ShieldCheck size={19} />
+          </span>
+          <h3 className="text-sm font-semibold text-muted">Your role</h3>
         </div>
+        <p className="mt-4 text-lg font-semibold capitalize">
+          {membership?.role || "Not specified"}
+        </p>
+      </section>
 
-        {organization.website && (
+      <section className="rounded-2xl border border-border bg-surface/90 p-5 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Users size={19} />
+          </span>
+          <h3 className="text-sm font-semibold text-muted">Company size</h3>
+        </div>
+        <p className="mt-4 text-lg font-semibold">
+          {organization.companySize || "Not specified"}
+        </p>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-surface/90 p-5 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <FileText size={19} />
+          </span>
+          <h3 className="text-sm font-semibold text-muted">About</h3>
+        </div>
+        <p className="mt-4 whitespace-pre-wrap text-sm leading-6">
+          {organization.description || "No description added yet."}
+        </p>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-surface/90 p-5 text-text shadow-sm transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Globe size={19} />
+          </span>
+          <h3 className="text-sm font-semibold text-muted">Website</h3>
+        </div>
+        {organization.website ? (
           <a
             href={organization.website}
             target="_blank"
             rel="noreferrer"
-            className="\n              flex\n              items-center\n              gap-2\n              text-sm\n              text-primary\n              hover:underline\n            "
+            className="mt-4 block break-all text-sm font-medium text-primary hover:underline"
           >
-            <Globe size={17} />
-            Website
+            {organization.website}
           </a>
+        ) : (
+          <p className="mt-4 text-sm text-muted">No website added yet.</p>
         )}
-      </div>
+      </section>
     </div>
   );
 };

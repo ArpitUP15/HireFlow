@@ -7,12 +7,13 @@ import {
   GitBranch,
   ShieldCheck,
   UserRound,
-  Flag,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../context/useAuth";
+import { useOrganization } from "../context/useOrganization";
 import { submitContactMessage } from "../services/publicService";
 import ThemeToggle from "../components/common/ThemeToggle";
+import NotificationBell from "../components/common/NotificationBell";
 import hireFlowWordmark from "../assets/hireflow-symbol.png";
 import LiveHiringStats from "../components/common/LiveHiringStats";
 const features = [
@@ -49,6 +50,7 @@ const features = [
 ];
 export default function Home() {
   const { user, logout } = useAuth();
+  const { organization } = useOrganization();
   const navigate = useNavigate();
   const page = useRef(null);
 
@@ -142,14 +144,13 @@ export default function Home() {
           <a href="#faq">FAQ's</a>
           <a href="#contact">Contact</a>
 
-          <button
-            type="button"
-            aria-label="Language"
-            title="Language"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-transparent text-text transition-opacity hover:bg-primary/5"
-          >
-           
-          </button>
+          {user && (
+            <NotificationBell
+              canLoadNotifications={
+                Boolean(organization) || user.role === "candidate"
+              }
+            />
+          )}
           <ThemeToggle />
           {user ? (
             <>

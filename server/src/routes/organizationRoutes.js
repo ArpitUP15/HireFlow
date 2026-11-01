@@ -69,10 +69,7 @@ router.put(
   "/current",
   protect,
   loadOrganization,
-  requireOrganizationRole(
-    "owner",
-    "hr_admin"
-  ),
+  requireOrganizationRole("owner"),
   updateOrganization
 );
 
