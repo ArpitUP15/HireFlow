@@ -20,6 +20,7 @@ import errorHandler from "./middleware/errorMiddleware.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
+import portalRoutes from "./routes/portalRoutes.js";
 const app = express();
 
 /*
@@ -98,6 +99,8 @@ app.get("/health", (req, res) => {
 app.use("/api/public", publicRoutes);
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/portal", portalRoutes);
 
 app.use("/api/organizations", organizationRoutes);
 

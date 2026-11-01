@@ -18,7 +18,7 @@ describe("Jobs API", () => {
         firstName: "Job",
         lastName: "Tester",
         email: "jobtester@example.com",
-        password: "Password123"
+        password: "Password123!"
       });
 
     const userId = registerResponse.body.user._id;

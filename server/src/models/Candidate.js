@@ -45,6 +45,48 @@ const candidateSchema = new mongoose.Schema(
       default: "",
     },
 
+    address: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 500,
+    },
+
+    headline: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 200,
+    },
+
+    summary: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 5000,
+    },
+
+    linkedinUrl: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 1000,
+    },
+
+    githubUrl: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 1000,
+    },
+
+    portfolioUrl: {
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 1000,
+    },
+
     // --------------------------------------------------
     // PROFESSIONAL INFORMATION
     // --------------------------------------------------

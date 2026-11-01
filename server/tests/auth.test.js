@@ -6,7 +6,7 @@ describe("Authentication API", () => {
     firstName: "Test",
     lastName: "User",
     email: "testuser@example.com",
-    password: "Password123"
+    password: "Password123!"
   };
 
   test("POST /api/auth/register should create a user", async () => {
@@ -26,6 +26,25 @@ describe("Authentication API", () => {
 
     expect(response.headers["set-cookie"]).toBeDefined();
   });
+
+  test.each([
+    ["too short", "Pass1!"],
+    ["missing uppercase letter", "password123!"],
+    ["missing lowercase letter", "PASSWORD123!"],
+    ["missing number", "Password!!!!"],
+    ["missing special character", "Password1234"]
+  ])(
+    "POST /api/auth/register should reject passwords %s",
+    async (_reason, password) => {
+      const response = await request(app)
+        .post("/api/auth/register")
+        .send({ ...user, password });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toMatch(/password/i);
+    }
+  );
 
   test("POST /api/auth/login should login user", async () => {
     await request(app)

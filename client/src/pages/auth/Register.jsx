@@ -70,8 +70,32 @@ function Register() {
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (formData.password.length < 8) {
       setError("Password must be at least 8 characters long.");
+
+      return;
+    }
+
+    if (!/[a-z]/.test(formData.password)) {
+      setError("Password must include a lowercase letter.");
+
+      return;
+    }
+
+    if (!/[A-Z]/.test(formData.password)) {
+      setError("Password must include an uppercase letter.");
+
+      return;
+    }
+
+    if (!/\d/.test(formData.password)) {
+      setError("Password must include a number.");
+
+      return;
+    }
+
+    if (!/[^A-Za-z0-9]/.test(formData.password)) {
+      setError("Password must include a special character.");
 
       return;
     }
@@ -274,10 +298,14 @@ function Register() {
                 required
                 minLength={8}
                 disabled={loading}
-                placeholder="Minimum 6 characters"
+                placeholder="Create a strong password"
                 className="w-full rounded-xl border border-border bg-primary/5 py-3 pl-10 pr-4 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:opacity-50"
               />
             </div>
+            <p className="mt-2 text-xs text-muted">
+              Use at least 8 characters with uppercase and lowercase letters,
+              a number, and a special character.
+            </p>
           </div>
 
           {/* =======================================

@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
+import { getPasswordValidationMessage } from "../utils/passwordPolicy.js";
 
 
 // =====================================================
@@ -67,6 +68,7 @@ export const registerUser = async (
       !cleanFirstName ||
       !cleanLastName ||
       !cleanEmail ||
+      typeof password !== "string" ||
       !password
     ) {
       return res.status(400).json({
@@ -97,11 +99,13 @@ export const registerUser = async (
     // Validate password
     // -------------------------------------------------
 
-    if (password.length < 6) {
+    const passwordValidationMessage =
+      getPasswordValidationMessage(password);
+
+    if (passwordValidationMessage) {
       return res.status(400).json({
         success: false,
-        message:
-          "Password must be at least 6 characters long",
+        message: passwordValidationMessage,
       });
     }
 

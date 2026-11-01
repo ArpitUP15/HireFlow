@@ -22,7 +22,7 @@ describe("Applications API", () => {
         firstName: "Application",
         lastName: "Tester",
         email: "applicationtester@example.com",
-        password: "Password123"
+        password: "Password123!"
       });
 
     const userId = registerResponse.body.user._id;

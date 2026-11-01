@@ -1,6 +1,30 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { isStrongPassword } from "../utils/passwordPolicy.js";
 
+const candidateProfileSchema = new mongoose.Schema(
+  {
+    phone: { type: String, trim: true, default: "", maxlength: 30 },
+    location: { type: String, trim: true, default: "", maxlength: 200 },
+    address: { type: String, trim: true, default: "", maxlength: 500 },
+    headline: { type: String, trim: true, default: "", maxlength: 200 },
+    summary: { type: String, trim: true, default: "", maxlength: 5000 },
+    skills: { type: [String], default: [] },
+    experience: { type: Number, default: 0, min: 0, max: 70 },
+    education: { type: String, trim: true, default: "", maxlength: 3000 },
+    linkedinUrl: { type: String, trim: true, default: "", maxlength: 1000 },
+    githubUrl: { type: String, trim: true, default: "", maxlength: 1000 },
+    portfolioUrl: { type: String, trim: true, default: "", maxlength: 1000 },
+    resume: {
+      originalName: { type: String, default: "" },
+      fileName: { type: String, default: "" },
+      filePath: { type: String, default: "" },
+      mimeType: { type: String, default: "" },
+      uploadedAt: { type: Date, default: null },
+    },
+  },
+  { _id: false },
+);
 
 const userSchema =
   new mongoose.Schema(
@@ -31,7 +55,12 @@ const userSchema =
       password: {
         type: String,
         required: true,
-        minlength: 6,
+        minlength: 8,
+        validate: {
+          validator: isStrongPassword,
+          message:
+            "Password must be at least 8 characters and include uppercase and lowercase letters, a number, and a special character",
+        },
         select: false,
       },
 
@@ -56,6 +85,12 @@ const userSchema =
       lastLogin: {
         type: Date,
         default: null,
+      },
+
+      candidateProfile: {
+        type: candidateProfileSchema,
+        default: () => ({}),
+        select: false,
       },
     },
 
@@ -126,6 +161,9 @@ userSchema.methods.toJSON =
 
 
     delete user.password;
+    if (user.candidateProfile?.resume) {
+      delete user.candidateProfile.resume.filePath;
+    }
 
 
     return user;

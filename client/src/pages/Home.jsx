@@ -285,6 +285,9 @@ export default function Home() {
           <img src={hireFlowWordmark} alt="HireFlow" className="site-footer__logo" />
           <span>HireFlow</span>
         </div>
+        <p className="site-footer__copyright">
+          &copy; {new Date().getFullYear()} HireFlow. All rights reserved.
+        </p>
         <div className="site-footer__links">
           <Link to="/privacy">Privacy policy</Link>
           <Link to="/terms">Terms and conditions</Link>

@@ -18,7 +18,7 @@ describe("Candidates API", () => {
         firstName: "Candidate",
         lastName: "Tester",
         email: "candidatetester@example.com",
-        password: "Password123",
+        password: "Password123!",
         role: "recruiter"
       });
 

@@ -505,6 +505,9 @@ button:disabled {
   .portal-profile-layout {
     grid-template-columns: 1fr;
   }
+  .contact-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .portal-filters,
   .portal-form-grid {
     grid-template-columns: 1fr;
@@ -683,6 +686,12 @@ button:disabled {
   height: 18px;
   object-fit: contain;
 }
+.site-footer__copyright {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
 .site-footer__links {
   display: flex;
   align-items: center;
@@ -738,4 +747,235 @@ html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
  html { scroll-behavior: auto; }
  .hero-line { animation: none; }
  .scroll-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 919px) {
+  .landing-page {
+    overflow-x: clip;
+  }
+
+  .landing-navbar {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 10px clamp(14px, 4vw, 28px);
+  }
+
+  .landing-navbar .brand-name {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+  }
+
+  .landing-nav {
+    position: static;
+    order: 3;
+    left: auto;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px clamp(12px, 3vw, 24px);
+    padding: 4px 0;
+    transform: none;
+    white-space: normal;
+  }
+
+  .landing-actions {
+    gap: 8px;
+  }
+
+  .landing-actions .portal-button {
+    padding: 9px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .landing-page > main.portal-page {
+    gap: clamp(24px, 5vw, 36px);
+    padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 40px);
+  }
+
+  .landing-page .home-hero {
+    width: 100%;
+    padding: clamp(30px, 6vw, 56px) clamp(20px, 5vw, 48px);
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2rem, 6.2vw, 3.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .home-hero > p:not(.eyebrow) {
+    font-size: clamp(1rem, 2.2vw, 1.125rem);
+  }
+
+  .landing-page #features,
+  .landing-page #faq,
+  .landing-page #contact {
+    scroll-margin-top: 120px;
+  }
+
+  .home-features {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-actions {
+    gap: 6px;
+  }
+
+  .landing-actions .portal-button {
+    padding: 8px 10px;
+  }
+
+  .landing-nav {
+    column-gap: 14px;
+    font-size: 14px;
+  }
+
+  .landing-page .home-hero {
+    padding: 28px 18px;
+    border-radius: 16px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(1.8rem, 9vw, 2.5rem);
+  }
+
+  .home-hero .portal-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .home-hero .portal-actions a {
+    width: 100%;
+  }
+
+  .faq-shell,
+  .home-faq {
+    padding: 22px 16px 8px;
+  }
+
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+}
+
+@media (max-height: 448px) {
+  .landing-navbar {
+    min-height: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .landing-nav {
+    gap: 4px 18px;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .landing-page > main.portal-page {
+    gap: 20px;
+    padding-top: 18px;
+    padding-bottom: 24px;
+  }
+
+  .landing-page .home-hero {
+    padding-top: 20px;
+    padding-bottom: 24px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(1.75rem, 5vh, 2.6rem);
+  }
+
+  .home-hero > p:not(.eyebrow) {
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .landing-page > main.portal-page {
+    max-width: 1760px;
+    gap: clamp(36px, 3vw, 56px);
+    padding: 56px clamp(56px, 5vw, 104px);
+  }
+
+  .landing-page .home-hero {
+    max-width: 1280px;
+    padding: clamp(72px, 6vw, 104px);
+  }
+
+  .home-hero h1 {
+    max-width: 1120px;
+    font-size: clamp(4rem, 5vw, 6rem);
+  }
+
+  .home-hero > p:not(.eyebrow) {
+    max-width: 860px;
+    font-size: 1.25rem;
+  }
+
+  .home-features {
+    gap: 28px;
+    margin-block: 36px;
+  }
+
+  .home-features article {
+    padding: 30px;
+  }
+}
+
+.contact-layout {
+  grid-template-columns: minmax(190px, 0.65fr) minmax(0, 1.55fr);
+  align-items: start;
+  gap: clamp(16px, 2.5vw, 32px);
+}
+
+.contact-info-panel {
+  min-width: 0;
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: clamp(18px, 2vw, 28px);
+}
+
+.contact-info-panel .eyebrow {
+  margin: 0;
+}
+
+.contact-heading {
+  margin: 0;
+  font-size: clamp(1.35rem, 1.8vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.contact-copy {
+  max-width: 30ch;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.contact-form {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-info-panel {
+    padding: 20px;
+  }
+
+  .contact-heading {
+    font-size: 1.5rem;
+  }
+
+  .contact-form {
+    padding: 22px;
+  }
 }
