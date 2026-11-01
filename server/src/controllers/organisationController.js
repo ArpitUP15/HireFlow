@@ -1,791 +1,460 @@
+import { createHash, randomBytes } from "node:crypto";
 import mongoose from "mongoose";
-import crypto from "crypto";
-
-import Organization from "../models/Organization.js";
-import OrganizationMember from "../models/OrganizationMember.js";
 import Invitation from "../models/Invitation.js";
 import Notification from "../models/Notification.js";
+import Organization from "../models/Organization.js";
+import OrganizationMember from "../models/OrganizationMember.js";
 import User from "../models/User.js";
-import { sendEmail } from "../services/emailService.js";
-
 import {
-  generateInvitationToken,
-  hashInvitationToken
-} from "../utils/generateInvitationToken.js";
+  isEmailConfigured,
+  sendEmail,
+} from "../services/emailService.js";
 
-const escapeHtml = (value) =>
-  String(value).replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]);
+const invitationRoles = [
+  "hr_admin",
+  "recruiter",
+  "interviewer",
+];
 
-// ------------------------------------------------
-// Create organization
-// ------------------------------------------------
+const editableOrganizationFields = [
+  "name",
+  "description",
+  "logo",
+  "website",
+  "industry",
+  "companySize",
+];
 
-export const createOrganization =
-  async (req, res) => {
-    const {
-      name,
-      description,
-      website,
-      industry,
-      companySize
-    } = req.body;
+const createError = (status, message) =>
+  Object.assign(new Error(message), { status });
 
-    if (!name) {
-      res.status(400);
+const normalizeEmail = (email) =>
+  typeof email === "string" ? email.trim().toLowerCase() : "";
 
-      throw new Error(
-        "Organization name is required"
-      );
+const createSlug = (name) =>
+  name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const invitationUrl = (token) => {
+  const baseUrl = (
+    process.env.CLIENT_URL ||
+    process.env.FRONTEND_URL ||
+    "http://localhost:5173"
+  ).replace(/\/+$/, "");
+
+  return `${baseUrl}/accept-invitation?token=${encodeURIComponent(token)}`;
+};
+
+export const createOrganization = async (req, res, next) => {
+  try {
+    const name =
+      typeof req.body.name === "string" ? req.body.name.trim() : "";
+
+    if (name.length < 2 || name.length > 100) {
+      return res.status(400).json({
+        success: false,
+        message: "Organization name must be between 2 and 100 characters",
+      });
     }
 
-    const slug =
-      `${name}-${crypto
-        .randomBytes(4)
-        .toString("hex")}`
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-");
+    const baseSlug = createSlug(name);
+    let slug = baseSlug;
+    let suffix = 1;
 
-    const organization =
-      await Organization.create({
-        name,
-        slug,
-        description,
-        website,
-        industry,
-        companySize,
-        owner: req.user._id
-      });
+    while (await Organization.exists({ slug })) {
+      slug = `${baseSlug}-${suffix}`;
+      suffix += 1;
+    }
 
-    // Owner permissions
+    const organization = await Organization.create({
+      name,
+      slug,
+      owner: req.user._id,
+      description: req.body.description,
+      logo: req.body.logo,
+      website: req.body.website,
+      industry: req.body.industry,
+      companySize: req.body.companySize || undefined,
+    });
 
     await OrganizationMember.create({
-      organization:
-        organization._id,
-
+      organization: organization._id,
       user: req.user._id,
-
       role: "owner",
-
-      permissions: {
-        manageJobs: true,
-        manageCandidates: true,
-        manageApplications: true,
-        manageInterviews: true,
-        manageMembers: true,
-        viewAnalytics: true
-      }
     });
-
-    res.status(201).json({
-      success: true,
-      message:
-        "Organization created successfully",
-      organization
-    });
-  };
-
-// ------------------------------------------------
-// Get current organization
-// ------------------------------------------------
-
-export const getOrganization =
-  async (req, res) => {
-    const organization =
-      await Organization.findById(
-        req.organization._id
-      ).populate(
-        "owner",
-        "firstName lastName email"
-      );
-
-    if (!organization) {
-      res.status(404);
-
-      throw new Error(
-        "Organization not found"
-      );
-    }
-
-    res.status(200).json({
-      success: true,
-      organization,
-      membership:
-        req.organizationMember
-    });
-  };
-
-// =====================================================
-// GET MY ORGANIZATIONS
-// =====================================================
-
-export const getMyOrganizations =
-  async (req, res) => {
-
-    const memberships =
-      await OrganizationMember.find({
-        user: req.user._id,
-        status: "active",
-      })
-        .populate(
-          "organization"
-        )
-        .sort({
-          createdAt: 1,
-        });
-
-
-    const organizations =
-      memberships.map(
-        (membership) => ({
-          organization:
-            membership.organization,
-
-          membershipId:
-            membership._id,
-
-          role:
-            membership.role,
-
-          permissions:
-            membership.permissions,
-        })
-      );
-
-
-    res.status(200).json({
-      success: true,
-
-      count:
-        organizations.length,
-
-      organizations,
-    });
-  };
-
-// ------------------------------------------------
-// Update organization
-// ------------------------------------------------
-
-export const updateOrganization =
-  async (req, res) => {
-    const {
-      name,
-      description,
-      logo,
-      website,
-      industry,
-      companySize
-    } = req.body;
-
-    const organization =
-      await Organization.findById(
-        req.organization._id
-      );
-
-    if (!organization) {
-      res.status(404);
-
-      throw new Error(
-        "Organization not found"
-      );
-    }
-
-    if (name !== undefined)
-      organization.name = name;
-
-    if (description !== undefined)
-      organization.description =
-        description;
-
-    if (logo !== undefined)
-      organization.logo = logo;
-
-    if (website !== undefined)
-      organization.website =
-        website;
-
-    if (industry !== undefined)
-      organization.industry =
-        industry;
-
-    if (companySize !== undefined)
-      organization.companySize =
-        companySize;
-
-    await organization.save();
-
-    res.status(200).json({
-      success: true,
-      message:
-        "Organization updated successfully",
-      organization
-    });
-  };
-
-// ------------------------------------------------
-// Get members
-// ------------------------------------------------
-
-export const getMembers =
-  async (req, res) => {
-    const members =
-      await OrganizationMember.find({
-        organization:
-          req.organization._id
-      })
-        .populate(
-          "user",
-          "firstName lastName email avatar phone"
-        )
-        .sort({
-          createdAt: -1
-        });
-
-    res.status(200).json({
-      success: true,
-      count: members.length,
-      members
-    });
-  };
-
-// ------------------------------------------------
-// Invite employee
-// ------------------------------------------------
-
-export const inviteMember =
-  async (req, res) => {
-    const {
-      email,
-      role
-    } = req.body;
-
-    if (!email) {
-      res.status(400);
-
-      throw new Error(
-        "Email is required"
-      );
-    }
-
-    const normalizedEmail =
-      email.toLowerCase().trim();
-
-    const allowedRoles = [
-      "hr_admin",
-      "recruiter",
-      "interviewer"
-    ];
-
-    const memberRole =
-      allowedRoles.includes(role)
-        ? role
-        : "recruiter";
-
-    // Check existing user
-    const existingUser =
-      await User.findOne({
-        email: normalizedEmail
-      });
-
-    if (existingUser) {
-      const existingMember =
-        await OrganizationMember.findOne({
-          organization:
-            req.organization._id,
-          user: existingUser._id
-        });
-
-      if (existingMember) {
-        res.status(409);
-
-        throw new Error(
-          "User is already a member of this organization"
-        );
-      }
-    }
-
-    // Existing pending invitation
-    const existingInvitation =
-      await Invitation.findOne({
-        organization:
-          req.organization._id,
-
-        email: normalizedEmail,
-
-        status: "pending",
-
-        expiresAt: {
-          $gt: new Date()
-        }
-      });
-
-    if (existingInvitation) {
-      res.status(409);
-
-      throw new Error(
-        "A pending invitation already exists for this email"
-      );
-    }
-
-    const rawToken =
-      generateInvitationToken();
-
-    const tokenHash =
-      hashInvitationToken(
-        rawToken
-      );
-
-    const invitation =
-      await Invitation.create({
-        organization:
-          req.organization._id,
-
-        email: normalizedEmail,
-
-        role: memberRole,
-
-        tokenHash,
-
-        expiresAt:
-          new Date(
-            Date.now() +
-              48 *
-                60 *
-                60 *
-                1000
-          ),
-
-        invitedBy:
-          req.user._id
-      });
-
-    const clientUrl =
-      (process.env.CLIENT_URL || "http://localhost:5173")
-        .replace(/\/+$/, "");
-    const invitationLink =
-      `${clientUrl}/accept-invitation?token=${rawToken}`;
-
-    let notification;
-    try {
-      if (existingUser) {
-        notification = await Notification.create({
-          organization: req.organization._id,
-          user: existingUser._id,
-          type: "invitation",
-          title: "Organization invitation",
-          message: `${req.user.firstName} ${req.user.lastName} invited you to join ${req.organization.name} as ${memberRole.replace("_", " ")}.`,
-          metadata: {
-            invitationId: invitation._id.toString()
-          }
-        });
-      }
-
-      const inviterName =
-        `${req.user.firstName} ${req.user.lastName}`.trim();
-      const roleName = memberRole.replace("_", " ");
-      const organizationName = req.organization.name;
-      const safeLink = escapeHtml(invitationLink);
-      const text =
-        `${inviterName} invited you to join ${organizationName} on HireFlow as ${roleName}.\n\n` +
-        `Accept the invitation: ${invitationLink}\n\n` +
-        "This invitation expires in 48 hours. Sign in or create an account using this email address to accept it. Choose the Recruiter account type when registering.";
-      const html =
-        `<p>${escapeHtml(inviterName)} invited you to join ` +
-        `<strong>${escapeHtml(organizationName)}</strong> on HireFlow as ` +
-        `${escapeHtml(roleName)}.</p>` +
-        `<p><a href="${safeLink}">Accept invitation</a></p>` +
-        "<p>This invitation expires in 48 hours. Sign in or create an account using this email address to accept it. Choose the Recruiter account type when registering.</p>";
-
-      await sendEmail({
-        to: normalizedEmail,
-        subject: `Invitation to join ${organizationName} on HireFlow`,
-        text,
-        html
-      });
-    } catch (error) {
-      if (notification) {
-        await Notification.deleteOne({
-          _id: notification._id
-        });
-      }
-      await Invitation.deleteOne({
-        _id: invitation._id
-      });
-      if (error.statusCode) {
-        res.status(error.statusCode);
-      }
-      throw error;
-    }
-
-    res.status(201).json({
-      success: true,
-      message: "Invitation email sent successfully",
-
-      invitation: {
-        id: invitation._id,
-        email:
-          invitation.email,
-        role:
-          invitation.role,
-        expiresAt:
-          invitation.expiresAt,
-        emailSent: true,
-        notificationSent: Boolean(notification)
-      }
-    });
-  };
-
-// ------------------------------------------------
-// Accept invitation
-// ------------------------------------------------
-
-export const acceptInvitation =
-  async (req, res) => {
-    const {
-      token
-    } = req.body;
-
-    const { invitationId } = req.body;
-
-    if (!token && !invitationId) {
-      res.status(400);
-
-      throw new Error(
-        "Invitation token or invitation ID is required"
-      );
-    }
-
-    let invitation;
-    if (token) {
-      const tokenHash =
-        hashInvitationToken(token);
-
-      invitation = await Invitation.findOne({
-        tokenHash,
-        status: "pending"
-      });
-    } else {
-      if (!mongoose.Types.ObjectId.isValid(invitationId)) {
-        res.status(400);
-        throw new Error("Invalid invitation ID");
-      }
-
-      invitation = await Invitation.findOne({
-        _id: invitationId,
-        status: "pending"
-      });
-    }
-
-    if (!invitation) {
-      res.status(404);
-
-      throw new Error(
-        "Invalid or already used invitation"
-      );
-    }
-
-    if (
-      invitation.expiresAt <
-      new Date()
-    ) {
-      invitation.status =
-        "expired";
-
-      await invitation.save();
-
-      res.status(400);
-
-      throw new Error(
-        "Invitation has expired"
-      );
-    }
-
-    // Logged-in user's email must match
-    if (
-      req.user.email.toLowerCase() !==
-      invitation.email.toLowerCase()
-    ) {
-      res.status(403);
-
-      throw new Error(
-        "This invitation belongs to a different email address"
-      );
-    }
-
-    const existingMember =
-      await OrganizationMember.findOne({
-        organization:
-          invitation.organization,
-
-        user: req.user._id
-      });
-
-    if (existingMember) {
-      invitation.status =
-        "accepted";
-
-      await invitation.save();
-
-      res.status(409);
-
-      throw new Error(
-        "You are already a member of this organization"
-      );
-    }
 
     if (req.user.role === "candidate") {
       await User.updateOne(
-        { _id: req.user._id },
-        { $set: { role: "recruiter" } }
+        { _id: req.user._id, role: "candidate" },
+        { $set: { role: "recruiter" } },
       );
     }
 
-    let permissions = {
-      manageJobs: false,
-      manageCandidates: false,
-      manageApplications: false,
-      manageInterviews: false,
-      manageMembers: false,
-      viewAnalytics: false
-    };
+    return res.status(201).json({
+      success: true,
+      message: "Organization created successfully",
+      organization,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
 
-    if (
-      invitation.role ===
-      "hr_admin"
-    ) {
-      permissions = {
-        manageJobs: true,
-        manageCandidates: true,
-        manageApplications: true,
-        manageInterviews: true,
-        manageMembers: true,
-        viewAnalytics: true
-      };
-    }
-
-    if (
-      invitation.role ===
-      "recruiter"
-    ) {
-      permissions = {
-        manageJobs: true,
-        manageCandidates: true,
-        manageApplications: true,
-        manageInterviews: true,
-        manageMembers: false,
-        viewAnalytics: true
-      };
-    }
-
-    if (
-      invitation.role ===
-      "interviewer"
-    ) {
-      permissions = {
-        manageJobs: false,
-        manageCandidates: false,
-        manageApplications: false,
-        manageInterviews: true,
-        manageMembers: false,
-        viewAnalytics: false
-      };
-    }
-
-    const member =
-      await OrganizationMember.create({
-        organization:
-          invitation.organization,
-
-        user:
-          req.user._id,
-
-        role:
-          invitation.role,
-
-        permissions
+export const getOrganization = async (req, res, next) => {
+  try {
+    if (!req.organization) {
+      return res.status(404).json({
+        success: false,
+        message: "Organization not found",
       });
+    }
 
-    invitation.status =
-      "accepted";
+    return res.status(200).json({
+      success: true,
+      organization: req.organization,
+      membership: req.organizationMember,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
 
+export const getMyOrganizations = async (req, res, next) => {
+  try {
+    const organizations = await OrganizationMember.find({
+      user: req.user._id,
+      status: "active",
+    })
+      .sort({ createdAt: 1 })
+      .populate("organization");
+
+    return res.status(200).json({
+      success: true,
+      organizations,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const updateOrganization = async (req, res, next) => {
+  try {
+    const updates = {};
+
+    for (const field of editableOrganizationFields) {
+      if (Object.hasOwn(req.body, field)) {
+        updates[field] = req.body[field];
+      }
+    }
+
+    if (typeof updates.name === "string") {
+      updates.name = updates.name.trim();
+      if (updates.name.length < 2 || updates.name.length > 100) {
+        return res.status(400).json({
+          success: false,
+          message: "Organization name must be between 2 and 100 characters",
+        });
+      }
+    }
+
+    const organization = await Organization.findByIdAndUpdate(
+      req.organization._id,
+      { $set: updates },
+      { new: true, runValidators: true },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Organization updated successfully",
+      organization,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getMembers = async (req, res, next) => {
+  try {
+    const members = await OrganizationMember.find({
+      organization: req.organization._id,
+      status: "active",
+    })
+      .sort({ createdAt: 1 })
+      .populate("user", "firstName lastName email");
+
+    return res.status(200).json({
+      success: true,
+      members,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const inviteMember = async (req, res, next) => {
+  try {
+    const email = normalizeEmail(req.body.email);
+    const role = req.body.role || "recruiter";
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid email address is required",
+      });
+    }
+
+    if (!invitationRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid organization role",
+      });
+    }
+
+    const invitedUser = await User.findOne({ email }).select("_id");
+    if (
+      invitedUser &&
+      await OrganizationMember.exists({
+        organization: req.organization._id,
+        user: invitedUser._id,
+        status: "active",
+      })
+    ) {
+      return res.status(409).json({
+        success: false,
+        message: "This user is already a member of the organization",
+      });
+    }
+
+    const pendingInvitation = await Invitation.findOne({
+      organization: req.organization._id,
+      email,
+      status: "pending",
+      expiresAt: { $gt: new Date() },
+    });
+
+    if (pendingInvitation) {
+      return res.status(409).json({
+        success: false,
+        message: "A pending invitation already exists for this email",
+      });
+    }
+
+    const token = randomBytes(32).toString("hex");
+    const invitation = await Invitation.create({
+      organization: req.organization._id,
+      email,
+      role,
+      tokenHash: createHash("sha256").update(token).digest("hex"),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      invitedBy: req.user._id,
+    });
+    const link = invitationUrl(token);
+    const emailConfigured = isEmailConfigured();
+    let emailSent = false;
+
+    if (emailConfigured) {
+      try {
+        await sendEmail({
+          to: email,
+          subject: `Invitation to join ${req.organization.name} on HireFlow`,
+          text: `You have been invited to join ${req.organization.name} as a ${role}.\n\nAccept the invitation: ${link}\n\nThis link expires in 7 days.`,
+        });
+        emailSent = true;
+      } catch (error) {
+        console.error("Invitation email delivery failed:", error);
+      }
+    }
+
+    if (invitedUser) {
+      await Notification.create({
+        organization: req.organization._id,
+        user: invitedUser._id,
+        type: "invitation",
+        title: `Invitation to ${req.organization.name}`,
+        message: `You have been invited to join as a ${role}.`,
+        metadata: { invitationId: invitation._id },
+      });
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: "Invitation created successfully",
+      invitation: {
+        invitationLink: link,
+        emailSent,
+        emailConfigured,
+      },
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const acceptInvitation = async (req, res, next) => {
+  try {
+    const { token, invitationId } = req.body;
+
+    if (!token && !invitationId) {
+      return res.status(400).json({
+        success: false,
+        message: "Invitation token or ID is required",
+      });
+    }
+
+    if (
+      invitationId &&
+      !mongoose.Types.ObjectId.isValid(invitationId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invitation ID",
+      });
+    }
+
+    const invitation = token
+      ? await Invitation.findOne({
+          tokenHash: createHash("sha256").update(token).digest("hex"),
+        }).populate("organization")
+      : await Invitation.findById(invitationId).populate("organization");
+
+    if (!invitation || invitation.status !== "pending") {
+      return res.status(404).json({
+        success: false,
+        message: "Invitation not found or has already been used",
+      });
+    }
+
+    if (invitation.expiresAt <= new Date()) {
+      invitation.status = "expired";
+      await invitation.save();
+      return res.status(410).json({
+        success: false,
+        message: "This invitation has expired",
+      });
+    }
+
+    if (normalizeEmail(req.user.email) !== invitation.email) {
+      return res.status(403).json({
+        success: false,
+        message: "Sign in with the email address that received this invitation",
+      });
+    }
+
+    await OrganizationMember.create({
+      organization: invitation.organization._id,
+      user: req.user._id,
+      role: invitation.role,
+    });
+
+    invitation.status = "accepted";
     await invitation.save();
 
-    res.status(201).json({
-      success: true,
-      message:
-        "Invitation accepted successfully",
-      member
-    });
-  };
-
-// ------------------------------------------------
-// Remove member
-// ------------------------------------------------
-
-export const removeMember =
-  async (req, res) => {
-    const {
-      memberId
-    } = req.params;
-
-    if (
-      !mongoose.Types.ObjectId.isValid(
-        memberId
-      )
-    ) {
-      res.status(400);
-
-      throw new Error(
-        "Invalid member ID"
+    if (req.user.role === "candidate") {
+      await User.updateOne(
+        { _id: req.user._id, role: "candidate" },
+        { $set: { role: "recruiter" } },
       );
     }
 
-    const member =
-      await OrganizationMember.findOne({
-        _id: memberId,
+    return res.status(200).json({
+      success: true,
+      message: "Invitation accepted successfully",
+      organization: invitation.organization,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
 
-        organization:
-          req.organization._id
+export const removeMember = async (req, res, next) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.memberId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid member ID",
       });
+    }
+
+    const member = await OrganizationMember.findOne({
+      _id: req.params.memberId,
+      organization: req.organization._id,
+      status: "active",
+    });
 
     if (!member) {
-      res.status(404);
-
-      throw new Error(
-        "Organization member not found"
-      );
+      return res.status(404).json({
+        success: false,
+        message: "Organization member not found",
+      });
     }
 
-    if (
-      member.role ===
-      "owner"
-    ) {
-      res.status(400);
-
-      throw new Error(
-        "Organization owner cannot be removed"
-      );
+    if (member.role === "owner") {
+      return res.status(400).json({
+        success: false,
+        message: "The organization owner cannot be removed",
+      });
     }
 
     await member.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message:
-        "Member removed successfully"
+      message: "Member removed successfully",
     });
-  };
+  } catch (error) {
+    return next(error);
+  }
+};
 
-// ------------------------------------------------
-// Update member role
-// ------------------------------------------------
-
-export const updateMemberRole =
-  async (req, res) => {
-    const {
-      memberId
-    } = req.params;
-
-    const {
-      role
-    } = req.body;
-
-    const allowedRoles = [
-      "hr_admin",
-      "recruiter",
-      "interviewer"
-    ];
-
-    if (
-      !allowedRoles.includes(role)
-    ) {
-      res.status(400);
-
-      throw new Error(
-        "Invalid organization role"
-      );
+export const updateMemberRole = async (req, res, next) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.memberId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid member ID",
+      });
     }
 
-    const member =
-      await OrganizationMember.findOne({
-        _id: memberId,
-
-        organization:
-          req.organization._id
+    const { role } = req.body;
+    if (!invitationRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid organization role",
       });
+    }
+
+    const member = await OrganizationMember.findOne({
+      _id: req.params.memberId,
+      organization: req.organization._id,
+      status: "active",
+    });
 
     if (!member) {
-      res.status(404);
-
-      throw new Error(
-        "Member not found"
-      );
+      return res.status(404).json({
+        success: false,
+        message: "Organization member not found",
+      });
     }
 
-    if (
-      member.role ===
-      "owner"
-    ) {
-      res.status(400);
-
-      throw new Error(
-        "Owner role cannot be changed"
-      );
+    if (member.role === "owner") {
+      return res.status(400).json({
+        success: false,
+        message: "The organization owner's role cannot be changed",
+      });
     }
 
     member.role = role;
-
-    if (
-      role === "hr_admin"
-    ) {
-      member.permissions = {
-        manageJobs: true,
-        manageCandidates: true,
-        manageApplications: true,
-        manageInterviews: true,
-        manageMembers: true,
-        viewAnalytics: true
-      };
-    }
-
-    if (
-      role === "recruiter"
-    ) {
-      member.permissions = {
-        manageJobs: true,
-        manageCandidates: true,
-        manageApplications: true,
-        manageInterviews: true,
-        manageMembers: false,
-        viewAnalytics: true
-      };
-    }
-
-    if (
-      role === "interviewer"
-    ) {
-      member.permissions = {
-        manageJobs: false,
-        manageCandidates: false,
-        manageApplications: false,
-        manageInterviews: true,
-        manageMembers: false,
-        viewAnalytics: false
-      };
-    }
-
     await member.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message:
-        "Member role updated successfully",
-      member
+      message: "Member role updated successfully",
+      member,
     });
-  };
+  } catch (error) {
+    return next(error);
+  }
+};

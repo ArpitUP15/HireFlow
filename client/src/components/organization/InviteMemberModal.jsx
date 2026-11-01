@@ -15,7 +15,9 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
 
   const [error, setError] = useState("");
 
-  const [invitation, setInvitation] = useState(null);
+  const [invitationLink, setInvitationLink] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailConfigured, setEmailConfigured] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,7 +31,9 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
         role,
       });
 
-      setInvitation(data.invitation);
+      setInvitationLink(data.invitation.invitationLink);
+      setEmailSent(Boolean(data.invitation.emailSent));
+      setEmailConfigured(Boolean(data.invitation.emailConfigured));
 
       onSuccess?.();
     } catch (error) {
@@ -43,13 +47,15 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
     setEmail("");
     setRole("recruiter");
     setError("");
-    setInvitation(null);
+    setInvitationLink("");
+    setEmailSent(false);
+    setEmailConfigured(false);
     onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Invite Team Member">
-      {!invitation ? (
+      {!invitationLink ? (
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
             <div className="rounded-lg bg-accent/10 p-3 text-sm text-accent-readable">
@@ -86,19 +92,37 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           <Button type="submit" loading={loading} className="w-full">
-            Create Invitation
+            Send Invitation
           </Button>
         </form>
       ) : (
         <div className="space-y-5">
           <div className="rounded-lg bg-secondary/10 p-4 text-sm text-secondary-readable">
-            Invitation email sent to {invitation.email}.
+            {emailSent
+              ? "Invitation email sent successfully. The recipient can use the link in their email to join your organization."
+              : emailConfigured
+                ? "Invitation created, but email delivery failed. Copy the invitation link below and share it directly."
+                : "Invitation created, but no email provider is configured. Set RESEND_API_KEY in server/.env to send invitations by email."}
           </div>
-          {invitation.notificationSent && (
-            <p className="text-sm text-muted">
-              An in-app notification was also sent to their account.
+
+          <div>
+            <p className="mb-2 text-sm font-medium text-muted">
+              Invitation Link
             </p>
-          )}
+
+            <textarea
+              readOnly
+              value={invitationLink}
+              rows="4"
+              className="w-full rounded-lg border border-border p-3 text-sm"
+            />
+          </div>
+
+          <p className="text-xs text-muted">
+            {emailSent
+              ? "You can also copy this link and share it directly if needed."
+              : "Setup fallback: copy this link and share it directly until email delivery is configured."}
+          </p>
 
           <Button onClick={handleClose} className="w-full">
             Done
