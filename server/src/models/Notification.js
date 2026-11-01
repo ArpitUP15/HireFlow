@@ -21,6 +21,7 @@ const notificationSchema =
           "application",
           "interview",
           "candidate",
+          "invitation",
           "system",
         ],
         default: "system",

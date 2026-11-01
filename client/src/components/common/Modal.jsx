@@ -1,42 +1,18 @@
 import { X } from "lucide-react";
 
-const Modal = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-}) => {
+const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) {
     return null;
   }
 
   return (
     <div
-      className="
-        fixed
-        inset-0
-        z-50
-        flex
-        items-center
-        justify-center
-        bg-black/50
-        p-4
-      "
+      className="\n        fixed\n        inset-0\n        z-50\n        flex\n        items-center\n        justify-center\n        bg-overlay/50\n        p-4\n      "
       onClick={onClose}
     >
       <div
-        className="
-          w-full
-          max-w-lg
-          rounded-md
-          border border-border
-          bg-surface
-          text-primary
-          shadow-2xl
-        "
-        onClick={(event) =>
-          event.stopPropagation()
-        }
+        className="\n          w-full\n          max-w-lg\n          rounded-md\n          border border-border\n          bg-surface\n          text-text\n          shadow-2xl\n        "
+        onClick={(event) => event.stopPropagation()}
       >
         <div
           className="
@@ -48,26 +24,17 @@ const Modal = ({
             py-4
           "
         >
-          <h2 className="text-lg font-semibold">
-            {title}
-          </h2>
+          <h2 className="text-lg font-semibold">{title}</h2>
 
           <button
             onClick={onClose}
-            className="
-              rounded-lg
-              p-2
-              text-secondary
-              hover:bg-neutral
-            "
+            className="\n              rounded-lg\n              p-2\n              text-muted\n              hover:bg-background\n            "
           >
             <X size={20} />
           </button>
         </div>
 
-        <div className="p-6">
-          {children}
-        </div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );

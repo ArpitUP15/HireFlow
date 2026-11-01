@@ -1,477 +1,110 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  getMyOrganizations,
-  getCurrentOrganization,
-} from "../services/organizationService";
-
-import {
-  useAuth,
-} from "./useAuth";
-
-
-const OrganizationContext =
-  createContext(null);
-
-
-export const OrganizationProvider = ({
-  children,
-}) => {
-
-  const {
-    user,
-    loading: authLoading,
-  } = useAuth();
-
-
-  const [
-    organization,
-    setOrganization,
-  ] = useState(null);
-
-
-  const [
-    membership,
-    setMembership,
-  ] = useState(null);
-
-
-  const [
-    organizations,
-    setOrganizations,
-  ] = useState([]);
-
-
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
-
-
-  const [
-    error,
-    setError,
-  ] = useState("");
-
-
-  // ===================================================
-  // LOAD ORGANIZATIONS
-  // ===================================================
-
-  const loadOrganizations =
-    async () => {
-
-      try {
-
-        setLoading(true);
-
-        setError("");
-
-
-        const data =
-          await getMyOrganizations();
-
-
-        const list =
-          data?.organizations ||
-          [];
-
-
-        setOrganizations(
-          list
-        );
-
-
-        // ---------------------------------------------
-        // No organizations
-        // ---------------------------------------------
-
-        if (
-          list.length === 0
-        ) {
-
-          localStorage.removeItem(
-            "currentOrganizationId"
-          );
-
-          setOrganization(null);
-
-          setMembership(null);
-
-          return;
-        }
-
-
-        // ---------------------------------------------
-        // Existing selected organization
-        // ---------------------------------------------
-
-        const storedId =
-          localStorage.getItem(
-            "currentOrganizationId"
-          );
-
-
-        const selected =
-          list.find(
-            (item) =>
-              item.organization?._id ===
-              storedId
-          );
-
-
-        // ---------------------------------------------
-        // Use stored organization or first organization
-        // ---------------------------------------------
-
-        const activeOrganization =
-          selected ||
-          list[0];
-
-
-        const organizationId =
-          activeOrganization
-            .organization
-            ._id;
-
-
-        // ---------------------------------------------
-        // Save organization ID
-        // ---------------------------------------------
-
+import { useCallback, useEffect, useRef, useState } from "react";
+import { getMyOrganizations } from "../services/organizationService";
+import { useAuth } from "./useAuth";
+import { OrganizationContext } from "./organizationState";
+export const OrganizationProvider = ({ children }) => {
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?._id;
+  const isStaff = Boolean(user && user.role !== "candidate");
+  const [state, setState] = useState({
+    userId: null,
+    list: [],
+    selected: null,
+    error: "",
+  });
+  const requestId = useRef(0);
+  const loadOrganizations = useCallback(async () => {
+    const revision = ++requestId.current;
+    if (!userId || !isStaff) return;
+    try {
+      const data = await getMyOrganizations();
+      if (revision !== requestId.current) return;
+      const list = (data.organizations || []).filter((m) => m.organization);
+      const stored = localStorage.getItem("currentOrganizationId");
+      const selected =
+        list.find((m) => m.organization._id === stored) || list[0] || null;
+      if (selected)
         localStorage.setItem(
           "currentOrganizationId",
-          organizationId
+          selected.organization._id,
         );
-
-
-        setOrganization(
-          activeOrganization.organization
-        );
-
-
-        setMembership({
-          ...activeOrganization,
-          organization:
-            undefined,
+      else localStorage.removeItem("currentOrganizationId");
+      setState({ userId, list, selected, error: "" });
+    } catch (e) {
+      if (revision === requestId.current)
+        setState({
+          userId,
+          list: [],
+          selected: null,
+          error: e.response?.data?.message || "Could not load organization",
         });
-
-
-      } catch (error) {
-
-        console.error(
-          "Organization loading error:",
-          error
-        );
-
-
-        const message =
-          error?.response
-            ?.data
-            ?.message ||
-          "Unable to load organizations";
-
-
-        setError(
-          message
-        );
-
-        setOrganization(
-          null
-        );
-
-        setMembership(
-          null
-        );
-
-      } finally {
-
-        setLoading(false);
-      }
-    };
-
-
-  // ===================================================
-  // LOAD CURRENT ORGANIZATION
-  // ===================================================
-
-  const refreshOrganization =
-    async () => {
-
-      try {
-
-        setLoading(true);
-
-        setError("");
-
-
-        const data =
-          await getCurrentOrganization();
-
-
-        setOrganization(
-          data.organization
-        );
-
-
-        setMembership(
-          data.membership
-        );
-
-
-        if (
-          data.organization?._id
-        ) {
-
+    }
+  }, [userId, isStaff]);
+  useEffect(() => {
+    let cancelled = false;
+    if (!userId || !isStaff) return;
+    getMyOrganizations()
+      .then((data) => {
+        if (cancelled) return;
+        const list = (data.organizations || []).filter((m) => m.organization);
+        const stored = localStorage.getItem("currentOrganizationId");
+        const selected =
+          list.find((m) => m.organization._id === stored) || list[0] || null;
+        if (selected)
           localStorage.setItem(
             "currentOrganizationId",
-            data.organization._id
+            selected.organization._id,
           );
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Current organization error:",
-          error
-        );
-
-
-        setError(
-          error?.response
-            ?.data
-            ?.message ||
-          "Unable to load organization"
-        );
-
-      } finally {
-
-        setLoading(false);
-      }
+        else localStorage.removeItem("currentOrganizationId");
+        setState({ userId, list, selected, error: "" });
+      })
+      .catch((e) => {
+        if (!cancelled)
+          setState({
+            userId,
+            list: [],
+            selected: null,
+            error: e.response?.data?.message || "Could not load organization",
+          });
+      });
+    return () => {
+      cancelled = true;
     };
-
-
-  // ===================================================
-  // INITIAL LOAD
-  // ===================================================
-
-  useEffect(() => {
-
-    if (authLoading) {
-      return;
-    }
-
-
-    if (!user) {
-
-      setOrganization(null);
-
-      setMembership(null);
-
-      setOrganizations([]);
-
-      setError("");
-
-      setLoading(false);
-
-      return;
-    }
-
-
-    loadOrganizations();
-
-  }, [
-    user,
-    authLoading,
-  ]);
-
-
-  // ===================================================
-  // SELECT ORGANIZATION
-  // ===================================================
-
-  const selectOrganization =
-    async (
-      organizationId
-    ) => {
-
-      if (!organizationId) {
-        return;
-      }
-
-
-      localStorage.setItem(
-        "currentOrganizationId",
-        organizationId
-      );
-
-
-      const selected =
-        organizations.find(
-          (item) =>
-            item.organization?._id ===
-            organizationId
-        );
-
-
-      if (selected) {
-
-        setOrganization(
-          selected.organization
-        );
-
-
-        setMembership({
-          ...selected,
-          organization:
-            undefined,
-        });
-      }
-
-
-      await refreshOrganization();
-    };
-
-
-  // ===================================================
-  // CLEAR ORGANIZATION
-  // ===================================================
-
-  const clearOrganization =
-    () => {
-
-      localStorage.removeItem(
-        "currentOrganizationId"
-      );
-
-
-      setOrganization(
-        null
-      );
-
-      setMembership(
-        null
-      );
-    };
-
-
-  // ===================================================
-  // ROLE CHECK
-  // ===================================================
-
-  const hasRole =
-    (...roles) => {
-
-      if (!membership) {
-        return false;
-      }
-
-
-      return roles.includes(
-        membership.role
-      );
-    };
-
-
-  // ===================================================
-  // PERMISSION CHECK
-  // ===================================================
-
-  const hasPermission =
-    (permission) => {
-
-      if (!membership) {
-        return false;
-      }
-
-
-      if (
-        membership.role ===
-          "owner" ||
-        membership.role ===
-          "hr_admin"
-      ) {
-
-        return true;
-      }
-
-
-      return Boolean(
-        membership.permissions?.[
-          permission
-        ]
-      );
-    };
-
-
-  // ===================================================
-  // CONTEXT VALUE
-  // ===================================================
-
-  const value = {
-
-    organization,
-
-    organizations,
-
-    membership,
-
-    loading,
-
-    error,
-
-    loadOrganizations,
-
-    refreshOrganization,
-
-    selectOrganization,
-
-    clearOrganization,
-
-    hasRole,
-
-    hasPermission,
+  }, [userId, isStaff]);
+  const valid = isStaff && state.userId === userId;
+  const membership = valid ? state.selected : null;
+  const selectOrganization = (id) => {
+    const selected = state.list.find((m) => m.organization._id === id);
+    if (!selected) return;
+    localStorage.setItem("currentOrganizationId", id);
+    setState((s) => ({ ...s, selected }));
   };
-
-
+  const clearOrganization = () => {
+    localStorage.removeItem("currentOrganizationId");
+    setState((s) => ({ ...s, selected: null }));
+  };
   return (
-
     <OrganizationContext.Provider
-      value={value}
+      value={{
+        organization: membership?.organization || null,
+        membership,
+        organizations: valid ? state.list : [],
+        loading: authLoading || (isStaff && !valid),
+        error: valid ? state.error : "",
+        loadOrganizations,
+        refreshOrganization: loadOrganizations,
+        selectOrganization,
+        clearOrganization,
+        hasRole: (...roles) => roles.includes(membership?.role),
+        hasPermission: (key) =>
+          Boolean(
+            membership &&
+            (["owner", "hr_admin"].includes(membership.role) ||
+              membership.permissions?.[key]),
+          ),
+      }}
     >
-
       {children}
-
     </OrganizationContext.Provider>
   );
 };
-
-
-// =====================================================
-// HOOK
-// =====================================================
-
-export const useOrganization =
-  () => {
-
-    const context =
-      useContext(
-        OrganizationContext
-      );
-
-
-    if (!context) {
-
-      throw new Error(
-        "useOrganization must be used inside OrganizationProvider"
-      );
-    }
-
-
-    return context;
-  };

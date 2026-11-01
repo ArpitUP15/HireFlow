@@ -2,13 +2,10 @@ import { useState } from "react";
 import { Upload } from "lucide-react";
 import api from "../../services/api";
 
-const ResumeUpload = ({
-  candidateId,
-  onUploaded,
-}) => {
+const ResumeUpload = ({ candidateId, onUploaded }) => {
   const [file, setFile] = useState(null);
-  const [loading, setLoading] =
-    useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleUpload = async () => {
     if (!file) return;
@@ -19,61 +16,49 @@ const ResumeUpload = ({
 
     try {
       setLoading(true);
+      setError("");
 
       const response = await api.post(
         `/candidates/${candidateId}/resume`,
         formData,
         {
           headers: {
-            "Content-Type":
-              "multipart/form-data",
+            "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
-      onUploaded?.(
-        response.data.candidate
-      );
+      onUploaded?.(response.data.candidate);
 
       setFile(null);
     } catch (error) {
-      console.error(
-        "Resume upload failed:",
-        error
-      );
+      setError(error.response?.data?.message || "Resume upload failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-      <h3 className="font-semibold text-white">
-        Resume
-      </h3>
+    <div className="rounded-2xl border border-border bg-primary/5 p-5">
+      <h3 className="font-semibold text-text">Resume</h3>
 
       <input
         type="file"
-        accept=".pdf,.doc,.docx"
-        onChange={(event) =>
-          setFile(
-            event.target.files?.[0] || null
-          )
-        }
-        className="mt-4 block w-full text-sm text-slate-400"
+        accept=".pdf,.docx"
+        onChange={(event) => setFile(event.target.files?.[0] || null)}
+        className="mt-4 block w-full text-sm text-muted"
       />
 
+      {error && <p role="alert">{error}</p>}
       <button
         type="button"
         onClick={handleUpload}
         disabled={!file || loading}
-        className="mt-4 flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+        className="mt-4 flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-background disabled:opacity-50"
       >
         <Upload size={18} />
 
-        {loading
-          ? "Uploading..."
-          : "Upload Resume"}
+        {loading ? "Uploading..." : "Upload Resume"}
       </button>
     </div>
   );

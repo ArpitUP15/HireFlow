@@ -1,7 +1,7 @@
 import express from "express";
+import statsRoutes from "./statsRoutes.js";
 
 import {
-  getPublicStats,
   submitContactMessage,
 } from "../controllers/publicController.js";
 
@@ -18,10 +18,7 @@ const router =
 // PUBLIC STATISTICS
 // =====================================================
 
-router.get(
-  "/stats",
-  getPublicStats
-);
+router.use("/stats", statsRoutes);
 
 
 // =====================================================

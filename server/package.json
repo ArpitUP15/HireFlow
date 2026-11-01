@@ -9,7 +9,8 @@
     "start": "node server.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
-    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+    "test:coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:ai": "node --test tests/ai-integration.node.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -18,14 +19,17 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-rate-limit": "^8.7.0",
+    "groq-sdk": "^1.6.0",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.13.0",
     "mongoose": "^8.18.0",
     "morgan": "^1.11.0",
     "multer": "^2.4.0",
     "nodemailer": "^10.0.10",
     "pdf-parse": "^2.4.5",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.3.0",

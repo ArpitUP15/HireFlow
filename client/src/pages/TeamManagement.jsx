@@ -1,12 +1,6 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
-import {
-  UserPlus,
-  RefreshCw,
-} from "lucide-react";
+import { UserPlus, RefreshCw } from "lucide-react";
 
 import Button from "../components/common/Button";
 import Loader from "../components/common/Loader";
@@ -19,101 +13,68 @@ import {
   removeMember,
 } from "../services/organizationService";
 
-import {
-  useOrganization,
-} from "../context/OrganizationContext";
+import { useOrganization } from "../context/useOrganization";
 
 const TeamManagement = () => {
-  const {
-    membership,
-    organization,
-  } = useOrganization();
+  const { membership, organization } = useOrganization();
 
-  const [members, setMembers] =
-    useState([]);
+  const [members, setMembers] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [modalOpen, setModalOpen] =
-    useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   const canManage =
-    membership?.role ===
-      "owner" ||
-    membership?.role ===
-      "hr_admin";
+    membership?.role === "owner" || membership?.role === "hr_admin";
 
   const loadMembers = async () => {
     try {
-      setLoading(true);
-      setError("");
+      const data = await getMembers();
 
-      const data =
-        await getMembers();
-
-      setMembers(
-        data.members || []
-      );
+      setMembers(data.members || []);
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Unable to load members"
-      );
+      setError(error.response?.data?.message || "Unable to load members");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadMembers();
+    getMembers()
+      .then((d) => setMembers(d.members || []))
+      .catch((e) =>
+        setError(e.response?.data?.message || "Could not load members"),
+      )
+      .finally(() => setLoading(false));
   }, []);
 
-  const handleRoleChange = async (
-    memberId,
-    role
-  ) => {
+  const handleRoleChange = async (memberId, role) => {
     try {
-      await updateMemberRole(
-        memberId,
-        role
-      );
+      await updateMemberRole(memberId, role);
 
       await loadMembers();
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Unable to update role"
-      );
+      setError(error.response?.data?.message || "Unable to update role");
     }
   };
 
-  const handleRemove = async (
-    memberId
-  ) => {
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to remove this member?"
-      );
+  const handleRemove = async (memberId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this member?",
+    );
 
     if (!confirmed) {
       return;
     }
 
     try {
-      await removeMember(
-        memberId
-      );
+      await removeMember(memberId);
 
       await loadMembers();
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Unable to remove member"
-      );
+      setError(error.response?.data?.message || "Unable to remove member");
     }
   };
 
@@ -122,29 +83,25 @@ const TeamManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral px-4 py-6 text-primary lg:px-8">
+    <div className="min-h-screen bg-background px-4 py-6 text-text lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm font-medium text-slate-300">
+            <p className="text-sm font-medium text-text">
               {organization?.name}
             </p>
 
-            <h1 className="mt-1 text-3xl font-bold text-white">
+            <h1 className="mt-1 text-3xl font-bold text-text">
               Team Management
             </h1>
 
-            <p className="mt-2 text-slate-400">
+            <p className="mt-2 text-muted">
               Manage your organization's recruitment team.
             </p>
           </div>
 
           {canManage && (
-            <Button
-              onClick={() =>
-                setModalOpen(true)
-              }
-            >
+            <Button onClick={() => setModalOpen(true)}>
               <span className="flex items-center gap-2">
                 <UserPlus size={18} />
                 Invite Member
@@ -154,45 +111,33 @@ const TeamManagement = () => {
         </div>
 
         {error && (
-          <div className="mb-6 flex items-center justify-between rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+          <div className="mb-6 flex items-center justify-between rounded-lg border border-accent/30 bg-accent/10 p-4 text-sm text-accent-readable">
             <span>{error}</span>
 
             <button
               onClick={loadMembers}
-              className="rounded p-1 text-red-300 hover:bg-red-500/20"
+              className="rounded p-1 text-accent-readable hover:bg-accent/20"
             >
-              <RefreshCw
-                size={17}
-              />
+              <RefreshCw size={17} />
             </button>
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/90 shadow-sm">
-          <div className="border-b border-slate-800 px-5 py-4">
-            <h2 className="font-semibold text-white">
-              Team Members
-            </h2>
+        <div className="overflow-hidden rounded-2xl border border-border bg-surface/90 shadow-sm">
+          <div className="border-b border-border px-5 py-4">
+            <h2 className="font-semibold text-text">Team Members</h2>
 
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-muted">
               {members.length} member
-              {members.length !== 1
-                ? "s"
-                : ""}
+              {members.length !== 1 ? "s" : ""}
             </p>
           </div>
 
           <MemberTable
             members={members}
-            currentUserId={
-              membership?.user
-            }
-            onRoleChange={
-              handleRoleChange
-            }
-            onRemove={
-              handleRemove
-            }
+            currentUserId={membership?.user}
+            onRoleChange={handleRoleChange}
+            onRemove={handleRemove}
             canManage={canManage}
           />
         </div>
@@ -200,12 +145,8 @@ const TeamManagement = () => {
 
       <InviteMemberModal
         isOpen={modalOpen}
-        onClose={() =>
-          setModalOpen(false)
-        }
-        onSuccess={
-          loadMembers
-        }
+        onClose={() => setModalOpen(false)}
+        onSuccess={loadMembers}
       />
     </div>
   );

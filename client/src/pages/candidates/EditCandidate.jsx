@@ -49,12 +49,9 @@ const EditCandidate = () => {
       try {
         setLoading(true);
 
-        const response =
-          await getCandidateById(id);
+        const response = await getCandidateById(id);
 
-        const candidate =
-          response.data?.candidate ||
-          response.data;
+        const candidate = response.candidate;
 
         setFormData({
           firstName: candidate.firstName || "",
@@ -62,33 +59,22 @@ const EditCandidate = () => {
           email: candidate.email || "",
           phone: candidate.phone || "",
           location: candidate.location || "",
-          currentTitle:
-            candidate.currentTitle || "",
-          experience:
-            candidate.experience || "",
+          currentTitle: candidate.currentTitle || "",
+          experience: candidate.experience || "",
           skills: Array.isArray(candidate.skills)
             ? candidate.skills.join(", ")
             : candidate.skills || "",
-          education:
-            candidate.education || "",
-          linkedin:
-            candidate.linkedin || "",
-          github:
-            candidate.github || "",
-          portfolio:
-            candidate.portfolio || "",
-          resumeUrl:
-            candidate.resumeUrl || "",
-          notes:
-            candidate.notes || "",
+          education: candidate.education || "",
+          linkedin: candidate.linkedin || "",
+          github: candidate.github || "",
+          portfolio: candidate.portfolio || "",
+          resumeUrl: candidate.resumeUrl || "",
+          notes: candidate.notes || "",
         });
       } catch (err) {
         console.error(err);
 
-        setError(
-          err.response?.data?.message ||
-            "Failed to load candidate."
-        );
+        setError(err.response?.data?.message || "Failed to load candidate.");
       } finally {
         setLoading(false);
       }
@@ -136,10 +122,7 @@ const EditCandidate = () => {
     } catch (err) {
       console.error(err);
 
-      setError(
-        err.response?.data?.message ||
-          "Failed to update candidate."
-      );
+      setError(err.response?.data?.message || "Failed to update candidate.");
     } finally {
       setSaving(false);
     }
@@ -148,63 +131,48 @@ const EditCandidate = () => {
   if (loading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-
       {/* Header */}
       <div className="mb-8 flex items-center gap-4">
-
         <button
-          onClick={() =>
-            navigate(`/candidates/${id}`)
-          }
-          className="rounded-lg border p-2 hover:bg-gray-50"
+          onClick={() => navigate(`/candidates/${id}`)}
+          className="rounded-lg border p-2 hover:bg-surface"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
 
         <div>
-          <h1 className="text-3xl font-bold">
-            Edit Candidate
-          </h1>
+          <h1 className="text-3xl font-bold">Edit Candidate</h1>
 
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-muted">
             Update candidate profile information.
           </p>
         </div>
-
       </div>
 
       {/* Error */}
       {error && (
-        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+        <div className="mb-6 rounded-lg border border-accent bg-accent/10 px-4 py-3 text-accent-readable">
           {error}
         </div>
       )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6"
-      >
-
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
-            <User className="h-5 w-5 text-blue-600" />
+            <User className="h-5 w-5 text-primary" />
 
-            <h2 className="text-lg font-semibold">
-              Personal Information
-            </h2>
+            <h2 className="text-lg font-semibold">Personal Information</h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-
             <div>
               <label className="mb-2 block text-sm font-medium">
                 First Name *
@@ -234,12 +202,10 @@ const EditCandidate = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">
-                Email *
-              </label>
+              <label className="mb-2 block text-sm font-medium">Email *</label>
 
               <div className="relative">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted" />
 
                 <input
                   type="email"
@@ -253,12 +219,10 @@ const EditCandidate = () => {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium">
-                Phone
-              </label>
+              <label className="mb-2 block text-sm font-medium">Phone</label>
 
               <div className="relative">
-                <Phone className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                <Phone className="absolute left-3 top-3.5 h-5 w-5 text-muted" />
 
                 <input
                   name="phone"
@@ -270,12 +234,10 @@ const EditCandidate = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="mb-2 block text-sm font-medium">
-                Location
-              </label>
+              <label className="mb-2 block text-sm font-medium">Location</label>
 
               <div className="relative">
-                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted" />
 
                 <input
                   name="location"
@@ -286,19 +248,16 @@ const EditCandidate = () => {
                 />
               </div>
             </div>
-
           </div>
         </div>
 
         {/* Professional Information */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
           <h2 className="mb-6 text-lg font-semibold">
             Professional Information
           </h2>
 
           <div className="grid gap-6 md:grid-cols-2">
-
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Current Job Title
@@ -328,9 +287,7 @@ const EditCandidate = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="mb-2 block text-sm font-medium">
-                Skills
-              </label>
+              <label className="mb-2 block text-sm font-medium">Skills</label>
 
               <input
                 name="skills"
@@ -340,7 +297,7 @@ const EditCandidate = () => {
                 className="w-full rounded-lg border px-4 py-3"
               />
 
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-muted">
                 Separate skills using commas.
               </p>
             </div>
@@ -359,19 +316,14 @@ const EditCandidate = () => {
                 className="w-full rounded-lg border px-4 py-3"
               />
             </div>
-
           </div>
         </div>
 
         {/* Links */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
-          <h2 className="mb-6 text-lg font-semibold">
-            Online Profiles
-          </h2>
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
+          <h2 className="mb-6 text-lg font-semibold">Online Profiles</h2>
 
           <div className="space-y-4">
-
             <input
               name="linkedin"
               value={formData.linkedin}
@@ -403,16 +355,12 @@ const EditCandidate = () => {
               placeholder="Resume URL"
               className="w-full rounded-lg border px-4 py-3"
             />
-
           </div>
         </div>
 
         {/* Notes */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
-          <h2 className="mb-4 text-lg font-semibold">
-            Recruiter Notes
-          </h2>
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Recruiter Notes</h2>
 
           <textarea
             name="notes"
@@ -422,18 +370,14 @@ const EditCandidate = () => {
             placeholder="Add internal recruiter notes..."
             className="w-full rounded-lg border px-4 py-3"
           />
-
         </div>
 
         {/* Actions */}
         <div className="flex justify-end gap-4">
-
           <button
             type="button"
-            onClick={() =>
-              navigate(`/candidates/${id}`)
-            }
-            className="rounded-lg border px-6 py-3 font-medium hover:bg-gray-50"
+            onClick={() => navigate(`/candidates/${id}`)}
+            className="rounded-lg border px-6 py-3 font-medium hover:bg-surface"
           >
             Cancel
           </button>
@@ -441,7 +385,7 @@ const EditCandidate = () => {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-background hover:bg-primary/90 disabled:opacity-60"
           >
             {saving ? (
               <>
@@ -455,13 +399,10 @@ const EditCandidate = () => {
               </>
             )}
           </button>
-
         </div>
-
       </form>
     </div>
   );
 };
 
 export default EditCandidate;
-

@@ -1,65 +1,34 @@
-import {
-  Menu,
-} from "lucide-react";
-
-import {
-  useState,
-} from "react";
-
-import {
-  Outlet,
-} from "react-router-dom";
-
+import { useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+import { useOrganization } from "../../context/useOrganization";
 import Sidebar from "./Sidebar";
-import ThemeToggle from "./ThemeToggle";
-
-const DashboardLayout = () => {
-  const [
-    sidebarOpen,
-    setSidebarOpen,
-  ] = useState(false);
-
+import Navbar from "./Navbar";
+export default function DashboardLayout() {
+  const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const { organization, loading, error } = useOrganization();
+  const location = useLocation();
+  if (user.role !== "candidate" && user.role !== "admin") {
+    if (loading) return <p className="portal-page">Loading organization...</p>;
+    if (error)
+      return (
+        <p className="portal-page" role="alert">
+          {error}
+        </p>
+      );
+    if (!organization && location.pathname !== "/dashboard")
+      return <Navigate to="/dashboard" replace />;
+  }
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() =>
-          setSidebarOpen(false)
-        }
-      />
-
-      {/* Main Content */}
+    <div className="min-h-screen bg-background text-text">
+      <Sidebar isOpen={open} onClose={() => setOpen(false)} />
       <div className="lg:pl-64">
-        {/* Mobile Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-white/10 bg-slate-950/90 px-4 backdrop-blur-lg lg:hidden">
-          <button
-            type="button"
-            onClick={() =>
-              setSidebarOpen(true)
-            }
-            className="rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-white"
-          >
-            <Menu size={22} />
-          </button>
-
-          <div className="ml-4 text-xl font-bold">
-            <span className="text-white">
-              Hire
-            </span>
-
-            <span className="text-blue-500">
-              Flow
-            </span>
-          </div>
-          <ThemeToggle className="ml-auto" />
-        </header>
-
-        <main className="min-h-[calc(100vh-4rem)]">
-          <Outlet />
+        <Navbar onMenu={() => setOpen(true)} />
+        <main>
+          <Outlet key={organization?._id || user._id} />
         </main>
       </div>
     </div>
   );
-};
-
-export default DashboardLayout;
+}

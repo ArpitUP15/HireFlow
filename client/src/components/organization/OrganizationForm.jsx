@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Building2,
@@ -34,35 +34,17 @@ const OrganizationForm = ({
   onCancel,
   loading = false,
 }) => {
-  const [formData, setFormData] =
-    useState(initialFormData);
+  const [formData, setFormData] = useState(() => ({
+    ...initialFormData,
+    ...Object.fromEntries(
+      Object.keys(initialFormData).map((k) => [k, organization?.[k] || ""]),
+    ),
+  }));
 
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (organization) {
-      setFormData({
-        name: organization.name || "",
-        description:
-          organization.description || "",
-        website:
-          organization.website || "",
-        industry:
-          organization.industry || "",
-        companySize:
-          organization.companySize || "",
-        logo: organization.logo || "",
-      });
-    } else {
-      setFormData(initialFormData);
-    }
-  }, [organization]);
-
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
+    const { name, value } = event.target;
 
     setFormData((previous) => ({
       ...previous,
@@ -75,50 +57,38 @@ const OrganizationForm = ({
 
     setError("");
 
-    const trimmedName =
-      formData.name.trim();
+    const trimmedName = formData.name.trim();
 
     if (!trimmedName) {
-      setError(
-        "Organization name is required."
-      );
+      setError("Organization name is required.");
       return;
     }
 
     try {
       await onSubmit({
         name: trimmedName,
-        description:
-          formData.description.trim(),
-        website:
-          formData.website.trim(),
-        industry:
-          formData.industry.trim(),
-        companySize:
-          formData.companySize,
+        description: formData.description.trim(),
+        website: formData.website.trim(),
+        industry: formData.industry.trim(),
+        companySize: formData.companySize,
         logo: formData.logo.trim(),
       });
     } catch (error) {
       setError(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to save organization."
+          "Failed to save organization.",
       );
     }
   };
 
-  const isEditing = Boolean(
-    organization
-  );
+  const isEditing = Boolean(organization);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Error */}
       {error && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="rounded-xl border border-accent/20 bg-accent/10 p-4 text-sm text-accent-readable">
           {error}
         </div>
       )}
@@ -127,7 +97,7 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-name"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Organization Name
         </label>
@@ -135,7 +105,7 @@ const OrganizationForm = ({
         <div className="relative">
           <Building2
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
           />
 
           <input
@@ -147,7 +117,7 @@ const OrganizationForm = ({
             placeholder="Enter organization name"
             required
             disabled={loading}
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-border bg-primary/5 py-3 pl-10 pr-4 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
       </div>
@@ -156,16 +126,13 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-description"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Description
         </label>
 
         <div className="relative">
-          <FileText
-            size={18}
-            className="absolute left-3 top-3 text-slate-500"
-          />
+          <FileText size={18} className="absolute left-3 top-3 text-muted" />
 
           <textarea
             id="organization-description"
@@ -175,7 +142,7 @@ const OrganizationForm = ({
             placeholder="Tell us about your organization"
             rows={4}
             disabled={loading}
-            className="w-full resize-none rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full resize-none rounded-xl border border-border bg-primary/5 py-3 pl-10 pr-4 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
       </div>
@@ -184,7 +151,7 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-website"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Website
         </label>
@@ -192,7 +159,7 @@ const OrganizationForm = ({
         <div className="relative">
           <Globe
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
           />
 
           <input
@@ -203,7 +170,7 @@ const OrganizationForm = ({
             onChange={handleChange}
             placeholder="https://example.com"
             disabled={loading}
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-border bg-primary/5 py-3 pl-10 pr-4 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
       </div>
@@ -212,7 +179,7 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-industry"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Industry
         </label>
@@ -220,7 +187,7 @@ const OrganizationForm = ({
         <div className="relative">
           <BriefcaseBusiness
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
           />
 
           <input
@@ -231,7 +198,7 @@ const OrganizationForm = ({
             onChange={handleChange}
             placeholder="e.g. Software Development"
             disabled={loading}
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl border border-border bg-primary/5 py-3 pl-10 pr-4 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
       </div>
@@ -240,7 +207,7 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-company-size"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Company Size
         </label>
@@ -248,7 +215,7 @@ const OrganizationForm = ({
         <div className="relative">
           <Users
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
           />
 
           <select
@@ -257,17 +224,12 @@ const OrganizationForm = ({
             value={formData.companySize}
             onChange={handleChange}
             disabled={loading}
-            className="w-full appearance-none rounded-xl border border-white/10 bg-slate-900 py-3 pl-10 pr-4 text-white outline-none transition focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full appearance-none rounded-xl border border-border bg-surface py-3 pl-10 pr-4 text-text outline-none transition-opacity focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <option value="">
-              Select company size
-            </option>
+            <option value="">Select company size</option>
 
             {companySizes.map((size) => (
-              <option
-                key={size}
-                value={size}
-              >
+              <option key={size} value={size}>
                 {size} employees
               </option>
             ))}
@@ -279,7 +241,7 @@ const OrganizationForm = ({
       <div>
         <label
           htmlFor="organization-logo"
-          className="mb-2 block text-sm font-medium text-slate-200"
+          className="mb-2 block text-sm font-medium text-text"
         >
           Logo URL
         </label>
@@ -292,18 +254,18 @@ const OrganizationForm = ({
           onChange={handleChange}
           placeholder="https://example.com/logo.png"
           disabled={loading}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl border border-border bg-primary/5 px-4 py-3 text-text outline-none transition-opacity placeholder:text-muted focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-3 border-t border-white/10 pt-6">
+      <div className="flex justify-end gap-3 border-t border-border pt-6">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-border px-5 py-3 text-sm font-medium text-text transition-opacity hover:bg-primary/5 hover:text-text disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>
@@ -312,15 +274,11 @@ const OrganizationForm = ({
         <button
           type="submit"
           disabled={loading}
-          className="flex min-w-37.5 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-w-37.5 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-background transition-opacity hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? (
             <>
-              <Loader2
-                size={18}
-                className="animate-spin"
-              />
-
+              <Loader2 size={18} className="animate-spin" />
               Saving...
             </>
           ) : isEditing ? (

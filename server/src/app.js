@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -18,6 +19,7 @@ import errorHandler from "./middleware/errorMiddleware.js";
 
 import aiRoutes from "./routes/aiRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
 const app = express();
 
 /*
@@ -36,12 +38,10 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL ||
-      "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
 
     credentials: true,
-  })
+  }),
 );
 
 /*
@@ -55,7 +55,7 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 );
 
 /*
@@ -65,6 +65,7 @@ app.use(
 */
 
 app.use(cookieParser());
+app.use("/api/stats", statsRoutes);
 
 /*
 |--------------------------------------------------------------------------
@@ -84,8 +85,7 @@ app.get("/health", (req, res) => {
     success: true,
     status: "healthy",
     service: "HireFlow API",
-    timestamp:
-      new Date().toISOString(),
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -95,55 +95,25 @@ app.get("/health", (req, res) => {
 |--------------------------------------------------------------------------
 */
 
-app.use(
-  "/api/public",
-  publicRoutes
-);
+app.use("/api/public", publicRoutes);
 
-app.use(
-  "/api/auth",
-  authRoutes
-);
+app.use("/api/auth", authRoutes);
 
-app.use(
-  "/api/organizations",
-  organizationRoutes
-);
+app.use("/api/organizations", organizationRoutes);
 
-app.use(
-  "/api/jobs",
-  jobRoutes
-);
+app.use("/api/jobs", jobRoutes);
 
-app.use(
-  "/api/candidates",
-  candidateRoutes
-);
+app.use("/api/candidates", candidateRoutes);
 
-app.use(
-  "/api/applications",
-  applicationRoutes
-);
+app.use("/api/applications", applicationRoutes);
 
-app.use(
-  "/api/interviews",
-  interviewRoutes
-);
+app.use("/api/interviews", interviewRoutes);
 
-app.use(
-  "/api/analytics",
-  analyticsRoutes
-);
+app.use("/api/analytics", analyticsRoutes);
 
-app.use(
-  "/api/ai",
-  aiRoutes
-);
+app.use("/api/ai", aiRoutes);
 
-app.use(
-  "/api/notifications",
-  notificationRoutes
-);
+app.use("/api/notifications", notificationRoutes);
 
 app.use("/api/admin", adminRoutes);
 /*
@@ -154,6 +124,21 @@ app.use("/api/admin", adminRoutes);
 
 app.use(notFound);
 
+app.use((error, req, res, next) => {
+  if (error.code === "LIMIT_FILE_SIZE")
+    return res
+      .status(413)
+      .json({ success: false, message: "Maximum resume size is 5 MB" });
+  if (error.code?.startsWith("LIMIT_"))
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid resume upload" });
+  if (error.status)
+    return res
+      .status(error.status)
+      .json({ success: false, message: error.message });
+  next(error);
+});
 app.use(errorHandler);
 
 export default app;

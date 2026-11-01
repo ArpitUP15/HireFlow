@@ -1,41 +1,20 @@
-const RoleSelect = ({
-  value,
-  onChange,
-  disabled = false,
-}) => {
+const RoleSelect = ({ value, onChange, disabled = false }) => {
   return (
     <select
       value={value}
-      onChange={(event) =>
-        onChange(event.target.value)
-      }
+      onChange={(event) => onChange(event.target.value)}
       disabled={disabled}
-      className="
-        rounded-lg
-        border
-        border-slate-700
-        bg-slate-950
-        px-3
-        py-2
-        text-sm
-        text-slate-100
-        outline-none
-        focus:border-blue-500
-        focus:ring-2
-        focus:ring-blue-500/20
-        disabled:bg-slate-800
-        disabled:text-slate-400
-      "
+      className="\n        rounded-lg\n        border\n        border-border\n        bg-background\n        px-3\n        py-2\n        text-sm\n        text-text\n        outline-none\n        focus:border-primary\n        focus:ring-2\n        focus:ring-primary/20\n        disabled:bg-surface-hover\n        disabled:text-muted\n      "
     >
-      <option value="hr_admin" className="bg-slate-900 text-slate-100">
+      <option value="hr_admin" className="bg-surface text-text">
         HR Admin
       </option>
 
-      <option value="recruiter" className="bg-slate-900 text-slate-100">
+      <option value="recruiter" className="bg-surface text-text">
         Recruiter
       </option>
 
-      <option value="interviewer" className="bg-slate-900 text-slate-100">
+      <option value="interviewer" className="bg-surface text-text">
         Interviewer
       </option>
     </select>

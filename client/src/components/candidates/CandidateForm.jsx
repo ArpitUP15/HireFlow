@@ -9,89 +9,58 @@ const CandidateForm = ({
   loading = false,
   submitText = "Add Candidate",
 }) => {
-  const [form, setForm] =
-    useState({
-      firstName:
-        initialData.firstName || "",
+  const [form, setForm] = useState({
+    firstName: initialData.firstName || "",
 
-      lastName:
-        initialData.lastName || "",
+    lastName: initialData.lastName || "",
 
-      email:
-        initialData.email || "",
+    email: initialData.email || "",
 
-      phone:
-        initialData.phone || "",
+    phone: initialData.phone || "",
 
-      location:
-        initialData.location || "",
+    location: initialData.location || "",
 
-      headline:
-        initialData.headline || "",
+    headline: initialData.headline || "",
 
-      summary:
-        initialData.summary || "",
+    summary: initialData.summary || "",
 
-      skills:
-        initialData.skills?.join(
-          ", "
-        ) || "",
+    skills: initialData.skills?.join(", ") || "",
 
-      experience:
-        initialData.experience || 0,
+    experience: initialData.experience || 0,
 
-      resumeUrl:
-        initialData.resumeUrl || "",
+    resumeUrl: initialData.resumeUrl || "",
 
-      linkedinUrl:
-        initialData.linkedinUrl ||
-        "",
+    linkedinUrl: initialData.linkedinUrl || "",
 
-      portfolioUrl:
-        initialData.portfolioUrl ||
-        "",
+    portfolioUrl: initialData.portfolioUrl || "",
 
-      source:
-        initialData.source ||
-        "manual",
-    });
+    source: initialData.source || "manual",
+  });
 
-  const handleChange = (
-    event
-  ) => {
+  const handleChange = (event) => {
     setForm({
       ...form,
-      [event.target.name]:
-        event.target.value,
+      [event.target.name]: event.target.value,
     });
   };
 
-  const handleSubmit = (
-    event
-  ) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     onSubmit({
       ...form,
 
-      experience: Number(
-        form.experience
-      ),
+      experience: Number(form.experience),
 
       skills: form.skills
         .split(",")
-        .map((skill) =>
-          skill.trim()
-        )
+        .map((skill) => skill.trim())
         .filter(Boolean),
     });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid gap-5 md:grid-cols-2">
         <Input
           label="First Name"
@@ -150,7 +119,7 @@ const CandidateForm = ({
         />
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-200">
+          <label className="mb-1.5 block text-sm font-medium text-text">
             Source
           </label>
 
@@ -158,29 +127,38 @@ const CandidateForm = ({
             name="source"
             value={form.source}
             onChange={handleChange}
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-text"
           >
-            <option value="manual" className="bg-slate-900 text-slate-100">
+            <option value="manual" className="bg-surface text-text">
               Manual
             </option>
 
-            <option value="linkedin" className="bg-slate-900 text-slate-100">
+            <option
+              value="linkedin"
+              className="bg-surface text-text"
+            >
               LinkedIn
             </option>
 
-            <option value="referral" className="bg-slate-900 text-slate-100">
+            <option
+              value="referral"
+              className="bg-surface text-text"
+            >
               Referral
             </option>
 
-            <option value="job-board" className="bg-slate-900 text-slate-100">
+            <option
+              value="job-board"
+              className="bg-surface text-text"
+            >
               Job Board
             </option>
 
-            <option value="website" className="bg-slate-900 text-slate-100">
+            <option value="website" className="bg-surface text-text">
               Website
             </option>
 
-            <option value="other" className="bg-slate-900 text-slate-100">
+            <option value="other" className="bg-surface text-text">
               Other
             </option>
           </select>
@@ -196,7 +174,7 @@ const CandidateForm = ({
       />
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-200">
+        <label className="mb-1.5 block text-sm font-medium text-text">
           Professional Summary
         </label>
 
@@ -205,7 +183,7 @@ const CandidateForm = ({
           value={form.summary}
           onChange={handleChange}
           rows="6"
-          className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-lg border border-border bg-background p-3 text-text placeholder:text-muted focus:border-primary focus:outline-none"
           placeholder="Candidate summary..."
         />
       </div>
@@ -236,11 +214,7 @@ const CandidateForm = ({
         />
       </div>
 
-      <Button
-        type="submit"
-        loading={loading}
-        className="w-full"
-      >
+      <Button type="submit" loading={loading} className="w-full">
         {submitText}
       </Button>
     </form>

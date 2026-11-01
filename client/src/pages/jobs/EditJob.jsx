@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -10,10 +9,7 @@ import {
   DollarSign,
 } from "lucide-react";
 
-import {
-  getJobById,
-  updateJob,
-} from "../../services/jobService";
+import { getJobById, updateJob } from "../../services/jobService";
 
 const EditJob = () => {
   const { id } = useParams();
@@ -67,10 +63,7 @@ const EditJob = () => {
       } catch (err) {
         console.error(err);
 
-        setError(
-          err.response?.data?.message ||
-            "Failed to load job."
-        );
+        setError(err.response?.data?.message || "Failed to load job.");
       } finally {
         setLoading(false);
       }
@@ -107,14 +100,10 @@ const EditJob = () => {
         ...formData,
 
         salaryMin:
-          formData.salaryMin === ""
-            ? undefined
-            : Number(formData.salaryMin),
+          formData.salaryMin === "" ? undefined : Number(formData.salaryMin),
 
         salaryMax:
-          formData.salaryMax === ""
-            ? undefined
-            : Number(formData.salaryMax),
+          formData.salaryMax === "" ? undefined : Number(formData.salaryMax),
 
         skills: formData.skills
           .split(",")
@@ -128,10 +117,7 @@ const EditJob = () => {
     } catch (err) {
       console.error(err);
 
-      setError(
-        err.response?.data?.message ||
-          "Failed to update job."
-      );
+      setError(err.response?.data?.message || "Failed to update job.");
     } finally {
       setSaving(false);
     }
@@ -144,7 +130,7 @@ const EditJob = () => {
   if (loading) {
     return (
       <div className="flex min-h-100 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -155,22 +141,19 @@ const EditJob = () => {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-
       {/* Header */}
       <div className="mb-8 flex items-center gap-4">
         <button
           onClick={() => navigate(`/jobs/${id}`)}
-          className="rounded-lg border border-gray-200 p-2 hover:bg-gray-50"
+          className="rounded-lg border border-border p-2 hover:bg-surface"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
 
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Edit Job
-          </h1>
+          <h1 className="text-3xl font-bold text-text">Edit Job</h1>
 
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-muted">
             Update job information and requirements.
           </p>
         </div>
@@ -178,30 +161,22 @@ const EditJob = () => {
 
       {/* Error */}
       {error && (
-        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+        <div className="mb-6 rounded-lg border border-accent bg-accent/10 px-4 py-3 text-accent-readable">
           {error}
         </div>
       )}
 
       {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-8"
-      >
-
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Basic Information */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
-            <Briefcase className="h-5 w-5 text-blue-600" />
+            <Briefcase className="h-5 w-5 text-primary" />
 
-            <h2 className="text-lg font-semibold">
-              Basic Information
-            </h2>
+            <h2 className="text-lg font-semibold">Basic Information</h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-
             {/* Title */}
             <div className="md:col-span-2">
               <label className="mb-2 block text-sm font-medium">
@@ -215,7 +190,7 @@ const EditJob = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g. Frontend Developer"
-                className="w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-500"
+                className="w-full rounded-lg border px-4 py-3 outline-none focus:border-primary"
               />
             </div>
 
@@ -231,18 +206,16 @@ const EditJob = () => {
                 value={formData.department}
                 onChange={handleChange}
                 placeholder="Engineering"
-                className="w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-500"
+                className="w-full rounded-lg border px-4 py-3 outline-none focus:border-primary"
               />
             </div>
 
             {/* Location */}
             <div>
-              <label className="mb-2 block text-sm font-medium">
-                Location
-              </label>
+              <label className="mb-2 block text-sm font-medium">Location</label>
 
               <div className="relative">
-                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted" />
 
                 <input
                   type="text"
@@ -250,7 +223,7 @@ const EditJob = () => {
                   value={formData.location}
                   onChange={handleChange}
                   placeholder="Dehradun / Remote"
-                  className="w-full rounded-lg border py-3 pl-10 pr-4 outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border py-3 pl-10 pr-4 outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -294,16 +267,12 @@ const EditJob = () => {
                 <option value="executive">Executive</option>
               </select>
             </div>
-
           </div>
         </div>
 
         {/* Description */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
-          <h2 className="mb-6 text-lg font-semibold">
-            Job Description
-          </h2>
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
+          <h2 className="mb-6 text-lg font-semibold">Job Description</h2>
 
           <textarea
             name="description"
@@ -312,23 +281,19 @@ const EditJob = () => {
             rows="7"
             required
             placeholder="Describe the role, responsibilities and expectations..."
-            className="w-full rounded-lg border px-4 py-3 outline-none focus:border-blue-500"
+            className="w-full rounded-lg border px-4 py-3 outline-none focus:border-primary"
           />
         </div>
 
         {/* Salary */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
-            <DollarSign className="h-5 w-5 text-blue-600" />
+            <DollarSign className="h-5 w-5 text-primary" />
 
-            <h2 className="text-lg font-semibold">
-              Compensation
-            </h2>
+            <h2 className="text-lg font-semibold">Compensation</h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-
             <div>
               <label className="mb-2 block text-sm font-medium">
                 Minimum Salary
@@ -358,18 +323,14 @@ const EditJob = () => {
                 className="w-full rounded-lg border px-4 py-3"
               />
             </div>
-
           </div>
         </div>
 
         {/* Skills */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
+          <h2 className="mb-2 text-lg font-semibold">Required Skills</h2>
 
-          <h2 className="mb-2 text-lg font-semibold">
-            Required Skills
-          </h2>
-
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="mb-4 text-sm text-muted">
             Separate skills using commas.
           </p>
 
@@ -384,11 +345,8 @@ const EditJob = () => {
         </div>
 
         {/* Status */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-
-          <h2 className="mb-4 text-lg font-semibold">
-            Job Status
-          </h2>
+        <div className="rounded-xl border bg-surface p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold">Job Status</h2>
 
           <select
             name="status"
@@ -404,11 +362,10 @@ const EditJob = () => {
 
         {/* Actions */}
         <div className="flex justify-end gap-4">
-
           <button
             type="button"
             onClick={() => navigate(`/jobs/${id}`)}
-            className="rounded-lg border px-6 py-3 font-medium hover:bg-gray-50"
+            className="rounded-lg border px-6 py-3 font-medium hover:bg-surface"
           >
             Cancel
           </button>
@@ -416,7 +373,7 @@ const EditJob = () => {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-background hover:bg-primary/90 disabled:opacity-60"
           >
             {saving ? (
               <>
@@ -430,9 +387,7 @@ const EditJob = () => {
               </>
             )}
           </button>
-
         </div>
-
       </form>
     </div>
   );

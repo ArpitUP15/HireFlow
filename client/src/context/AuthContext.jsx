@@ -1,8 +1,4 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 import {
   register as registerUser,
@@ -11,192 +7,94 @@ import {
   getMe,
 } from "../services/authService.js";
 
+import { AuthContext } from "./authState";
 
-export const AuthContext =
-  createContext(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
+  const [loading, setLoading] = useState(true);
 
-export const AuthProvider = ({
-  children,
-}) => {
-
-  const [
-    user,
-    setUser,
-  ] = useState(null);
-
-
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
-
-
-  const [
-    isAuthenticated,
-    setIsAuthenticated,
-  ] = useState(false);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // ===================================================
   // CHECK AUTHENTICATION
   // ===================================================
 
   useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await getMe();
 
-    const checkAuthentication =
-      async () => {
+        if (response?.success && response?.user) {
+          setUser(response.user);
 
-        try {
-
-          const response =
-            await getMe();
-
-
-          if (
-            response?.success &&
-            response?.user
-          ) {
-
-            setUser(
-              response.user
-            );
-
-            setIsAuthenticated(
-              true
-            );
-
-          } else {
-
-            setUser(null);
-
-            setIsAuthenticated(
-              false
-            );
-          }
-
-        } catch (error) {
-
+          setIsAuthenticated(true);
+        } else {
           setUser(null);
 
-          setIsAuthenticated(
-            false
-          );
-
-        } finally {
-
-          setLoading(false);
+          setIsAuthenticated(false);
         }
-      };
+      } catch {
+        setUser(null);
 
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     checkAuthentication();
-
   }, []);
-
 
   // ===================================================
   // REGISTER
   // ===================================================
 
-  const register = async (
-    userData
-  ) => {
+  const register = async (userData) => {
+    const response = await registerUser(userData);
 
-    const response =
-      await registerUser(
-        userData
-      );
-
-
-    if (
-      !response?.success ||
-      !response?.user
-    ) {
-      throw new Error(
-        response?.message ||
-          "Registration failed"
-      );
+    if (!response?.success || !response?.user) {
+      throw new Error(response?.message || "Registration failed");
     }
 
+    setUser(response.user);
 
-    setUser(
-      response.user
-    );
-
-    setIsAuthenticated(
-      true
-    );
-
+    setIsAuthenticated(true);
 
     return response;
   };
-
 
   // ===================================================
   // LOGIN
   // ===================================================
 
-  const login = async (
-    email,
-    password
-  ) => {
+  const login = async (email, password) => {
+    const response = await loginUser({
+      email,
+      password,
+    });
 
-    const response =
-      await loginUser({
-        email,
-        password,
-      });
-
-
-    if (
-      !response?.success ||
-      !response?.user
-    ) {
-      throw new Error(
-        response?.message ||
-          "Login failed"
-      );
+    if (!response?.success || !response?.user) {
+      throw new Error(response?.message || "Login failed");
     }
 
+    setUser(response.user);
 
-    setUser(
-      response.user
-    );
-
-    setIsAuthenticated(
-      true
-    );
-
+    setIsAuthenticated(true);
 
     return response;
   };
-
 
   // ===================================================
   // LOGOUT
   // ===================================================
 
   const logout = async () => {
-
-    try {
-
-      await logoutUser();
-
-    } finally {
-
-      setUser(null);
-
-      setIsAuthenticated(
-        false
-      );
-
-      localStorage.removeItem(
-        "currentOrganizationId"
-      );
-    }
+    await logoutUser();
+    setUser(null);
+    setIsAuthenticated(false);
+    localStorage.removeItem("currentOrganizationId");
   };
-
 
   // ===================================================
   // CONTEXT VALUE
@@ -218,12 +116,5 @@ export const AuthProvider = ({
     setUser,
   };
 
-
-  return (
-    <AuthContext.Provider
-      value={value}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

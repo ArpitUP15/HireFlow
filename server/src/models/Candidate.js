@@ -86,6 +86,9 @@ const candidateSchema = new mongoose.Schema(
     // --------------------------------------------------
     // AI SCREENING
     // --------------------------------------------------
+    resumeText: { type: String, default: "", maxlength: 18000 },
+    parsedResume: { type: mongoose.Schema.Types.Mixed, default: null },
+    resume: { type: mongoose.Schema.Types.Mixed, default: null },
     aiScreening: {
       matchScore: {
         type: Number,

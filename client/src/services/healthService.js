@@ -1,13 +1,7 @@
 import api from "./api";
 
+export const checkHealth = async () => {
+  const response = await api.get("/health");
 
-export const checkHealth =
-  async () => {
-
-    const response =
-      await api.get(
-        "/health"
-      );
-
-    return response.data;
-  };
+  return response.data;
+};

@@ -1,6 +1,7 @@
 import Candidate from "../models/Candidate.js";
+import fs from "node:fs/promises";
+import { extractResumeText as extractDocument } from "../services/resumeParser.js";
 import {
-  extractResumeText,
   deleteResumeFile,
 } from "../services/resumeService.js";
 
@@ -310,7 +311,7 @@ const uploadCandidateResume = async (
 
     const candidate = await Candidate.findOne({
       _id: id,
-      organization: req.headers["x-organization-id"],
+      organization: req.organization._id,
     });
 
     if (!candidate) {
@@ -322,19 +323,10 @@ const uploadCandidateResume = async (
       });
     }
 
-    if (candidate.resume?.filePath) {
-      await deleteResumeFile(
-        candidate.resume.filePath
-      );
-    }
-
-    let resumeText = "";
-
-    if (req.file.mimetype === "application/pdf") {
-      resumeText = await extractResumeText(
-        req.file.path
-      );
-    }
+    let resumeText;
+    try { resumeText = await extractDocument({ buffer: await fs.readFile(req.file.path), mimetype: req.file.mimetype }); }
+    catch (error) { await deleteResumeFile(req.file.path); throw error; }
+    if (candidate.resume?.filePath) await deleteResumeFile(candidate.resume.filePath);
 
     candidate.resume = {
       originalName: req.file.originalname,

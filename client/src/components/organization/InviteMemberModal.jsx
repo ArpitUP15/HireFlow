@@ -4,55 +4,36 @@ import Modal from "../common/Modal";
 import Input from "../common/Input";
 import Button from "../common/Button";
 
-import {
-  inviteMember,
-} from "../../services/organizationService";
+import { inviteMember } from "../../services/organizationService";
 
-const InviteMemberModal = ({
-  isOpen,
-  onClose,
-  onSuccess,
-}) => {
-  const [email, setEmail] =
-    useState("");
+const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
+  const [email, setEmail] = useState("");
 
-  const [role, setRole] =
-    useState("recruiter");
+  const [role, setRole] = useState("recruiter");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [invitationLink, setInvitationLink] =
-    useState("");
+  const [invitation, setInvitation] = useState(null);
 
-  const handleSubmit = async (
-    event
-  ) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       setLoading(true);
       setError("");
 
-      const data =
-        await inviteMember({
-          email,
-          role,
-        });
+      const data = await inviteMember({
+        email,
+        role,
+      });
 
-      setInvitationLink(
-        data.invitation.invitationLink
-      );
+      setInvitation(data.invitation);
 
       onSuccess?.();
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Unable to send invitation"
-      );
+      setError(error.response?.data?.message || "Unable to send invitation");
     } finally {
       setLoading(false);
     }
@@ -62,23 +43,16 @@ const InviteMemberModal = ({
     setEmail("");
     setRole("recruiter");
     setError("");
-    setInvitationLink("");
+    setInvitation(null);
     onClose();
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      title="Invite Team Member"
-    >
-      {!invitationLink ? (
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
+    <Modal isOpen={isOpen} onClose={handleClose} title="Invite Team Member">
+      {!invitation ? (
+        <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            <div className="rounded-lg bg-accent/10 p-3 text-sm text-accent-readable">
               {error}
             </div>
           )}
@@ -88,79 +62,45 @@ const InviteMemberModal = ({
             name="email"
             type="email"
             value={email}
-            onChange={(event) =>
-              setEmail(
-                event.target.value
-              )
-            }
+            onChange={(event) => setEmail(event.target.value)}
             placeholder="recruiter@example.com"
             required
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            <label className="mb-1.5 block text-sm font-medium text-muted">
               Role
             </label>
 
             <select
               value={role}
-              onChange={(event) =>
-                setRole(
-                  event.target.value
-                )
-              }
-              className="w-full rounded-lg border border-gray-300 px-3 py-2.5"
+              onChange={(event) => setRole(event.target.value)}
+              className="w-full rounded-lg border border-border px-3 py-2.5"
             >
-              <option value="recruiter">
-                Recruiter
-              </option>
+              <option value="recruiter">Recruiter</option>
 
-              <option value="hr_admin">
-                HR Admin
-              </option>
+              <option value="hr_admin">HR Admin</option>
 
-              <option value="interviewer">
-                Interviewer
-              </option>
+              <option value="interviewer">Interviewer</option>
             </select>
           </div>
 
-          <Button
-            type="submit"
-            loading={loading}
-            className="w-full"
-          >
+          <Button type="submit" loading={loading} className="w-full">
             Create Invitation
           </Button>
         </form>
       ) : (
         <div className="space-y-5">
-          <div className="rounded-lg bg-green-50 p-4 text-sm text-green-700">
-            Invitation created successfully.
+          <div className="rounded-lg bg-secondary/10 p-4 text-sm text-secondary-readable">
+            Invitation email sent to {invitation.email}.
           </div>
-
-          <div>
-            <p className="mb-2 text-sm font-medium text-gray-700">
-              Invitation Link
+          {invitation.notificationSent && (
+            <p className="text-sm text-muted">
+              An in-app notification was also sent to their account.
             </p>
+          )}
 
-            <textarea
-              readOnly
-              value={invitationLink}
-              rows="4"
-              className="w-full rounded-lg border border-gray-300 p-3 text-sm"
-            />
-          </div>
-
-          <p className="text-xs text-gray-500">
-            Development mode: this link is shown
-            here instead of being emailed.
-          </p>
-
-          <Button
-            onClick={handleClose}
-            className="w-full"
-          >
+          <Button onClick={handleClose} className="w-full">
             Done
           </Button>
         </div>

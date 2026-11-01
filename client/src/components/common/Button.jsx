@@ -9,13 +9,12 @@ const Button = ({
 }) => {
   const styles = {
     primary:
-      "bg-tertiary hover:bg-neutral text-on-tertiary",
-    secondary:
-      "bg-transparent hover:bg-surface text-secondary",
+      "bg-primary text-background hover:brightness-90 dark:hover:brightness-110",
+    secondary: "bg-transparent text-text hover:bg-primary/10",
     danger:
-      "bg-red-600 hover:bg-red-500 text-white",
+      "bg-accent text-on-accent hover:brightness-90 dark:hover:brightness-110",
     outline:
-      "border border-border bg-surface hover:bg-neutral text-primary",
+      "border border-border bg-background text-text hover:bg-primary/10",
   };
 
   return (
@@ -27,7 +26,7 @@ const Button = ({
         px-5 py-3
         rounded-sm
         font-medium
-        transition
+        transition-opacity
         duration-200
         disabled:opacity-50
         disabled:cursor-not-allowed

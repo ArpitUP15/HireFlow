@@ -1,4 +1,5 @@
 import {
+  UserRound,
   LayoutDashboard,
   BriefcaseBusiness,
   Users,
@@ -14,7 +15,9 @@ import {
 import { NavLink } from "react-router-dom";
 
 import { useAuth } from "../../context/useAuth";
+import { useOrganization } from "../../context/useOrganization";
 import ThemeToggle from "./ThemeToggle";
+import hireFlowSymbol from "../../assets/hireflow-symbol.png";
 
 const navigationItems = [
   {
@@ -61,31 +64,47 @@ const navigationItems = [
     name: "Pipeline",
     path: "/pipeline",
     icon: KanbanSquare,
-  }
+  },
 ];
 
-const Sidebar = ({
-  isOpen,
-  onClose,
-}) => {
-  const {
-    user,
-  } = useAuth();
+const Sidebar = ({ isOpen, onClose }) => {
+  const { user } = useAuth();
+  const { hasPermission, hasRole } = useOrganization();
+  const permissions = {
+    "/dashboard": "viewAnalytics",
+    "/jobs": "manageJobs",
+    "/candidates": "manageCandidates",
+    "/applications": "manageApplications",
+    "/pipeline": "manageApplications",
+    "/interviews": "manageInterviews",
+    "/team": "manageMembers",
+  };
 
-  const visibleNavigationItems = navigationItems.filter((item) => {
-    if (user?.role === "candidate") {
-      return item.path !== "/organization" && item.path !== "/organization/settings";
-    }
-
-    return true;
-  });
+  const visibleNavigationItems =
+    user?.role === "candidate"
+      ? [
+          { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+          { name: "Job Portal", path: "/jobs", icon: BriefcaseBusiness },
+          { name: "Profile", path: "/profile", icon: UserRound },
+        ]
+      : user?.role === "admin"
+        ? [{ name: "System dashboard", path: "/admin", icon: LayoutDashboard }]
+        : navigationItems.filter((item) => {
+            if (user?.role === "recruiter" && item.path === "/candidates")
+              return false;
+            if (item.path === "/organization/settings")
+              return hasRole("owner", "hr_admin");
+            return (
+              !permissions[item.path] || hasPermission(permissions[item.path])
+            );
+          });
 
   return (
     <>
       {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-overlay/60 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -102,38 +121,34 @@ const Sidebar = ({
           w-64
           flex-col
           border-r
-          border-white/10
-          bg-slate-950
+          border-border
+          bg-background
           transition-transform
           duration-300
           lg:translate-x-0
-          ${
-            isOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
-          }
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Logo */}
-        <div className="flex h-20 items-center justify-between border-b border-white/10 px-6">
+        <div className="flex h-20 items-center justify-between border-b border-border px-6">
           <NavLink
-            to="/dashboard"
-            className="text-2xl font-bold"
+            to="/"
+            aria-label="Go to HireFlow landing page"
+            className="flex h-14 w-14 items-center justify-center"
+            onClick={onClose}
           >
-            <span className="text-white">
-              Hire
-            </span>
-
-            <span className="text-blue-500">
-              Flow
-            </span>
+            <img
+              src={hireFlowSymbol}
+              alt="HireFlow"
+              className="h-14 w-14 object-contain"
+            />
           </NavLink>
 
           {/* Mobile Close */}
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-400 transition hover:bg-white/5 hover:text-white lg:hidden"
+            className="rounded-lg p-2 text-muted transition-opacity hover:bg-primary/5 hover:text-text lg:hidden"
           >
             <X size={22} />
           </button>
@@ -141,23 +156,18 @@ const Sidebar = ({
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 py-6">
-          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+          <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-muted">
             Main Menu
           </p>
 
           <div className="space-y-1">
-            {visibleNavigationItems.map(
-              ({
-                name,
-                path,
-                icon: Icon,
-              }) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  onClick={onClose}
-                  className={({ isActive }) =>
-                    `
+            {visibleNavigationItems.map(({ name, path, icon: Icon }) => (
+              <NavLink
+                key={path}
+                to={path}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `
                     group
                     flex
                     items-center
@@ -167,38 +177,31 @@ const Sidebar = ({
                     py-3
                     text-sm
                     font-medium
-                    transition
+                    transition-opacity
                     ${
                       isActive
-                        ? "bg-tertiary text-on-tertiary"
-                        : "text-secondary hover:bg-white/5 hover:text-primary"
+                        ? "bg-primary text-background"
+                        : "text-muted hover:bg-primary/5 hover:text-text"
                     }
                     `
-                  }
-                >
-                  <Icon
-                    size={19}
-                    strokeWidth={2}
-                  />
+                }
+              >
+                <Icon size={19} strokeWidth={2} />
 
-                  <span>{name}</span>
-                </NavLink>
-              )
-            )}
+                <span>{name}</span>
+              </NavLink>
+            ))}
           </div>
         </nav>
 
         {/* Bottom Section */}
-        <div className="border-t border-white/10 p-4">
+        <div className="border-t border-border p-4">
           <ThemeToggle className="mb-4 w-full" />
-          <div className="rounded-xl border border-blue-500/10 bg-blue-500/5 p-4">
-            <p className="text-sm font-semibold text-white">
-              HireFlow
-            </p>
+          <div className="rounded-xl border border-primary/10 bg-primary/5 p-4">
+            <p className="text-sm font-semibold text-text">HireFlow</p>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
-              AI-powered recruitment and HR
-              management platform.
+            <p className="mt-1 text-xs leading-5 text-muted">
+              AI-powered recruitment and HR management platform.
             </p>
           </div>
         </div>

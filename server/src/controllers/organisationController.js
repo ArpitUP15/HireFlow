@@ -4,11 +4,23 @@ import crypto from "crypto";
 import Organization from "../models/Organization.js";
 import OrganizationMember from "../models/OrganizationMember.js";
 import Invitation from "../models/Invitation.js";
+import Notification from "../models/Notification.js";
+import User from "../models/User.js";
+import { sendEmail } from "../services/emailService.js";
 
 import {
   generateInvitationToken,
   hashInvitationToken
 } from "../utils/generateInvitationToken.js";
+
+const escapeHtml = (value) =>
+  String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
 
 // ------------------------------------------------
 // Create organization
@@ -276,11 +288,6 @@ export const inviteMember =
         : "recruiter";
 
     // Check existing user
-    const User =
-      (await import(
-        "../models/User.js"
-      )).default;
-
     const existingUser =
       await User.findOne({
         email: normalizedEmail
@@ -329,8 +336,6 @@ export const inviteMember =
     const rawToken =
       generateInvitationToken();
 
-    console.log("Invitation token:", rawToken);
-
     const tokenHash =
       hashInvitationToken(
         rawToken
@@ -360,13 +365,67 @@ export const inviteMember =
           req.user._id
       });
 
+    const clientUrl =
+      (process.env.CLIENT_URL || "http://localhost:5173")
+        .replace(/\/+$/, "");
     const invitationLink =
-      `${process.env.CLIENT_URL}/accept-invitation?token=${rawToken}`;
+      `${clientUrl}/accept-invitation?token=${rawToken}`;
+
+    let notification;
+    try {
+      if (existingUser) {
+        notification = await Notification.create({
+          organization: req.organization._id,
+          user: existingUser._id,
+          type: "invitation",
+          title: "Organization invitation",
+          message: `${req.user.firstName} ${req.user.lastName} invited you to join ${req.organization.name} as ${memberRole.replace("_", " ")}.`,
+          metadata: {
+            invitationId: invitation._id.toString()
+          }
+        });
+      }
+
+      const inviterName =
+        `${req.user.firstName} ${req.user.lastName}`.trim();
+      const roleName = memberRole.replace("_", " ");
+      const organizationName = req.organization.name;
+      const safeLink = escapeHtml(invitationLink);
+      const text =
+        `${inviterName} invited you to join ${organizationName} on HireFlow as ${roleName}.\n\n` +
+        `Accept the invitation: ${invitationLink}\n\n` +
+        "This invitation expires in 48 hours. Sign in or create an account using this email address to accept it. Choose the Recruiter account type when registering.";
+      const html =
+        `<p>${escapeHtml(inviterName)} invited you to join ` +
+        `<strong>${escapeHtml(organizationName)}</strong> on HireFlow as ` +
+        `${escapeHtml(roleName)}.</p>` +
+        `<p><a href="${safeLink}">Accept invitation</a></p>` +
+        "<p>This invitation expires in 48 hours. Sign in or create an account using this email address to accept it. Choose the Recruiter account type when registering.</p>";
+
+      await sendEmail({
+        to: normalizedEmail,
+        subject: `Invitation to join ${organizationName} on HireFlow`,
+        text,
+        html
+      });
+    } catch (error) {
+      if (notification) {
+        await Notification.deleteOne({
+          _id: notification._id
+        });
+      }
+      await Invitation.deleteOne({
+        _id: invitation._id
+      });
+      if (error.statusCode) {
+        res.status(error.statusCode);
+      }
+      throw error;
+    }
 
     res.status(201).json({
       success: true,
-      message:
-        "Invitation created successfully",
+      message: "Invitation email sent successfully",
 
       invitation: {
         id: invitation._id,
@@ -376,10 +435,8 @@ export const inviteMember =
           invitation.role,
         expiresAt:
           invitation.expiresAt,
-
-        // Development only.
-        // In production send this through email.
-        invitationLink
+        emailSent: true,
+        notificationSent: Boolean(notification)
       }
     });
   };
@@ -394,22 +451,36 @@ export const acceptInvitation =
       token
     } = req.body;
 
-    if (!token) {
+    const { invitationId } = req.body;
+
+    if (!token && !invitationId) {
       res.status(400);
 
       throw new Error(
-        "Invitation token is required"
+        "Invitation token or invitation ID is required"
       );
     }
 
-    const tokenHash =
-      hashInvitationToken(token);
+    let invitation;
+    if (token) {
+      const tokenHash =
+        hashInvitationToken(token);
 
-    const invitation =
-      await Invitation.findOne({
+      invitation = await Invitation.findOne({
         tokenHash,
         status: "pending"
       });
+    } else {
+      if (!mongoose.Types.ObjectId.isValid(invitationId)) {
+        res.status(400);
+        throw new Error("Invalid invitation ID");
+      }
+
+      invitation = await Invitation.findOne({
+        _id: invitationId,
+        status: "pending"
+      });
+    }
 
     if (!invitation) {
       res.status(404);
@@ -465,6 +536,13 @@ export const acceptInvitation =
 
       throw new Error(
         "You are already a member of this organization"
+      );
+    }
+
+    if (req.user.role === "candidate") {
+      await User.updateOne(
+        { _id: req.user._id },
+        { $set: { role: "recruiter" } }
       );
     }
 

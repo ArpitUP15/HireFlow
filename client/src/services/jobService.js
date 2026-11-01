@@ -1,6 +1,5 @@
 import api from "./api";
 
-
 export const getJobs = async (params = {}) => {
   const response = await api.get("/jobs", {
     params,
@@ -9,79 +8,38 @@ export const getJobs = async (params = {}) => {
   return response.data;
 };
 
+export const getJobById = async (id) => {
+  const response = await api.get(`/jobs/${id}`);
 
-export const getJobById =
-  async (id) => {
+  return response.data;
+};
 
-    const response =
-      await api.get(
-        `/jobs/${id}`
-      );
+export const createJob = async (jobData) => {
+  const response = await api.post("/jobs", jobData);
 
-    return response.data;
-  };
+  return response.data;
+};
 
+export const updateJob = async (id, jobData) => {
+  const response = await api.put(`/jobs/${id}`, jobData);
 
-export const createJob =
-  async (jobData) => {
+  return response.data;
+};
 
-    const response =
-      await api.post(
-        "/jobs",
-        jobData
-      );
+export const deleteJob = async (id) => {
+  const response = await api.delete(`/jobs/${id}`);
 
-    return response.data;
-  };
+  return response.data;
+};
 
+export const publishJob = async (id) => {
+  const response = await api.patch(`/jobs/${id}/publish`);
 
-export const updateJob =
-  async (
-    id,
-    jobData
-  ) => {
+  return response.data;
+};
 
-    const response =
-      await api.put(
-        `/jobs/${id}`,
-        jobData
-      );
+export const closeJob = async (id) => {
+  const response = await api.patch(`/jobs/${id}/close`);
 
-    return response.data;
-  };
-
-
-export const deleteJob =
-  async (id) => {
-
-    const response =
-      await api.delete(
-        `/jobs/${id}`
-      );
-
-    return response.data;
-  };
-
-
-export const publishJob =
-  async (id) => {
-
-    const response =
-      await api.patch(
-        `/jobs/${id}/publish`
-      );
-
-    return response.data;
-  };
-
-
-export const closeJob =
-  async (id) => {
-
-    const response =
-      await api.patch(
-        `/jobs/${id}/close`
-      );
-
-    return response.data;
-  };
+  return response.data;
+};

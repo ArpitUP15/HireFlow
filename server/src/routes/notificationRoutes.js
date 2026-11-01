@@ -2,6 +2,8 @@ import express from "express";
 
 import {
   getNotifications,
+  getInvitationNotifications,
+  markInvitationNotificationRead,
   markNotificationRead,
 } from "../controllers/notificationController.js";
 
@@ -11,8 +13,14 @@ import organizationMiddleware from "../middleware/organizationMiddleware.js";
 const router = express.Router();
 
 router.use(protect);
-router.use(organizationMiddleware);
 
+router.get("/invitations", getInvitationNotifications);
+router.patch(
+  "/invitations/:id/read",
+  markInvitationNotificationRead
+);
+
+router.use(organizationMiddleware);
 router.get("/", getNotifications);
 
 router.patch(

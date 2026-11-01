@@ -1,11 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL ||
-    "http://localhost:5001/api",
+  baseURL: import.meta.env.VITE_API_URL || "/api",
 
   withCredentials: true,
+  timeout: 60000,
 
   headers: {
     "Content-Type": "application/json",
@@ -20,31 +19,19 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const rawOrganizationId =
-      localStorage.getItem(
-        "currentOrganizationId"
-      );
+    const rawOrganizationId = localStorage.getItem("currentOrganizationId");
 
     if (
       rawOrganizationId &&
       rawOrganizationId !== "null" &&
       rawOrganizationId !== "undefined"
     ) {
-      const organizationId =
-        rawOrganizationId.trim();
+      const organizationId = rawOrganizationId.trim();
 
-      if (
-        /^[a-fA-F0-9]{24}$/.test(
-          organizationId
-        )
-      ) {
-        config.headers[
-          "x-organization-id"
-        ] = organizationId;
+      if (/^[a-fA-F0-9]{24}$/.test(organizationId)) {
+        config.headers["x-organization-id"] = organizationId;
       } else {
-        localStorage.removeItem(
-          "currentOrganizationId"
-        );
+        localStorage.removeItem("currentOrganizationId");
       }
     }
 
@@ -53,7 +40,7 @@ api.interceptors.request.use(
 
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 /*
@@ -66,16 +53,12 @@ api.interceptors.response.use(
   (response) => response,
 
   (error) => {
-    if (
-      error.response?.status === 401
-    ) {
-      console.warn(
-        "Authentication required."
-      );
+    if (error.response?.status === 401) {
+      console.warn("Authentication required.");
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

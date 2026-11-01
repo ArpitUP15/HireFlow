@@ -13,14 +13,10 @@ const Input = ({
       {label && (
         <label
           htmlFor={name}
-          className="block text-sm font-medium text-slate-200"
+          className="block text-sm font-medium text-text"
         >
           {label}
-          {required && (
-            <span className="text-red-400 ml-1">
-              *
-            </span>
-          )}
+          {required && <span className="text-accent-readable ml-1">*</span>}
         </label>
       )}
 
@@ -39,26 +35,18 @@ const Input = ({
           bg-surface
           px-3.5
           py-2.5
-          text-primary
-          placeholder:text-secondary
+          text-text
+          placeholder:text-muted
           outline-none
-          transition
+          transition-opacity
           focus:border-secondary
           focus:ring-2
           focus:ring-secondary/20
-          ${
-            error
-              ? "border-red-500"
-              : "border-border"
-          }
+          ${error ? "border-accent" : "border-border"}
         `}
       />
 
-      {error && (
-        <p className="text-sm text-red-400">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-sm text-accent-readable">{error}</p>}
     </div>
   );
 };

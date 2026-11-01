@@ -1,24 +1,21 @@
-import {
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 
-import {
-  ThemeContext,
-} from "./ThemeContext";
+import { ThemeContext } from "./ThemeContext";
 
-export const ThemeProvider = ({
-  children,
-}) => {
+export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() =>
-    window.localStorage.getItem("hireflow-theme") === "dark"
-      ? "dark"
-      : "light"
+    window.localStorage.getItem("hireflow-theme") === "dark" ? "dark" : "light",
   );
 
   useLayoutEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    const root = document.documentElement;
+    root.classList.toggle("dark", theme === "dark");
+    root.removeAttribute("data-theme");
+    const browserTheme = document.querySelector('meta[name="theme-color"]');
+    browserTheme?.setAttribute(
+      "content",
+      getComputedStyle(root).getPropertyValue("--background").trim(),
+    );
     window.localStorage.setItem("hireflow-theme", theme);
   }, [theme]);
 
@@ -27,15 +24,13 @@ export const ThemeProvider = ({
       theme,
       toggleTheme: () =>
         setTheme((currentTheme) =>
-          currentTheme === "light" ? "dark" : "light"
+          currentTheme === "light" ? "dark" : "light",
         ),
     }),
-    [theme]
+    [theme],
   );
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };

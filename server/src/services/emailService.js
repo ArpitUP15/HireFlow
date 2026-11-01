@@ -50,21 +50,47 @@ export const sendEmail = async ({
     throw new Error("Email subject is required");
   }
 
+  const smtpPass = normalizeEnvValue(process.env.SMTP_PASS);
+  if (!smtpPass) {
+    throw new Error(
+      "SMTP_PASS is not configured. Configure SMTP credentials to send invitation emails."
+    );
+  }
+
+  const from = normalizeEnvValue(process.env.SMTP_FROM);
+  if (!from) {
+    throw new Error(
+      "SMTP_FROM is not configured. Set a verified sender email address to send invitation emails."
+    );
+  }
+
   const transporter = nodemailer.createTransport(getSmtpConfig());
 
   const mailOptions = {
-    from: normalizeEnvValue(process.env.SMTP_FROM),
+    from,
     to,
     subject,
     text,
     html,
   };
 
-  const result = await transporter.sendMail(mailOptions);
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    const response = String(error.response || "");
+    if (
+      error.responseCode === 554 &&
+      /demo domains can only be used/i.test(response)
+    ) {
+      const deliveryError = new Error(
+        "Mailtrap rejected this recipient because the configured demo sender can only email the Mailtrap account owner. Verify a sending domain in Mailtrap and set SMTP_FROM to an address on that domain to invite other users."
+      );
+      deliveryError.statusCode = 502;
+      throw deliveryError;
+    }
 
-  console.log(`✅ Email sent successfully to ${to}`);
-
-  return result;
+    throw error;
+  }
 };
 
 export default nodemailer.createTransport(getSmtpConfig());

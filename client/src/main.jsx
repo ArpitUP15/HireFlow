@@ -6,34 +6,16 @@ import App from "./App.jsx";
 
 import "./index.css";
 
-import {
-  AuthProvider,
-} from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 
-import {
-  OrganizationProvider,
-} from "./context/OrganizationContext";
+import { OrganizationProvider } from "./context/OrganizationContext";
 
-
-ReactDOM
-  .createRoot(
-    document.getElementById(
-      "root"
-    )
-  )
-  .render(
-
-    <React.StrictMode>
-
-      <AuthProvider>
-
-        <OrganizationProvider>
-
-          <App />
-
-        </OrganizationProvider>
-
-      </AuthProvider>
-
-    </React.StrictMode>
-  );
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <AuthProvider>
+      <OrganizationProvider>
+        <App />
+      </OrganizationProvider>
+    </AuthProvider>
+  </React.StrictMode>,
+);
