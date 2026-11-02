@@ -156,7 +156,7 @@ GROQ_MODEL=openai/gpt-oss-20b
 GROQ_TIMEOUT_MS=90000
 ```
 
-Invitation email delivery is optional. Configure SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`) or Resend (`RESEND_API_KEY` and `EMAIL_FROM`). Email sending will not work until a provider and valid sender are configured.
+Organization invitations are delivered as in-app notifications to existing HireFlow users. For invitees without an account, share the generated invitation link directly; it expires after 7 days.
 
 ### 3. Configure the frontend
 

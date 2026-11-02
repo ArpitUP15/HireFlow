@@ -16,8 +16,6 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
   const [error, setError] = useState("");
 
   const [invitationLink, setInvitationLink] = useState("");
-  const [emailSent, setEmailSent] = useState(false);
-  const [emailConfigured, setEmailConfigured] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,8 +30,6 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
       });
 
       setInvitationLink(data.invitation.invitationLink);
-      setEmailSent(Boolean(data.invitation.emailSent));
-      setEmailConfigured(Boolean(data.invitation.emailConfigured));
 
       onSuccess?.();
     } catch (error) {
@@ -48,8 +44,6 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
     setRole("recruiter");
     setError("");
     setInvitationLink("");
-    setEmailSent(false);
-    setEmailConfigured(false);
     onClose();
   };
 
@@ -98,11 +92,9 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
       ) : (
         <div className="space-y-5">
           <div className="rounded-lg bg-secondary/10 p-4 text-sm text-secondary-readable">
-            {emailSent
-              ? "Invitation email sent successfully. The recipient can use the link in their email to join your organization."
-              : emailConfigured
-                ? "Invitation created, but email delivery failed. Copy the invitation link below and share it directly."
-                : "Invitation created, but no email provider is configured. Set RESEND_API_KEY in server/.env to send invitations by email."}
+            The invitation was created. If this email belongs to an existing
+            HireFlow user, they received an in-app notification. Share the link
+            below directly if they do not have an account yet.
           </div>
 
           <div>
@@ -119,9 +111,7 @@ const InviteMemberModal = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           <p className="text-xs text-muted">
-            {emailSent
-              ? "You can also copy this link and share it directly if needed."
-              : "Setup fallback: copy this link and share it directly until email delivery is configured."}
+            This invitation link expires in 7 days.
           </p>
 
           <Button onClick={handleClose} className="w-full">

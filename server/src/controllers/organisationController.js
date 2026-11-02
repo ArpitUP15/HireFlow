@@ -5,10 +5,6 @@ import Notification from "../models/Notification.js";
 import Organization from "../models/Organization.js";
 import OrganizationMember from "../models/OrganizationMember.js";
 import User from "../models/User.js";
-import {
-  isEmailConfigured,
-  sendEmail,
-} from "../services/emailService.js";
 
 const invitationRoles = [
   "hr_admin",
@@ -252,21 +248,6 @@ export const inviteMember = async (req, res, next) => {
       invitedBy: req.user._id,
     });
     const link = invitationUrl(token);
-    const emailConfigured = isEmailConfigured();
-    let emailSent = false;
-
-    if (emailConfigured) {
-      try {
-        await sendEmail({
-          to: email,
-          subject: `Invitation to join ${req.organization.name} on HireFlow`,
-          text: `You have been invited to join ${req.organization.name} as a ${role}.\n\nAccept the invitation: ${link}\n\nThis link expires in 7 days.`,
-        });
-        emailSent = true;
-      } catch (error) {
-        console.error("Invitation email delivery failed:", error);
-      }
-    }
 
     if (invitedUser) {
       await Notification.create({
@@ -284,8 +265,6 @@ export const inviteMember = async (req, res, next) => {
       message: "Invitation created successfully",
       invitation: {
         invitationLink: link,
-        emailSent,
-        emailConfigured,
       },
     });
   } catch (error) {
