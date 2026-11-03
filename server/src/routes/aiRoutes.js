@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isAllowedOrigin } from "../config/cors.js";
 import rateLimit from "express-rate-limit";
 import protect from "../middleware/authMiddleware.js";
 import organizationMiddleware, {
@@ -23,10 +24,9 @@ router.use((req, res, next) => {
       });
   const origin = req.get("origin");
   if (
-    !["GET", "HEAD"].includes(req.method) &&
-    origin &&
-    origin !== (process.env.CLIENT_URL || "http://localhost:5173")
-  )
+  !["GET", "HEAD"].includes(req.method) &&
+  !isAllowedOrigin(origin)
+)
     return res
       .status(403)
       .json({ success: false, message: "Untrusted request origin" });

@@ -1,18 +1,13 @@
 import { Server } from "socket.io";
-
+import { corsOptions } from "./config/cors.js";
 let io;
 
 export const initializeSocket = (
   server
 ) => {
   io = new Server(server, {
-    cors: {
-      origin:
-        process.env.CLIENT_URL ||
-        "http://localhost:5173",
-      credentials: true,
-    },
-  });
+  cors: corsOptions,
+});
 
   io.on("connection", (socket) => {
     console.log(
