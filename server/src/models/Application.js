@@ -43,6 +43,23 @@ const applicationSchema = new mongoose.Schema(
       index: true,
     },
 
+    statusHistory: {
+      type: [
+        {
+          status: {
+            type: String,
+            enum: ["applied", "screening", "shortlisted", "interview", "selected", "rejected"],
+            required: true,
+          },
+          changedAt: { type: Date, default: Date.now, required: true },
+          changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+          source: { type: String, enum: ["system", "recruiter", "workflow"], default: "system" },
+          remarks: { type: String, default: "", maxlength: 1000 },
+        },
+      ],
+      default: [],
+    },
+
     source: {
       type: String,
       enum: [

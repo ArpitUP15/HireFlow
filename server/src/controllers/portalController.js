@@ -248,6 +248,7 @@ export const applyToPortalJob = async (req, res) => {
       coverLetter: req.body?.coverLetter || "",
       source: "website",
       status: "applied",
+      statusHistory: [{ status: "applied", changedAt: new Date(), changedBy: user._id, source: "system", remarks: "Candidate submitted application" }],
     });
 
     return res.status(201).json({

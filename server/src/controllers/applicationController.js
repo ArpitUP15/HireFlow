@@ -1,6 +1,7 @@
 import Application from "../models/Application.js";
 import Job from "../models/Job.js";
 import Candidate from "../models/Candidate.js";
+import { transitionApplicationStatus } from "../services/applicationStatusService.js";
 
 
 // ==========================================
@@ -98,6 +99,8 @@ export const createApplication = async (
         rating,
 
         status: "applied",
+
+        statusHistory: [{ status: "applied", changedAt: new Date(), changedBy: req.user._id, source: "recruiter", remarks: "Application created" }],
 
         appliedAt: new Date(),
 
@@ -414,91 +417,46 @@ export const updateApplication =
 // UPDATE APPLICATION STATUS
 // ==========================================
 
-export const updateApplicationStatus =
-  async (req, res) => {
-    try {
-      const { status } =
-        req.body;
+export const updateApplicationStatus = async (req, res) => {
+  try {
+    const { status, remarks = "" } = req.body;
+    const validStatuses = ["applied", "screening", "shortlisted", "interview", "selected", "rejected"];
 
-      const validStatuses = [
-        "applied",
-        "screening",
-        "shortlisted",
-        "interview",
-        "selected",
-        "rejected",
-      ];
-
-      if (
-        !validStatuses.includes(
-          status
-        )
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Invalid application status",
-        });
-      }
-    // Update Status
-      const application =
-        await Application.findOneAndUpdate(
-          {
-            _id: req.params.id,
-
-            organization:
-              req.organization._id,
-          },
-
-          {
-            status,
-
-            lastStatusChangedAt:
-              new Date(),
-          },
-
-          {
-            new: true,
-            runValidators: true,
-          }
-        )
-          .populate(
-            "job",
-            "title department"
-          )
-          .populate(
-            "candidate",
-            "firstName lastName email"
-          );
-
-      if (!application) {
-        return res.status(404).json({
-          success: false,
-          message:
-            "Application not found",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message:
-          "Application status updated successfully",
-
-        application,
-      });
-    } catch (error) {
-      console.error(
-        "Update status error:",
-        error
-      );
-
-      return res.status(500).json({
-        success: false,
-        message:
-          "Failed to update application status",
-      });
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid application status" });
     }
-  };
+
+    // Keep the existing endpoint, but restrict decisions to authorized organization staff.
+    const memberRole = req.organizationMember?.role;
+    const permitted = ["owner", "hr_admin", "recruiter", "hiring_manager"].includes(memberRole)
+      || Boolean(req.organizationMember?.permissions?.manage_applications)
+      || Boolean(req.organizationMember?.permissions?.update_applications);
+    if (!permitted) {
+      return res.status(403).json({ success: false, message: "You are not authorized to change application status" });
+    }
+
+    const current = await Application.findOne({ _id: req.params.id, organization: req.organization._id });
+    if (!current) return res.status(404).json({ success: false, message: "Application not found" });
+
+    const application = await transitionApplicationStatus({
+      application: current,
+      status,
+      changedBy: req.user._id,
+      source: "recruiter",
+      remarks,
+    });
+
+    const populated = await Application.findById(application._id)
+      .populate("job", "title department")
+      .populate("candidate", "firstName lastName email")
+      .populate("createdBy", "firstName lastName email");
+
+    return res.status(200).json({ success: true, message: "Application status updated successfully", application: populated });
+  } catch (error) {
+    console.error("Update status error:", error);
+    return res.status(error.status || 500).json({ success: false, message: error.status ? error.message : "Failed to update application status" });
+  }
+};
 
 
 // ==========================================

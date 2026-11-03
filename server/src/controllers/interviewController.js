@@ -1,26 +1,41 @@
 import Interview from "../models/Interview.js";
+import Application from "../models/Application.js";
+import { transitionApplicationStatus } from "../services/applicationStatusService.js";
 
-export const createInterview = async (
-  req,
-  res,
-  next
-) => {
+export const createInterview = async (req, res, next) => {
   try {
-    const organizationId =
-      req.headers["x-organization-id"];
+    const organizationId = req.organization?._id || req.headers["x-organization-id"];
+    const { application: applicationId, candidate, job } = req.body;
 
-    const interview = await Interview.create({
-      ...req.body,
+    const application = await Application.findOne({
+      _id: applicationId,
       organization: organizationId,
     });
+    if (!application) {
+      return res.status(404).json({ success: false, message: "Application not found for this organization" });
+    }
+    if (String(application.candidate) !== String(candidate) || String(application.job) !== String(job)) {
+      return res.status(400).json({ success: false, message: "Interview candidate and job must match the selected application" });
+    }
 
-    const populatedInterview =
-      await Interview.findById(interview._id)
-        .populate("candidate")
-        .populate("job")
-        .populate("interviewer");
+    const interview = await Interview.create({ ...req.body, organization: organizationId });
 
-    res.status(201).json({
+    if (interview.status !== "Cancelled") {
+      await transitionApplicationStatus({
+        application,
+        status: "interview",
+        changedBy: req.user?._id || null,
+        source: "workflow",
+        remarks: `Interview scheduled (${interview.interviewType})`,
+      });
+    }
+
+    const populatedInterview = await Interview.findById(interview._id)
+      .populate("candidate")
+      .populate("job")
+      .populate("interviewer");
+
+    return res.status(201).json({
       success: true,
       message: "Interview created successfully",
       interview: populatedInterview,
